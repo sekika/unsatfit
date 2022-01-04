@@ -95,7 +95,7 @@ def main():
         if d['empty']:
             printform(lang, getlang, data)
             printhelp(lang)
-        elif model == []:
+        elif f.selectedmodel == []:
             printform(lang, getlang, data)
             print('<p><strong>Please select at least one model.</strong></p>')
             printhelp(lang)
@@ -307,7 +307,7 @@ def calc(f, field):
         result.append(vgbcch)
 
     # dual-VG-CH model
-    if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
+    if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
         f.set_model('vg2ch', const=[*con_q, [9, 1]])
         w1, a, m1, m2 = f.get_init_vg2ch()  # Get initial parameter
         f.ini = (*ini_q, w1, a, m1, m2)
@@ -379,7 +379,8 @@ def calc(f, field):
             f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;<sub>1</sub>',
                      'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
             f2 = copy.deepcopy(f)
-            result.append(f2)
+            if 'DV' in f.selectedmodel:
+                result.append(f2)
 
     # dual-KO model
     if 'DK' in f.selectedmodel:
