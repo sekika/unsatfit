@@ -1,37 +1,31 @@
-## Welcome to GitHub Pages
+# unsatfit
 
-You can use the [editor on GitHub](https://github.com/sekika/unsatfit/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+unsatfit is a Python library for optimizing parameters of [functions of soil hydraulic properties](https://doi.org/10.1002/vzj2.20168) (water retention function and unsaturated hydraulic conductivity function).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Install
 
-### Markdown
+python3 -m pip install unsatfit
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Sample code
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+f = unsatfit.Fit() # Create instance for fitting
+f.set_model('vg', const=[[10, 1]]) # Set model and constant parameters
+f.swrc = (h, theta) # Data of soil water retention
+f.unsat = (h, K) # Data of unsaturated hydraulic conductivity
+a, m = f.get_init_vg() # Get initial paramter
+f.ini = (max(theta), 0, a, m, max(K), 0.5, 2) # Set initial paramter
+f.b_qr = (0, 0.05) # Set lower and upper bound
+f.optimize() # Optimize
+print(f.fitted) # Show result as an array
+print(f.message)  # Show result
+f.show_fig = True
+f.plot()  # Draw a graph
+f.contour('a', 'm')  # Draw contour of RMSE for a and m
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## SWRC Fit
 
-### Jekyll Themes
+SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/sekika/unsatfit/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+- [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)

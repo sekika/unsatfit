@@ -1,0 +1,4 @@
+[Settings]
+debug = True
+workdir = img
+imagefile = img/swrc.png

@@ -1,0 +1,87 @@
+/*
+ * swrc.css
+ *
+ */
+
+body {
+  background: rgb(97%, 93%, 93%);
+  color: black;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+h1 {
+  text-align: center;
+  color:black;
+  background: rgb(70%, 70%, 100%);
+  font-size        : 30px; 
+  font-style       : italic;
+}
+
+h2 {
+  font-size        : 20px; 
+  text-align       : left; 
+  font-weight      : bold;
+  margin-right     : 0; 
+  padding          : 0.25em 0em 0.25em 0.7em;
+  color:black;
+  background: rgb(75%, 75%, 100%);
+}
+
+th {
+  font-weight      : bold;
+  color:black;
+  background: rgb(80%, 80%, 100%);
+}
+
+p {
+  text-align: justify;
+  text-indent: 1em;
+}
+
+ul li {
+  padding-bottom: 0.3em;
+}
+
+hr  {
+	margin-bottom    : 5px;
+}
+
+ul {
+	list-style-image: url("img/dot.png") 
+}
+
+pre {
+  margin-left: 5%;
+  margin-right: 3%;
+  padding: 1em;
+  border: 2px solid #000;
+  font-size : 17px; 
+  color: #000;
+  background-color: #f6f6f6;
+}
+
+strong {
+	color: red;
+	font-weight: bold;
+}
+
+div.center {
+        text-align: center;
+}
+
+div.right {
+  text-align: right;
+}
+
+.detailed-options {
+   display: none;
+}
+
+div.tmp {
+    color: red;
+    font-weight: bold;
+    font-size: 50px;
+    text-align: center;
+    background: rgb(70%, 70%, 100%);
+}

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Models of SWRC Fit</title>
+  <link rel="stylesheet" type="text/css" href="swrc.css">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<p>[ English | <a href="model-ja.html">日本語</a> ]</p>
+
+<h1>Soil hydraulic models in SWRC Fit</h1>
+
+<p>Soil water retention curve (SWRC) is described by water retention function &theta;(h) is a function of volumetric water content, &theta; to pressure head, h. Here we denote h to be positive for unsaturated conditions, thus considering to be an equivalent suction.
+Effective water content S<sub>e</sub> is defined by \(S_e = \frac{\theta-\theta_r}{\theta_s-\theta_r}\), where saturated water content &theta;<sub>s</sub> and residual water content &theta;<sub>r</sub> are parameters either treated as constant or variable.
+We can obtain &theta;(h) from S<sub>e</sub>(h) by &theta;(h) = (&theta;<sub>s</sub> - &theta;<sub>r</sub>)S<sub>e</sub>(h) + &theta;<sub>r</sub></p>
+
+<p><a href="./">SWRC Fit</a> simultaneously fits measured SWRC data to multiple S<sub>e</sub>(h) functions described as follows and determine the parameters of the functions.</p>
+
+<h2>Unimodal models</h2>
+<table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr>
+<tr><td>BC<td>Brooks and Corey<td>\(S_e = \begin{cases}\left(h / h_b\right)^{-\lambda} & (h>h_b) \\ 1 & (h \le h_b)\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>b</sub>, &lambda;</tr><tr><td>VG<td>van Genuchten<td>\(S_e = \biggl[\dfrac{1}{1+(\alpha h)^n}\biggr]^m ~~ (m=1-1/n)\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, &alpha;, n</tr><tr><td>KO<td>Kosugi<td>\(\begin{eqnarray}S_e &=& Q \biggl[\dfrac{\ln(h/h_m)}{\sigma}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>m</sub>, &sigma;</tr><tr><td>FX<td>Fredlund and Xing<td>\(S_e = \biggl[ \dfrac{1}{\ln \left[e+(h / a)^n \right]} \biggr]^m\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, a, m, n</tr></table>
+
+<ul>
+<li>In KO model, Q(x) is the complementary cumulative normal distribution function, defined by Q(x)=1-&Phi;(x), in which &Phi;(x) is a normalized form of the <a href="http://mathworld.wolfram.com/NormalDistributionFunction.html">cumulative normal distribution function</a>, and can be computed from complementary error function erfc(x) = 1-erf(x) as shown in the table.</li>
+<li>In FX model, e is <a href="https://en.wikipedia.org/wiki/E_(mathematical_constant)">Napier's constant</a>.</li>
+<li>Citations are shown in reference section.</li>
+</ul>
+
+<p>Here is SWRC for the sample data, clay loam (UNSODA 3033) with unimodal models, with all variables including &theta;<sub>s</sub> and &theta;<sub>r</sub> are optimized.
+Fitted parameters, coefficient of determination (R<sub>2</sub>) and <a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">AIC</a> can be shown in table by executing calculation with SWRC Fit.</p>
+
+<div align="center"><img src="img/unimodal.png" alt="Unimodal models"></div>
+
+<h2>Multimodal models</h2>
+
+<p>Multimodal water retention function is defined as a linear superposition of subfunctions S<sub>i</sub>(h) as follows (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>).
+\[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
+where k is the number of subfunctions, and w<sub>i</sub> are weighting factors with 0&lt;w<sub>i</sub>&lt;1 and &Sigma;w<sub>i</sub> = 1.
+Unimodal models are k=1, and bimodal models are k=2.</p>
+
+<p>The multimoodal model is denoted by subscripting the number of the subfunction.
+For example, VG<sub>1</sub>BC<sub>2</sub> model denotes VG subfunction for S<sub>1</sub>(h) and BC subfunction for S<sub>2</sub>(h).
+Combinations of the same subfunctions (e.g., BC<sub>1</sub>BC<sub>2</sub>BC<sub>3</sub>...) are referred to as the multimodels (e.g., multi-BC).
+The multi-VG model is the same as Durner (1994) model, and multi-KO model is the same as Seki (2007) model.
+Multimodels consisting of only two similar subfunctions are referred to as dual-models, such as the dual-BC for BC<sub>1</sub>BC<sub>2</sub>.</p>
+
+<h2>Bimodal models</h2>
+<p>As explained in the previous section, there are some possible combinations of bimodal models, where following models are implemented in SWRC Fit.</p>
+<table border="1"><tr><td>Model<td>Equation<td>Parameters</tr>
+<tr><td>dual-BC<td>\(S_e = \begin{cases}w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + (1-w_1)\left(h / h_{b_2}\right)^{-\lambda_2}  & (h>h_{b_2}) \\ w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + 1-w_1  & (h_{b_1} < h \le h_{b_2}) \\1 & (h \le h_{b_1})\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hb<sub>1</sub>, &lambda;<sub>1</sub>, hb<sub>2</sub>, &lambda;<sub>2</sub></tr><tr><td>dual-VG<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha_1 h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha_2 h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, &alpha;<sub>2</sub>, n<sub>2</sub></tr><tr><td>dual-KO<td>\(\begin{eqnarray}S_e &=& w_1 Q \biggl[\dfrac{\ln(h/h_{m_1})}{\sigma_1}\biggr] + (1-w_1) Q \biggl[\dfrac{\ln(h/h_{m_2})}{\sigma_2}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hm<sub>1</sub>, &sigma;<sub>1</sub>, hm<sub>2</sub>, &sigma;<sub>2</sub></tr></table>
+
+<p>Here is SWRC for the sample data, silty loam (UNSODA 2760) with bimodal models and VG model for comparison.
+Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all variables are optimized for VG model.</p>
+
+<div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
+
+<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Figure 1 in Seki et al., 2021</a>.</p>
+
+<h2>CH variation</h2>
+
+<p>CH (common head) variation for multimodal model of BC, VG, KO subfunctions is defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2021)</a> as
+\[H = h_{b_i} = \alpha_i^{-1} = h_{m_i} \]
+where following models are implemented in SWRC Fit.</p>
+<table border="1"><tr><td>Model<td>Equation<td>Parameters</tr>
+<tr><td>dual-BC-CH<td>\(S_e = \begin{cases}w_1 \left(h / h_b\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\right)^{-\lambda_2}  & (h>h_b)\\ 1 & (h \le h_b)\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b</sub>, &lambda;<sub>1</sub>, &lambda;<sub>2</sub></tr><tr><td>VG<sub>1</sub>BC<sub>2</sub>-CH<td>\(\begin{eqnarray}S_e &=& \begin{cases}w_1 S_1 + (1-w_1)\left(h/H\right)^{-\lambda}  & (h>H)\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\S_1 &=& \bigl[1+(h/H)^n\bigr]^{-m} ~~ (m=1-1/n)\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, H, n, &lambda;</tr><tr><td>dual-VG-CH<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;, n<sub>1</sub>, n<sub>2</sub></tr></table>
+<p>Here is SWRC for the sample data, sand (UNSODA 4440) with CH variations of bimodal models and VG model for comparison.
+Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all variables are optimized for VG model.
+&theta;<sub>r</sub> is optimized at 0.074 for VG model.</p>
+
+<div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
+
+<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Figure 2 in Seki et al., 2021</a>.</p>
+
+<h2>Hydraulic conductivity functions</h2>
+
+<p>For water retention functions except for FX model, closed-form hydraulic conductivity equations with generalized Mualem's equation are available (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>).</p>
+
+<h2>Note for notation</h2>
+
+<p>In the old version of SWRC Fit, KO model was denoted as LN model, dual-VG model was denoted as DB model, and dual-KO was denoted as BL model. The notation was changed to match Seki et al. (2021).</p>
+
+<h2>Reference</h2>
+
+<ul>
+<li>Brooks, R.H., and A.T. Corey (1964): Hydraulic properties of porous media. Hydrol. Paper 3. Colorado State Univ., Fort Collins, CO, USA.</li>
+<li>Durner, W. (1994): Hydraulic conductivity estimation for soils with heterogeneous pore structure. <i>Water Resour. Res.</i>, 30(2): 211-223. <a href="http://dx.doi.org/10.1029/93WR02676">doi:10.1029/93WR02676</a></li>
+<li>Fredlund, D.G. and Xing, A. (1994): Equations for the soil-water characteristic curve. <i>Can. Geotech. J.</i>, 31: 521-532. <a href="http://dx.doi.org/10.1139/t94-061">doi:10.1139/t94-061</a></li>
+<li>Kosugi, K. (1996): Lognormal distribution model for unsaturated soil hydraulic properties. <i>Water Resour. Res.</i> 32: 2697-2703. <a href="http://dx.doi.org/10.1029/96WR01776">doi:10.1029/96WR01776</a></li>
+<li>Seki, K. (2007): SWRC fit - a nonlinear fitting program with a water retention curve for soils having unimodal and bimodal pore structure. <i>Hydrol. Earth Syst. Sci. Discuss.</i>, 4: 407-437. <a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a></li>
+<li>Seki, K., N. Toride  and M.Th. van Genuchten (2021): Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168. <a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a></li>
+
+<li>van Genuchten, M. (1980): A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. <i>Soil Sci. Soc. Am. J.</i> 44:892-898. <a href="https://doi.org/10.2136/sssaj1980.03615995004400050002x">doi:10.2136/sssaj1980.03615995004400050002x</a></li>
+</ul>
+
+<hr>
+<p>Persistent URL of this page is <a href="http://purl.org/net/swrc/model.html">http://purl.org/net/swrc/model.html</a>.
+</p>
+<p>
+Author: <a href="http://www2.toyo.ac.jp/~seki_k/en/">Katsutoshi Seki</a>
+</p>
+<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
+</body>
+</html>

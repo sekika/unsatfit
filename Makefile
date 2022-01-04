@@ -1,0 +1,12 @@
+all:
+
+up:
+	rsync -avz --delete --exclude swrcfit/data/__pycache__ --exclude swrcfit/img/swrc.png --exclude swrcfit/img/*.json --exclude swrcfit/data/server.txt -e ssh ./ swatch:unsatfit/
+	ssh swatch "make swrc"
+
+format:
+	cd unsatfit; autopep8 -i unsatfit.py
+	cd swrcfit; autopep8 -i *.py
+	cd swrcfit/data; autopep8 -i *.py
+	- flake8 unsatfit/unsatfit.py | grep -v "E501"
+	- flake8 swrcfit/index.py | grep -v "E501"

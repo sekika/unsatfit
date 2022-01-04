@@ -1,0 +1,9 @@
+DirectoryIndex index.py
+Options +ExecCGI
+AddHandler cgi-script py
+
+RewriteEngine On
+RewriteRule index-(.*).html ?lang=$1 [PT]
+
+# To respond immeditely before drawing figure
+SetEnvIf Request_Method "POST" no-gzip
