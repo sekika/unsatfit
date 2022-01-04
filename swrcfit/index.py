@@ -407,11 +407,11 @@ def calc(f, field):
                     w1 = 1-w1
                     f.fitted = (*q, w1, hm1, s1, hm2, s2)
                 f.fitted_show = f.fitted
-            f.setting = model('DK')
-            f.par = (*par_theta, 'w<sub>1</sub>', 'hm<sub>1</sub>',
-                     '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
-            f2 = copy.deepcopy(f)
-            result.append(f2)
+        f.setting = model('DK')
+        f.par = (*par_theta, 'w<sub>1</sub>', 'hm<sub>1</sub>',
+            '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
+        f2 = copy.deepcopy(f)
+        result.append(f2)
 
     # Show result
     error = False
