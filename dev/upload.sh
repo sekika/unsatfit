@@ -25,6 +25,6 @@ passme python
 twine upload --skip-existing dist/*
 
 # Uninstall unsatfit
-sudo python3 -m pip uninstall unsatfit
+sudo /usr/bin/python3 -m pip uninstall unsatfit
 echo "Upload completed. Installed version uninstalled. Wait for a while and run"
-echo "sudo python3 -m pip install unsatfit"
+echo "sudo /usr/bin/python3 -m pip install unsatfit"
