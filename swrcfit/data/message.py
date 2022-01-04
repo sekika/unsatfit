@@ -121,6 +121,10 @@ def message(lang, ID, URL='./'):
                 + '<li><a href="http://www.iswc.cas.cn/sourcedb_iswc_cas/zw/zjrc/200910/t20091020_2584555.html">Dr. Li Wang</a> corrected Chinese.</li></ul>'
         return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="http://www.ars.usda.gov/Services/docs.htm?docid=8967">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
             + '<li>Acknowledgement for translation is shown in each language page. I speak only English and Japanese. Help in language is always welcome.</li></ul>'
+    if ID == 'question':
+        if lang == 'ja':
+            return '<h2>質問</h2><p>質問は<a href="https://github.com/sekika/unsatfit/issues">unsatfitリポジトリのissues</a>に送ってください。GitHub のアカウントを取得しサインインして、緑色の「New Issue」ボタンを押して下さい。日本語での質問も可能です。コメントで返信します。未公開のデータに関する質問など、質問を公開出来ない場合には、メールで質問をしてください。メールアドレスは<a href="https://doi.org/10.1002/vzj2.20168">この論文</a>にあります。</p>'
+        return '<h2>Question</h2><p>Please send questions and bug reports to <a href="https://github.com/sekika/unsatfit/issues">issues of unsatfit repository</a>. Get GitHub account, sign in, and press the green "New Issue" button. I will reply by comment. It is preferable to send your question publicly this way, because other people having the same question can find answer on the web. However, if your question is confidential, for example when it includes your unpublished data, please contact me by email. You can find my email address in <a href="https://doi.org/10.1002/vzj2.20168">this paper</a>.</p>'
     if ID == 'format':
         if lang == 'ja':
             return '<h2>入力データ形式</h2>\n<ul>\n<li>サンプルデータのように、測定値の組は (h, &theta;) をこの順番に入力する。\n' \

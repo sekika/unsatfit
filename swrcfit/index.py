@@ -676,6 +676,7 @@ def printhelp(lang):
     print(message(lang, 'format'))
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
+    print(message(lang, 'question'))
 
 
 def sample():
