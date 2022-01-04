@@ -1,6 +1,6 @@
 # Unsat Fit
 
-Unsat Fit (unsatfit) is a Python library for optimizing parameters for functions of soil hydraulic properties (water retention function and unsaturated hydraulic conductivity function)
+Unsat Fit (unsatfit) is a Python library for optimizing parameters for functions of soil hydraulic properties (water retention function and unsaturated hydraulic conductivity function).
 
 - Theory: https://doi.org/10.1002/vzj2.20168
 - Document: https://sekika.github.io/unsatfit/
