@@ -233,7 +233,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
 
-<p>S<a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Seki et al. (2021) の Figure 1</a> には、熊本黒ボク土のバイモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
+<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Seki et al. (2021) の Figure 1</a> には、熊本黒ボク土のバイモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
 <h2>CHモデル</h2>
 
@@ -248,7 +248,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
 
-<p>S<a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Figure 1 in Seki et al. (2021) の Figure 2</a> には、浜岡砂丘砂のCHモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
+<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2021) の Figure 2</a> には、浜岡砂丘砂のCHモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
 <h2>透水性関数</h2>
 

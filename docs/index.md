@@ -13,6 +13,7 @@ python3 -m pip install unsatfit
 ## Sample code
 
 ```
+import unsatfit
 f = unsatfit.Fit() # Create instance for fitting
 f.set_model('vg', const=[[10, 1]]) # Set model and constant parameters
 f.swrc = (h, theta) # Data of soil water retention
