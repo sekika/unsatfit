@@ -1,6 +1,6 @@
 # unsatfit
 
-unsatfit is a Python library for optimizing parameters for [functions of soil hydraulic properties](https://doi.org/10.1002/vzj2.20168) (water retention function and unsaturated hydraulic conductivity function).
+unsatfit is a Python library for optimizing parameters of [functions of soil hydraulic properties](https://doi.org/10.1002/vzj2.20168) (water retention function and unsaturated hydraulic conductivity function).
 
 - [Document](https://sekika.github.io/unsatfit/)
 
