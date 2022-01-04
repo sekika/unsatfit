@@ -99,13 +99,11 @@ def message(lang, ID, URL='./'):
             return '<h2>引用</h2>\n<p>SWRC Fit を使った研究成果を公表するときには、この論文を引用して下さい。\n' \
                 + '<a href="https://scholar.google.com/citations?view_op=view_citation&hl=ja&user=Gs_ABawAAAAJ&citation_for_view=Gs_ABawAAAAJ:9yKSN-GCB0IC">多くの研究で使われています。</a></p>' \
                 + '<ul><li>' + message(lang, 'seki2007') + '</li></ul>' \
-                + '<h2>プログラム</h2><p><a href="http://swrcfit.sourceforge.net/jp/">Octave で書かれたオフラインの SWRC Fit</a> は Python のプログラム unsatfit で完全に書き換えられました。' \
-                + 'Perl で書かれた Web バージョンは unsatfit を利用する Python のプログラムで書き換えられ、名前は SWRC Fit のままです。</p>'
+                + '<h2>プログラム</h2><p>SWRC Fit は <a href="https://sekika.github.io/unsatfit/">unsatfit</a> のライブラリを使って計算をしています。'
         return '<h2>Citation</h2>\n<p><p>Please cite this paper when you publish your work using this program, SWRC Fit.\n' \
             + '<a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Gs_ABawAAAAJ&citation_for_view=Gs_ABawAAAAJ:9yKSN-GCB0IC">Researches conducted with SWRC Fit</a>.</p>'  \
             + '<ul><li>' + message(lang, 'seki2007') + '</li></ul>' \
-            + '<h2>Program</h2><p><a href="http://swrcfit.sourceforge.net/">Offline version of SWRC Fit written with Octave</a> was completely rewritten with unsatfit written in Python. ' \
-            + 'The web version written in Perl was rewriten in Python which uses unsatfit and the name does not change from SWRC Fit.</p>'
+            + '<h2>Program</h2><p>SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.'
     if ID == 'ack':
         if lang == 'ja':
             return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="http://www.ars.usda.gov/Services/docs.htm?docid=8967">UNSODA データベース</a>から取得しました。</ul>'
@@ -221,8 +219,8 @@ def message(lang, ID, URL='./'):
         return 'Please wait ...'
     if ID == 'footer':
         if lang == 'ja':
-            return '<a href="?lang=ja">SWRC Fit</a> with unsatfit version VER （作成者：AUTHOR）が ARCH の Python PYV で動いています。'
-        return '<a href="?lang=' + lang + '">SWRC Fit</a> with unsatfit version VER created by AUTHOR running with Python PYV on ARCH.'
+            return '<a href="?lang=ja">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER （作成者：AUTHOR）が ARCH の Python PYV で動いています。'
+        return '<a href="?lang=' + lang + '">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER created by AUTHOR running with Python PYV on ARCH.'
     if ID == 'author':
         if lang == 'ja':
             return '<a href="http://www2.toyo.ac.jp/~seki_k/">関勝寿</a>'

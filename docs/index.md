@@ -30,6 +30,6 @@ f.contour('a', 'm')  # Draw contour of RMSE for a and m
 
 ## SWRC Fit
 
-SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function.
+SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function. Source code is in the [repository](https://github.com/sekika/unsatfit/tree/main/swrcfit).
 
 - [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)
