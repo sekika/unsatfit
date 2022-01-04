@@ -106,7 +106,7 @@ def message(lang, ID, URL='./'):
             + '<h2>Program</h2><p>SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.'
     if ID == 'ack':
         if lang == 'ja':
-            return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="http://www.ars.usda.gov/Services/docs.htm?docid=8967">UNSODA データベース</a>から取得しました。</ul>'
+            return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="http://www.ars.usda.gov/Services/docs.htm?docid=8967">UNSODA データベース</a>から取得しました。<li>「土壌の物理性」で<a href="https://www.jstage.jst.go.jp/article/jssoilphysics/148/0/148_45/_article/-char/ja/">お薦めして</a>いただきました。</ul>'
         if lang == 'es':
             return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="http://www.ars.usda.gov/Services/docs.htm?docid=8967">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
                 + '<li><a href="https://scholar.google.co.jp/citations?user=a842WTkAAAAJ">Dr. David Moret-Fernandez</a> corrected Spanish.</li></ul>'
