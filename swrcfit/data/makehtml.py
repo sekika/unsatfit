@@ -244,11 +244,11 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 ''')
     f.write(bitable(ch))
     f.write('''
-<p>サンプルデータ sand (UNSODA 4440) のSWRCを示す。上記のCHモデルと、比較のためにVGモデルを示している。CHモーダルモデルではθ<sub>r</sub> = 0 と固定し、VGモデルではすべてのパラメータを自由変数としている。VGモデルではθ<sub>r</sub>=0.074と最適化された。</p>
+<p>サンプルデータ sand (UNSODA 4440) のSWRCを示す。上記のCHモデルと、比較のためにVGモデルを示している。CHモデルではθ<sub>r</sub> = 0 と固定し、VGモデルではすべてのパラメータを自由変数としている。VGモデルではθ<sub>r</sub>=0.074と最適化された。</p>
 
 <div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
 
-<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2021) の Figure 2</a> には、浜岡砂丘砂のCHモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
+<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2021) の Figure 2</a> には、浜岡砂丘砂のCHモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
 <h2>透水性関数</h2>
 
