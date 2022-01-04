@@ -321,6 +321,8 @@ class Fit:
         y = t / max(t)
         hbi = sum(y > 0.95 + min(y) * 0.05)
         hli = sum(y > 0.15 + min(y)*0.85)
+        if hbi == hli:
+            hli = hli + 1
         if hbi > hli:
             hbi = hbi - 1
             hli = hbi + 1
@@ -328,6 +330,10 @@ class Fit:
         if hb == 0:
             hb = x[2] / 10
         l = -math.log(y[hli]/y[hbi]) / math.log(x[hli]/hb)
+        if l < 0.1:
+            l = 0.1
+        if l > 10:
+            l = 10
         f = Fit()
         f.set_model('bc', const=[[1, 1], [2, 0]])
         f.swrc = (x, y)
