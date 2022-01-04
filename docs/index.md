@@ -4,7 +4,11 @@ unsatfit is a Python library for optimizing parameters of [functions of soil hyd
 
 ## Install
 
+```
 python3 -m pip install unsatfit
+```
+
+[PyPI Project page](https://pypi.org/project/unsatfit/)
 
 ## Sample code
 
