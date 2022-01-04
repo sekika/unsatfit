@@ -6,6 +6,6 @@ unsatfit is a Python library for optimizing parameters for [functions of soil hy
 
 ## SWRC Fit
 
-SWRC Fit uses this library and calculates parameters for water retention function.
+SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function.
 
 - [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)
