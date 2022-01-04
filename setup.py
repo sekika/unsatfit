@@ -22,7 +22,7 @@ setup(
     description='Fit soil water retention and unsaturated hydraulic conductivity functions',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/sekika/unsatfit',
+    url='https://sekika.github.io/unsatfit/',
     author='Katsutoshi Seki',
     license='MIT',
     classifiers=[
