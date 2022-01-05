@@ -225,17 +225,17 @@ class Fit:
             3, wbc2], [4, hb1], [5, l1f], [6, hb2], [7, l2f]])
         f.ini = (ks, 0.5, 1, 1)
         f.optimize()
-        f.test_confirm('dual-BC', 93080700)
+        f.test_confirm('dual-BC', 93080695)
         f.set_model('vg2', const=[[1, qs], [2, 0], [3, wvg2], [
             4, a1], [5, m1], [6, a2], [7, m2], [10, 1]])
         f.ini = (ks, 0.5, 2)
         f.optimize()
-        f.test_confirm('dual-VG', 90182793)
+        f.test_confirm('dual-VG', 90182749)
         f.set_model('vgfs', const=[[1, qs], [2, 0], [3, qa], [
             4, fsa], [5, fsm], [6, 10**7], [9, 1], [10, 2]])
         f.ini = (ks, 0.5)
         f.optimize()
-        f.test_confirm('FS', 92931604)
+        f.test_confirm('FS', 92931606)
         f.set_model('ln2', const=[[1, qs], [2, 0], [3, wln2], [4, hm1], [
             5, s1], [6, hm2], [7, s2], [9, 2], [11, 1.5]])
         f.ini = (ks, 1)
@@ -245,7 +245,7 @@ class Fit:
             4, a1], [5, m1], [6, hb2], [7, l2], [10, 1]])
         f.ini = (ks, 0.5, 1)
         f.optimize()
-        f.test_confirm('VG-BC', 98032247)
+        f.test_confirm('VG-BC', 98032246)
 
     def test_confirm(self, case, expect):
         result = int((self.r2_ht + self.r2_ln_hk) * 50000000)
