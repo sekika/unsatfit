@@ -211,44 +211,44 @@ class Fit:
         f.set_model('vg', const=[[7, 1]])
         f.ini = (qs, 0, a, m, ks, 2, 1)
         f.optimize()
-        f.test_confirm('VG', 96564814)
+        f.test_confirm('VG', 965648)
         f.set_model('ln', const=[[1, qs], [2, 0], [8, 1]])
         f.ini = (hm, s, ks, 5, 1)
         f.optimize()
-        f.test_confirm('LN', 94510249)
+        f.test_confirm('LN', 945102)
         f.set_model('bc2', const=[[1, qs], [2, 0], [
             3, hb], [4, hc], [5, l1], [6, l2]])
         f.ini = (ks, 0.5, 1, 1)
         f.optimize()
-        f.test_confirm('dual-BC-CH', 95816736)
+        f.test_confirm('dual-BC-CH', 958167)
         f.set_model('bc2f', const=[[1, qs], [2, 0], [
             3, wbc2], [4, hb1], [5, l1f], [6, hb2], [7, l2f]])
         f.ini = (ks, 0.5, 1, 1)
         f.optimize()
-        f.test_confirm('dual-BC', 93080695)
+        f.test_confirm('dual-BC', 930806)
         f.set_model('vg2', const=[[1, qs], [2, 0], [3, wvg2], [
             4, a1], [5, m1], [6, a2], [7, m2], [10, 1]])
         f.ini = (ks, 0.5, 2)
         f.optimize()
-        f.test_confirm('dual-VG', 90182749)
+        f.test_confirm('dual-VG', 901827)
         f.set_model('vgfs', const=[[1, qs], [2, 0], [3, qa], [
             4, fsa], [5, fsm], [6, 10**7], [9, 1], [10, 2]])
         f.ini = (ks, 0.5)
         f.optimize()
-        f.test_confirm('FS', 92931606)
+        f.test_confirm('FS', 929316)
         f.set_model('ln2', const=[[1, qs], [2, 0], [3, wln2], [4, hm1], [
             5, s1], [6, hm2], [7, s2], [9, 2], [11, 1.5]])
         f.ini = (ks, 1)
         f.optimize()
-        f.test_confirm('dual-LN', 99577965)
+        f.test_confirm('dual-LN', 995779)
         f.set_model('vgbc', const=[[1, qs], [2, 0], [3, wvg2], [
             4, a1], [5, m1], [6, hb2], [7, l2], [10, 1]])
         f.ini = (ks, 0.5, 1)
         f.optimize()
-        f.test_confirm('VG-BC', 98032246)
+        f.test_confirm('VG-BC', 980322)
 
     def test_confirm(self, case, expect):
-        result = int((self.r2_ht + self.r2_ln_hk) * 50000000)
+        result = int((self.r2_ht + self.r2_ln_hk) * 500000)
         assert expect == result, 'Test failed for {0}. Expected: {1} Actual: {2}\nResult: {3}'.format(
             case, expect, result, self.message)
 
