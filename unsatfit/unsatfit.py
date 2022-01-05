@@ -437,7 +437,7 @@ class Fit:
     def linear_regress(self, x, y):
         return np.dot(x, y)/(x**2).sum()
 
-# Definition of water retention and hydraulic conducdtivity functions
+# Definition of water retention and hydraulic conductivity functions
 
     # Brooks and Corey model
 
