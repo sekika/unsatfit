@@ -547,6 +547,10 @@ def printhead(lang, f):
         return false;
     }}
   function a(){{'''.format(lang, message(lang, 'css'), mathjax))
+    print('if(document.getElementById("sample").value == "clear"){')
+    print('  document.getElementById("input").value = "";')
+    print('  localStorage.removeItem("{0}");'.format(STORAGEPREFIX + 'input'))
+    print('} else ', end="")
     for ID in f.sampledata:
         d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
@@ -589,6 +593,7 @@ def printform(lang, getlang, f):
         unsoda = escape(d['UNSODA'])
         texture = escape(d['Texture'])
         print('    <option value="{0}">{1}'.format(unsoda, texture))
+    print('  <option value="clear">*** Clear input ***')
     print('''  </select>
 <div><textarea name="input" id="input" rows="15" cols="27" wrap="off"></textarea></div>
 </td></tr>
