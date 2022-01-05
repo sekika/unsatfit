@@ -2,8 +2,11 @@
 
 unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties (water retention function and unsaturated hydraulic conductivity function). It was developed to write the following paper, and unsatfit determined the parameters of hydraulic properties and drew figures in this paper.
 
-- Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168.
+Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168.
 [https://doi.org/10.1002/vzj2.20168](https://doi.org/10.1002/vzj2.20168)
+
+* Author: [Katsutoshi Seki](https://scholar.google.com/citations?user=Gs_ABawAAAAJ)
+* License: MIT License
 
 ## Install
 
