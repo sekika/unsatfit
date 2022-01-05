@@ -8,6 +8,7 @@ from sample import sample
 
 PATH = os.getcwd() + '/../'
 
+
 def fig():
     f = open(PATH + 'fig.html', 'w', encoding='UTF-8')
     f.write('''
@@ -36,7 +37,7 @@ This is a list of figures produced by <a href="./">SWRC Fit</a>. Sample data pro
         soil = d['Soil sample']
         texture = d['Texture']
         f.write('<h2>{0} : {1}</h2>\n<p><div align="center"><img src="img/{2}.png" alt="Sample output"></div></p>'.format(soil, texture, id))
-    
+
     f.write('''
 <hr>
 <p>Persistent URL of this page is <a href="http://purl.org/net/swrc/fig.html">http://purl.org/net/swrc/fig.html</a>.

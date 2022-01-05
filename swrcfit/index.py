@@ -411,7 +411,7 @@ def calc(f, field):
                 f.fitted_show = f.fitted
         f.setting = model('DK')
         f.par = (*par_theta, 'w<sub>1</sub>', 'hm<sub>1</sub>',
-            '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
+                 '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
         f2 = copy.deepcopy(f)
         result.append(f2)
 
@@ -678,7 +678,7 @@ def printhelp(lang, f):
     print(message(lang, 'news'))
     print(message(lang, 'format'))
     print('<h2>{0}</h2>'.format(message(lang, 'sample')))
-    id = list(f.sampledata)[random.randint(0,7)]
+    id = list(f.sampledata)[random.randint(0, 7)]
     texture = f.sampledata[id]['Texture']
     soil = f.sampledata[id]['Soil sample']
     print('<ul><li>{0}<li>Texture: {1}<li><a href="fig.html">List of figures</a></ul>\n<p><div align="center"><img src="img/{2}.png" alt="Sample output"></div></p>'.format(soil, texture, id))
