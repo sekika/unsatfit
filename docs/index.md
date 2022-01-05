@@ -5,9 +5,6 @@ unsatfit is a Python library for optimizing parameters of functions of soil hydr
 Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168.
 [https://doi.org/10.1002/vzj2.20168](https://doi.org/10.1002/vzj2.20168)
 
-* Author: [Katsutoshi Seki](https://scholar.google.com/citations?user=Gs_ABawAAAAJ)
-* License: MIT License
-
 ## Install
 
 ```
@@ -42,3 +39,7 @@ SWRC Fit is a web interface which uses unsatfit and determines parameters for wa
 - [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)
 
 [GNU Octave version of SWRC Fit](https://github.com/sekika/swrcfit/blob/master/doc/en/README.md) is no longer maintained but the code is available.
+
+## About unsatfit
+* Author: [Katsutoshi Seki](https://scholar.google.com/citations?user=Gs_ABawAAAAJ)
+* License: MIT License
