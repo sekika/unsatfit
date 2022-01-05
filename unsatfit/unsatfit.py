@@ -423,7 +423,7 @@ class Fit:
         n2 = l2+1
         m2 = 1-1/n2
         f.set_model('vg2ch', const=[[1, 1], [2, 0], [
-                    3, w], [4, a], [6, l2], [9, 1]])
+                    3, w], [4, a], [6, m2], [9, 1]])
         f.ini = (m1)
         f.optimize()
         m1, = f.fitted
