@@ -4,8 +4,51 @@
 import os
 import sys
 from model import model
+from sample import sample
 
 PATH = os.getcwd() + '/../'
+
+def fig():
+    f = open(PATH + 'fig.html', 'w', encoding='UTF-8')
+    f.write('''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sample output of SWRC Fit</title>
+  <link rel="stylesheet" type="text/css" href="swrc.css">
+</head>
+<body>
+<h1>Sample output of SWRC Fit</h1>
+<p>
+This is a list of figures produced by <a href="./">SWRC Fit</a>. Sample data provided in the pulldown menu were analyzed with the default setting.
+<ul>
+<li>Fit &theta;<sub>r</sub> for unimodal and &theta;<sub>r</sub> = 0 for bimodal.
+<li>Fit &theta;<sub>s</sub>.
+</ul>
+<p>One of the figures is shown randomly at the page of SWRC Fit. Note that selected models are different.
+</p>
+''')
+    data = sample()
+    for id in data:
+        d = data[id]
+        soil = d['Soil sample']
+        texture = d['Texture']
+        f.write('<h2>{0} : {1}</h2>\n<p><div align="center"><img src="img/{2}.png" alt="Sample output"></div></p>'.format(soil, texture, id))
+    
+    f.write('''
+<hr>
+<p>Persistent URL of this page is <a href="http://purl.org/net/swrc/fig.html">http://purl.org/net/swrc/fig.html</a>.
+</p>
+<p>
+Author: <a href="http://www2.toyo.ac.jp/~seki_k/en/">Katsutoshi Seki</a>
+</p>
+<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
+</body>
+</html>
+''')
+    f.close()
 
 
 def unitable(models):
@@ -282,6 +325,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 def main():
     """Make html"""
+    fig()
     english()
     japanese()
 

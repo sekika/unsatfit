@@ -1,5 +1,5 @@
 UNSODA = 1270
-Soil sample = Superior, AZ, USA
+Soil sample = Superior, AZ, USA (UNSODA 1270)
 Texture = Tuffaceous Rock
 Author = Rasmussen et al.
 
