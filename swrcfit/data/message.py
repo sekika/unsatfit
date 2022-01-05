@@ -94,6 +94,10 @@ def message(lang, ID, URL='./'):
         if lang == 'fr':
             return 'Attendez SVP ...'
         return 'Please wait ...'
+    if ID == 'sample':
+        if lang == 'ja':
+            return '出力例'
+        return 'Sample output'
     if ID == 'help':
         if lang == 'ja':
             return '<h2>引用</h2>\n<p>SWRC Fit を使った研究成果を公表するときには、この論文を引用して下さい。\n' \

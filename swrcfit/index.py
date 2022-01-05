@@ -79,8 +79,8 @@ def main():
     f.color_marker = 'blue'
     f.linecolors = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
 
-    data = sample()
-    printhead(lang, f.inputtext, data)
+    f.sampledata = sample()
+    printhead(lang, f)
     print('<body>')
     d = dataset(f.inputtext)
     if field.getfirst('button') == 'Clear setting':
@@ -89,25 +89,25 @@ def main():
             key = STORAGEPREFIX + i
             print(
                 '<script>localStorage.removeItem("{0}");</script>'.format(key))
-        printform(lang, getlang, data)
-        printhelp(lang)
+        printform(lang, getlang, f)
+        printhelp(lang, f)
     else:
         if d['empty']:
-            printform(lang, getlang, data)
-            printhelp(lang)
+            printform(lang, getlang, f)
+            printhelp(lang, f)
         elif f.selectedmodel == []:
-            printform(lang, getlang, data)
+            printform(lang, getlang, f)
             print('<p><strong>Please select at least one model.</strong></p>')
-            printhelp(lang)
+            printhelp(lang, f)
         elif not d['valid']:
-            printform(lang, getlang, data)
+            printform(lang, getlang, f)
             error = escape(d['message']).replace(
                 'Error in input data', message(lang, 'inputerror'))
             if d['message'] == 'All h values are same.':
                 error = message(lang, 'sameh')
             print(
                 '<p><strong>{0}</strong></p><p>{1}</p>'.format(error, message(lang, 'readformat')))
-            printhelp(lang)
+            printhelp(lang, f)
         else:
             f.swrc = h, theta = d['data']  # Data of soil water retention
             f.data = d
@@ -527,7 +527,7 @@ def getoptiontheta(field, qsin, bimodal):
     return con_q, ini_q, par_theta
 
 
-def printhead(lang, inputtext, data):
+def printhead(lang, f):
     mathjax = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
     print(r'''<!DOCTYPE html>
 <html lang="{0}">
@@ -545,8 +545,8 @@ def printhead(lang, inputtext, data):
         return false;
     }}
   function a(){{'''.format(lang, message(lang, 'css'), mathjax))
-    for ID in data:
-        d = data[ID]
+    for ID in f.sampledata:
+        d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
         text = "\\n".join(escape(d['text']).splitlines())
         print(
@@ -557,7 +557,7 @@ def printhead(lang, inputtext, data):
     print('  }</script></head>', flush=True)
 
 
-def printform(lang, getlang, data):
+def printform(lang, getlang, f):
     url = './'
     print('<p>{0}</p>\n<h1>SWRC Fit</h1>\n<p>{1}</p>\n<form action="{2}" method="post">'.format(
         message(lang, 'langbar', url), message(lang, 'description'), url), flush=True)
@@ -582,8 +582,8 @@ def printform(lang, getlang, data):
 <p>{2}<br>
 <select name="sample" id="sample" onChange="a()">'''.format(message(lang, 'figoption'), message(lang, 'onemodel'), message(lang, 'swrc')))
     print('    <option value="">{0}'.format(message(lang, 'selectsample')))
-    for ID in data:
-        d = data[ID]
+    for ID in f.sampledata:
+        d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
         texture = escape(d['Texture'])
         print('    <option value="{0}">{1}'.format(unsoda, texture))
@@ -671,9 +671,15 @@ def loadtext(id):
 </script>'''.format(STORAGEPREFIX, id))
 
 
-def printhelp(lang):
+def printhelp(lang, f):
+    import random
     print(message(lang, 'news'))
     print(message(lang, 'format'))
+    print('<h2>{0}</h2>'.format(message(lang, 'sample')))
+    id = list(f.sampledata)[random.randint(0,7)]
+    texture = f.sampledata[id]['Texture']
+    soil = f.sampledata[id]['Soil sample']
+    print('<ul><li>{0}<li>Texture: {1}</ul><p><div align="center"><img src="img/{2}.png" alt="Sample output"></div></p>'.format(soil, texture, id))
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
     print(message(lang, 'question'))
