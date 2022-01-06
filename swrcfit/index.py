@@ -18,183 +18,9 @@ STORAGEPREFIX = 'swrc_'
 os.environ['MPLCONFIGDIR'] = WORKDIR
 
 
-def main():
-    """SWRC Fit to run as CGI"""
-    import cgi
-    from io import TextIOWrapper
-    from os import getenv
-    import unsatfit
-    f = unsatfit.Fit()
-
-    if DEBUG:
-        import cgitb
-        cgitb.enable()
-
-    # Change encoding of stdout to utf-8
-    # It is required becaue CGI script runs as another user and may not
-    # print utf-8 encoded text
-    sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-    # Respond HTTP header
-    print('Content-Type: text/html')
-    print('Cache-Control: public\n')
-
-    # Get input strings
-    field = cgi.FieldStorage()
-    getlang = field.getfirst('lang', 'none')
-    f.inputtext = field.getfirst('input', '')
-
-    # Get language setting
-    LANGUAGES = message('', 'list')
-    lang = getenv('HTTP_ACCEPT_LANGUAGE')
-    if lang is None:
-        lang = []
-    else:
-        lang = lang.split(',')
-    lang.append('en')
-    for i in lang:
-        if i[:2] in LANGUAGES:
-            lang = i[:2]
-            break
-    if getlang in LANGUAGES:
-        lang = getlang
-    f.lang = lang
-    f.getlang = getlang
-
-    # Get model selection
-    f.selectedmodel = []
-    for m in model('all'):
-        if field.getfirst(m, '') == 'on':
-            f.selectedmodel.append(m)
-    f.onemodel = (field.getfirst('onemodel', '') == 'on')
-
-    # Figure options
-    f.show_fig = False
-    f.save_fig = True
-    f.filename = 'img/swrc.png'
-    f.fig_width = 5.5  # inch
-    f.fig_height = 4.5
-    f.top_margin = 0.05
-    f.bottom_margin = 0.12
-    f.left_margin = 0.15  # Space for label is needed
-    f.right_margin = 0.05
-    f.legend_loc = 'upper right'
-    f.color_marker = 'blue'
-    f.linecolors = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
-
-    f.sampledata = sample()
-    printhead(lang, f)
-    print('<body>')
-    d = dataset(f.inputtext)
-
-    if field.getfirst('button') == 'Clear setting':
-        # Clear field storage
-        for i in model('savekeys'):
-            key = STORAGEPREFIX + i
-            print(
-                '<script>localStorage.removeItem("{0}");</script>'.format(key))
-        printform(lang, getlang, f)
-        printhelp(lang, f)
-    else:
-        if d['empty']:
-            printform(lang, getlang, f)
-            printhelp(lang, f)
-        elif f.selectedmodel == []:
-            printform(lang, getlang, f)
-            print('<p><strong>Please select at least one model.</strong></p>')
-            printhelp(lang, f)
-        elif not d['valid']:
-            printform(lang, getlang, f)
-            error = escape(d['message']).replace(
-                'Error in input data', message(lang, 'inputerror'))
-            if d['message'] == 'All h values are same.':
-                error = message(lang, 'sameh')
-            print(
-                '<p><strong>{0}</strong></p><p>{1}</p>'.format(error, message(lang, 'readformat')))
-            printhelp(lang, f)
-        else:
-            f.swrc = h, theta = d['data']  # Data of soil water retention
-            f.data = d
-            # Get options
-            f.cqs = field.getfirst('cqs', '')
-            f.cqr = field.getfirst('cqr', '')
-            f.qsin = field.getfirst('qsin', str(max(theta)))
-            f.qrin = field.getfirst('qrin', '')
-            # Save field storage to local storage
-            for i in model('savekeys'):
-                value = '//'.join(field.getfirst(i, 'off').splitlines())
-                if i in ['qsin', 'qrin', 'sigmax']:
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        value = 'off'
-                    if value == 'off':
-                        if i == 'qsin':
-                            value = ''
-                        if i == 'qrin':
-                            value = 0
-                        if i == 'sigmax':
-                            value = 2.5
-                    else:
-                        if value <= 0:
-                            value = 0
-                        if value < 1 and i == 'sigmax':
-                            value = 1
-                    value = str(value)
-                key = STORAGEPREFIX + i
-                print(
-                    '<script>localStorage.setItem("{0}", "{1}");</script>'.format(key, value))
-            calc(f)   # Start main calculation
-    # Print footer
-    import platform
-    footer = message(lang, "footer")
-    footer = footer.replace('VER', f.version())
-    footer = footer.replace('AUTHOR', message(lang, 'author'))
-    pyver = str(sys.version_info.major) + '.' + \
-        str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
-    footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
-    print('<hr>\n<p>{0}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>'.format(footer), flush=True)
-    return
-
-
-def calc(f):
-    """Main calculation"""
+def swrc(f):
     import copy
-    lang = f.lang
-    getlang = f.getlang
-    d = f.data
     result = []
-    # Note
-    note = [
-        'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
-    note.append(
-        'Effective saturation \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\). Therefore &theta; = &theta;<sub>r</sub> + (&theta;<sub>s</sub>-&theta;<sub>r</sub>)S<sub>e</sub>.')
-
-    # Show process
-    if getlang in message('', 'list'):
-        url = './?lang='+lang
-    else:
-        url = './'
-    print(
-        '<h1><a href="{0}">SWRC Fit</a> - {1}</h1>'.format(url, message(lang, 'result')))
-    print('<ul>')
-    for i in sorted(d):
-        if i not in ['empty', 'valid', 'text', 'data']:
-            if i == 'doi':
-                print(
-                    '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
-            else:
-                print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
-    for i in getoptiontheta(f, True)[0]:
-        bi = ''
-        if f.cqr == 'both' and i[0] == 2:
-            bi = ' for bimodal models'
-        par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0]-1]
-        print('<li>Constant: {0} = {1}{2}'.format(par, i[1], bi))
-    print('</ul>')
-    print(
-        '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
-
     # Fixed parameters
     con_q, ini_q, par_theta = getoptiontheta(f, False)
 
@@ -223,15 +49,7 @@ def calc(f):
     f.setting = model('VG')
     f.par = (*par_theta, '&alpha;', 'n')
     if not f.success:
-        print(
-            '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
-        print('<p><strong>Optimization failed.</strong></p>')
-        f.data_only = True
-        f.plot()
-        print('<p><a href="{0}"></a></p>')
-        showdata(f)
-        return
-
+        return []
     if 'VG' in f.selectedmodel:
         f2 = copy.deepcopy(f)
         result.append(f2)
@@ -421,8 +239,193 @@ def calc(f):
                  '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
         f2 = copy.deepcopy(f)
         result.append(f2)
+    return result
 
+
+def main():
+    """SWRC Fit to run as CGI"""
+    import cgi
+    from io import TextIOWrapper
+    from os import getenv
+    import unsatfit
+    f = unsatfit.Fit()
+
+    if DEBUG:
+        import cgitb
+        cgitb.enable()
+
+    # Change encoding of stdout to utf-8
+    # It is required becaue CGI script runs as another user and may not
+    # print utf-8 encoded text
+    sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+    # Respond HTTP header
+    print('Content-Type: text/html')
+    print('Cache-Control: public\n')
+
+    # Get input strings
+    field = cgi.FieldStorage()
+    getlang = field.getfirst('lang', 'none')
+    f.inputtext = field.getfirst('input', '')
+
+    # Get language setting
+    LANGUAGES = message('', 'list')
+    lang = getenv('HTTP_ACCEPT_LANGUAGE')
+    if lang is None:
+        lang = []
+    else:
+        lang = lang.split(',')
+    lang.append('en')
+    for i in lang:
+        if i[:2] in LANGUAGES:
+            lang = i[:2]
+            break
+    if getlang in LANGUAGES:
+        lang = getlang
+    f.lang = lang
+    f.getlang = getlang
+
+    # Get model selection
+    f.selectedmodel = []
+    for m in model('all'):
+        if field.getfirst(m, '') == 'on':
+            f.selectedmodel.append(m)
+    f.onemodel = (field.getfirst('onemodel', '') == 'on')
+
+    # Figure options
+    f.show_fig = False
+    f.save_fig = True
+    f.filename = 'img/swrc.png'
+    f.fig_width = 5.5  # inch
+    f.fig_height = 4.5
+    f.top_margin = 0.05
+    f.bottom_margin = 0.12
+    f.left_margin = 0.15  # Space for label is needed
+    f.right_margin = 0.05
+    f.legend_loc = 'upper right'
+    f.color_marker = 'blue'
+    f.linecolors = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
+
+    f.sampledata = sample()
+    printhead(lang, f)
+    print('<body>')
+    d = dataset(f.inputtext)
+
+    if field.getfirst('button') == 'Clear setting':
+        # Clear field storage
+        for i in model('savekeys'):
+            key = STORAGEPREFIX + i
+            print(
+                '<script>localStorage.removeItem("{0}");</script>'.format(key))
+        printform(lang, getlang, f)
+        printhelp(lang, f)
+    else:
+        if d['empty']:
+            printform(lang, getlang, f)
+            printhelp(lang, f)
+        elif f.selectedmodel == []:
+            printform(lang, getlang, f)
+            print('<p><strong>Please select at least one model.</strong></p>')
+            printhelp(lang, f)
+        elif not d['valid']:
+            printform(lang, getlang, f)
+            error = escape(d['message']).replace(
+                'Error in input data', message(lang, 'inputerror'))
+            if d['message'] == 'All h values are same.':
+                error = message(lang, 'sameh')
+            print(
+                '<p><strong>{0}</strong></p><p>{1}</p>'.format(error, message(lang, 'readformat')))
+            printhelp(lang, f)
+        else:
+            f.swrc = h, theta = d['data']  # Data of soil water retention
+            f.data = d
+            # Get options
+            f.cqs = field.getfirst('cqs', '')
+            f.cqr = field.getfirst('cqr', '')
+            f.qsin = field.getfirst('qsin', str(max(theta)))
+            f.qrin = field.getfirst('qrin', '')
+            # Save field storage to local storage
+            for i in model('savekeys'):
+                value = '//'.join(field.getfirst(i, 'off').splitlines())
+                if i in ['qsin', 'qrin', 'sigmax']:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        value = 'off'
+                    if value == 'off':
+                        if i == 'qsin':
+                            value = ''
+                        if i == 'qrin':
+                            value = 0
+                        if i == 'sigmax':
+                            value = 2.5
+                    else:
+                        if value <= 0:
+                            value = 0
+                        if value < 1 and i == 'sigmax':
+                            value = 1
+                    value = str(value)
+                key = STORAGEPREFIX + i
+                print(
+                    '<script>localStorage.setItem("{0}", "{1}");</script>'.format(key, value))
+            calc(f)   # Start main calculation
+    # Print footer
+    import platform
+    footer = message(lang, "footer")
+    footer = footer.replace('VER', f.version())
+    footer = footer.replace('AUTHOR', message(lang, 'author'))
+    pyver = str(sys.version_info.major) + '.' + \
+        str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
+    footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
+    print('<hr>\n<p>{0}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>'.format(footer), flush=True)
+    return
+
+
+def calc(f):
+    """Main calculation"""
+    lang = f.lang
+    getlang = f.getlang
+    d = f.data
+    # Show process
+    if getlang in message('', 'list'):
+        url = './?lang='+lang
+    else:
+        url = './'
+    print(
+        '<h1><a href="{0}">SWRC Fit</a> - {1}</h1>'.format(url, message(lang, 'result')))
+    print('<ul>')
+    for i in sorted(d):
+        if i not in ['empty', 'valid', 'text', 'data']:
+            if i == 'doi':
+                print(
+                    '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
+            else:
+                print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
+    for i in getoptiontheta(f, True)[0]:
+        bi = ''
+        if f.cqr == 'both' and i[0] == 2:
+            bi = ' for bimodal models'
+        par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0]-1]
+        print('<li>Constant: {0} = {1}{2}'.format(par, i[1], bi))
+    print('</ul>')
+    print(
+        '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
+    result = swrc(f)  # Calculation
+    if len(result) == 0:
+        print(
+            '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
+        print('<p><strong>Optimization failed.</strong></p>')
+        f.data_only = True
+        f.plot()
+        print('<p><a href="{0}"></a></p>')
+        showdata(f)
+        return
     # Show result
+    # Note
+    note = [
+        'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
+    note.append(
+        'Effective saturation \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\). Therefore &theta; = &theta;<sub>r</sub> + (&theta;<sub>s</sub>-&theta;<sub>r</sub>)S<sub>e</sub>.')
     error = False
     try:
         with open(IMAGEFILE, 'w') as file:
