@@ -9,7 +9,7 @@ from data.model import model
 from data.sample import sample
 from data.sample import dataset
 config = configparser.ConfigParser()
-config.read('data/server.txt')
+config.read(os.path.dirname(__file__) + '/data/server.txt')
 DEBUG = config.get('Settings', 'debug')
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
@@ -18,7 +18,32 @@ STORAGEPREFIX = 'swrc_'
 os.environ['MPLCONFIGDIR'] = WORKDIR
 
 
-def swrc(f):
+def test():
+    import numpy as np
+    import unsatfit
+    f = unsatfit.Fit()
+    f.test()  # Run test of unsatfit
+    sampledata = sample()
+    f.cqs = 'fit'
+    f.cqr = 'fit'
+    f.qsin = ''
+    f.qrin = '0'
+    f.sigmax = 2.5
+    f.debug = False
+    for id in sampledata:
+        f.selectedmodel = model('all')
+        f.b_sigma = (0, np.inf)
+        d = sampledata[id]
+        soil = d['Soil sample']
+        texture = d['Texture']
+        f.swrc = d['data']
+        print('{0} {1}'.format(soil, texture))
+        for i in swrcfit(f):
+            if not i.success:
+                print('{0} Failed.'.format(i.model_name))
+
+
+def swrcfit(f):
     import copy
     result = []
     # Fixed parameters
@@ -211,19 +236,16 @@ def swrc(f):
 
     # dual-KO model
     if 'DK' in f.selectedmodel:
-        sigmax = float(field.getfirst('sigmax', 2.5))
-        if sigmax < 1:
-            sigmax = 1
         f.set_model('ln2', const=[*con_q])
         if f.success:
             s1 = 1.2*(n1-1)**(-0.8)
-            if s1 > sigmax * 0.8:
-                s1 = sigmax * 0.8
+            if s1 > f.sigmax * 0.8:
+                s1 = f.sigmax * 0.8
             s2 = 1.2*(n2-1)**(-0.8)
-            if s2 > sigmax * 0.8:
-                s2 = sigmax * 0.8
+            if s2 > f.sigmax * 0.8:
+                s2 = f.sigmax * 0.8
             f.ini = (*q, w1, 1/a1, s1, 1/a2, s2)
-            f.b_sigma = (0, sigmax)
+            f.b_sigma = (0, f.sigmax)
             f.optimize()
             if f.success:
                 w1, hm1, s1, hm2, s2 = f.fitted[-5:]
@@ -243,10 +265,35 @@ def swrc(f):
 
 
 def main():
+    """Determine if it is invoked as cgi or command line
+    """
+    if os.getenv('SCRIPT_NAME') is None:
+        maincl()
+    else:
+        maincgi()
+
+
+def maincl():
+    import argparse
+    parser = argparse.ArgumentParser(description='SWRC Fit in command line')
+    parser.add_argument('-c', '--cgi', action='store_true',
+                        help='run as cgi')
+    parser.add_argument('-t', '--test', action='store_true',
+                        help='run test')
+    args = parser.parse_args()
+    if args.cgi:
+        maincgi()
+        return
+    if args.test:
+        test()
+        return
+    parser.print_help()
+
+
+def maincgi():
     """SWRC Fit to run as CGI"""
     import cgi
     from io import TextIOWrapper
-    from os import getenv
     import unsatfit
     f = unsatfit.Fit()
 
@@ -270,7 +317,7 @@ def main():
 
     # Get language setting
     LANGUAGES = message('', 'list')
-    lang = getenv('HTTP_ACCEPT_LANGUAGE')
+    lang = os.getenv('HTTP_ACCEPT_LANGUAGE')
     if lang is None:
         lang = []
     else:
@@ -344,6 +391,9 @@ def main():
             f.cqr = field.getfirst('cqr', '')
             f.qsin = field.getfirst('qsin', str(max(theta)))
             f.qrin = field.getfirst('qrin', '')
+            f.sigmax = float(field.getfirst('sigmax', 2.5))
+            if f.sigmax < 1:
+                f.sigmax = 1
             # Save field storage to local storage
             for i in model('savekeys'):
                 value = '//'.join(field.getfirst(i, 'off').splitlines())
@@ -410,7 +460,7 @@ def calc(f):
     print('</ul>')
     print(
         '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
-    result = swrc(f)  # Calculation
+    result = swrcfit(f)  # Calculation
     if len(result) == 0:
         print(
             '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')

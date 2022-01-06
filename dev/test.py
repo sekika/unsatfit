@@ -1,4 +1,5 @@
 #!/usr/bin/python3
-import unsatfit
-f = unsatfit.Fit()
-f.test()
+import sys
+sys.path.append('../swrcfit')
+from index import test
+test()
