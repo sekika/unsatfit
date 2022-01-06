@@ -296,7 +296,8 @@ class Fit:
             self.param = self.param[:c[0]-1] + self.param[c[0]:]
 
     def __init_bound(self):
-        self.b_qs = self.b_qr = self.b_qa = self.b_w1 = self.b_m = (0, 1)
+        self.b_qs = self.b_qr = (0, np.inf)
+        self.b_qa = self.b_w1 = self.b_m = (0, 1)
         self.b_a = self.b_a1 = self.b_a2 = self.b_hm = self.b_hm1 = self.b_hm2 = self.b_sigma = self.b_he = (
             0, np.inf)
         self.b_hb = self.b_hb2 = self.b_hc = self.b_lambda = self.b_lambda1 = self.b_lambda2 = (
@@ -317,7 +318,10 @@ class Fit:
 
     def get_init_bc(self):  # hb and lambda
         import math
-        x, t = self.swrc
+        swrc = list(zip(*self.swrc))
+        swrc_sort = sorted(swrc, key=lambda x: x[0])
+        swrc = list(zip(*swrc_sort))
+        x, t = swrc
         y = t / max(t)
         hbi = sum(y > 0.95 + min(y) * 0.05)
         hli = sum(y > 0.15 + min(y)*0.85)
@@ -339,7 +343,15 @@ class Fit:
         f.swrc = (x, y)
         f.ini = (hb, l)
         f.optimize()
-        return f.fitted
+        hb, l = f.fitted
+        r2 = f.r2_ht
+        if r2 < 0.6:
+            f.set_model('bc', const=[[2, 0]])
+            f.ini = (1, *f.ini)
+            f.optimize()
+            if f.r2_ht > r2:
+                hb, l = f.fitted[1:]
+        return hb, l
 
     def get_init_vg(self):  # alpha and m
         x, t = self.swrc
@@ -387,6 +399,8 @@ class Fit:
             x = np.log(x[i:] / hb)
             y = -np.log(y[i:] / (1-w))
             l2 = self.linear_regress(x, y)
+            if l2 < 0:
+                l2 = 0
         else:
             l2 = 0
         f.set_model('bc2', const=[[1, 1], [2, 0], [3, hb], [4, hc], [6, l2]])
@@ -398,10 +412,13 @@ class Fit:
             l1, = l,
         f.set_model('bc2', const=[[1, 1], [2, 0]])
         f.ini = (hb, hc, l1, l2)
-        f.b_lambda1 = (l, l1+2)
-        f.b_lambda2 = (0, l)
+        f.b_lambda1 = (min(l,l1), l1+2)
+        f.b_lambda2 = (0, max(l,l2))
         f.optimize()
-        return f.fitted
+        if f.success:
+            return f.fitted
+        else:
+            return f.ini
 
     def get_init_vg2ch(self):  # w, alpha, m1, m2
         x, t = self.swrc
@@ -418,6 +435,8 @@ class Fit:
             x = np.log(x[i:] / hb)
             y = -np.log(y[i:] / (1-w))
             l2 = self.linear_regress(x, y)
+            if l2 < 0:
+                l2 = 0
         else:
             l2 = 0
         n2 = l2+1
@@ -430,7 +449,10 @@ class Fit:
         f.set_model('vg2ch', const=[[1, 1], [2, 0], [9, 1]])
         f.ini = (w, a, m1, m2)
         f.optimize()
-        return f.fitted
+        if f.success:
+            return f.fitted
+        else:
+            return f.ini
 
     # Linear regression y = ax
 

@@ -48,6 +48,7 @@ def test(minR2):
 
 def swrcfit(f):
     import copy
+    import numpy as np
     result = []
     # Fixed parameters
     con_q, ini_q, par_theta = getoptiontheta(f, False)
@@ -58,6 +59,15 @@ def swrcfit(f):
         f.set_model('bc', const=[*con_q])
         f.ini = (*ini_q, hb, l)
         f.optimize()
+        if not f.success:
+            f.b_qs = (0, max(f.swrc[1])*1.5)
+            f.optimize()
+            f.b_qs = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         f.fitted_show = f.fitted
         f.setting = model('BC')
         f.par = (*par_theta, 'h<sub>b</sub>', '&lambda;')
@@ -69,6 +79,8 @@ def swrcfit(f):
     f.set_model('vg', const=[*con_q, [7, 1]])
     f.ini = (*ini_q, a, m)
     f.optimize()
+    if not f.success:
+        return []
     q = f.fitted[:-2]
     a, m = f.fitted[-2:]
     n = 1/(1-m)
@@ -76,8 +88,6 @@ def swrcfit(f):
     f.fitted_show = [*f.fitted[:-1], n]  # Convert from m to n
     f.setting = model('VG')
     f.par = (*par_theta, '&alpha;', 'n')
-    if not f.success:
-        return []
     if 'VG' in f.selectedmodel:
         f2 = copy.deepcopy(f)
         result.append(f2)
@@ -85,11 +95,29 @@ def swrcfit(f):
     # KO (Kosugi) model
     if 'KO' in f.selectedmodel or 'FX' in f.selectedmodel:
         f.set_model('ln', const=[*con_q])
-        f.ini = (*q, 1/a, 1.2*(n-1)**(-0.8))
+        sigma = 1.2*(n-1)**(-0.8)
+        f.ini = (*q, 1/a, sigma)
         f.optimize()
+        if not f.success:
+            hb, l = f.get_init_bc()
+            sigma = 1.2*l**(-0.8)
+            if sigma > 2.5:
+                sigma = 2.5
+            f.ini = (*ini_q, hb, sigma)
+            f.b_qs = (0, max(f.swrc[1])*1.5)
+            f.optimize()
+            f.b_qs = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         q_ko = f.fitted[:-2]
-        hm, sigma = f.fitted[-2:]
-        ko_r2 = f.r2_ht
+        if f.success:
+            hm, sigma = f.fitted[-2:]
+            ko_r2 = f.r2_ht
+        else:
+            ko_r2 = 0
         if 'KO' in f.selectedmodel:
             f.setting = model('KO')
             f.fitted_show = f.fitted
@@ -105,6 +133,20 @@ def swrcfit(f):
         else:
             f.ini = (*q_ko, hm, 2.54, 1.52 / sigma)
         f.optimize()
+        if not f.success:
+            hb, l = f.get_init_bc()
+            n = l + 1
+            a, m, n = hb, 2.54 * (1-1/n), 0.95 * n
+            f.b_qs = (0, max(f.swrc[1]))
+            f.b_qr = (0, min(f.swrc[1])/2)
+            f.ini = (*ini_q, a, m, n)
+            f.optimize()
+            f.b_qs = f.b_qr = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         f.setting = model('FX')
         f.fitted_show = f.fitted
         f.par = (*par_theta, 'a', 'm', 'n')
@@ -123,8 +165,13 @@ def swrcfit(f):
         f.optimize()
         if not f.success:
             hb2, l = f.get_init_bc()
-            f.ini = (*ini_q, hb, hb, l, l/5)
+            f.ini = (*ini_q, hb, hb*2, l, l/5)
             f.optimize()
+            if not f.success:
+                f.b_qs = (0, max(f.swrc[1]))
+                f.ini = (*ini_q, hb, hb*1.2, l, l/2)
+                f.optimize()
+                f.b_qs = (0, np.inf)
         if f.success:
             hb, hc, l1, l2 = f.fitted[-4:]
             w1 = 1/(1+(hc/hb)**(l2-l1))
@@ -218,24 +265,27 @@ def swrcfit(f):
             w1, a1, m1, m2 = dvch.fitted[-4:]
             q = dvch.fitted[:-4]
             f.ini = (*q, w1, a, m1, a, m2)
-            f.optimize()
-            if f.success:
-                w1, a1, m1, a2, m2 = f.fitted[-5:]
-                q = f.fitted[:-5]
-                if a1 < a2:
-                    a1, a2 = a2, a1
-                    m1, m2 = m2, m1
-                    w1 = 1-w1
-                    f.fitted = (*q, w1, a1, m1, a2, m2)
-                n1 = 1/(1-m1)
-                n2 = 1/(1-m2)
-                f.fitted_show = (*q, w1, a1, n1, a2, n2)
-            f.setting = model('DV')
-            f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;<sub>1</sub>',
-                     'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
-            f2 = copy.deepcopy(f)
-            if 'DV' in f.selectedmodel:
-                result.append(f2)
+        else:
+            a, m = f.get_init_vg()
+            f.ini = (*ini_q, 0.5, a, m, a, m)
+        f.optimize()
+        if f.success:
+            w1, a1, m1, a2, m2 = f.fitted[-5:]
+            q = f.fitted[:-5]
+            if a1 < a2:
+                a1, a2 = a2, a1
+                m1, m2 = m2, m1
+                w1 = 1-w1
+                f.fitted = (*q, w1, a1, m1, a2, m2)
+            n1 = 1/(1-m1)
+            n2 = 1/(1-m2)
+            f.fitted_show = (*q, w1, a1, n1, a2, n2)
+        f.setting = model('DV')
+        f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;<sub>1</sub>',
+                    'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
+        f2 = copy.deepcopy(f)
+        if 'DV' in f.selectedmodel:
+            result.append(f2)
 
     # dual-KO model
     if 'DK' in f.selectedmodel:
@@ -504,7 +554,10 @@ def calc(f):
         '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
     aic = []
     for i in result:
-        aic.append(i.aic_ht)
+        if i.success:
+            aic.append(i.aic_ht)
+        else:
+            aic.append(99999)
     aic_min = aic.index(min(aic))
     print(
         '<table border="1">\n<tr><th>Model<th>Equation<th>Parameters<th>R<sup>2</sup><th>AIC</tr>')
