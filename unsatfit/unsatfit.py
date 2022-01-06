@@ -399,8 +399,8 @@ class Fit:
             x = np.log(x[i:] / hb)
             y = -np.log(y[i:] / (1-w))
             l2 = self.linear_regress(x, y)
-            if l2 < 0:
-                l2 = 0
+            if l2 < 0.01:
+                l2 = 0.01
         else:
             l2 = 0
         f.set_model('bc2', const=[[1, 1], [2, 0], [3, hb], [4, hc], [6, l2]])
@@ -435,8 +435,8 @@ class Fit:
             x = np.log(x[i:] / hb)
             y = -np.log(y[i:] / (1-w))
             l2 = self.linear_regress(x, y)
-            if l2 < 0:
-                l2 = 0
+            if l2 < 0.01:
+                l2 = 0.01
         else:
             l2 = 0
         n2 = l2+1

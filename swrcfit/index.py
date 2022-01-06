@@ -168,10 +168,16 @@ def swrcfit(f):
             f.ini = (*ini_q, hb, hb*2, l, l/5)
             f.optimize()
             if not f.success:
-                f.b_qs = (0, max(f.swrc[1]))
-                f.ini = (*ini_q, hb, hb*1.2, l, l/2)
+                f.b_qs = (max(f.swrc[1]) * 0.9, max(f.swrc[1]))
+                f.b_qr = (0, min(f.swrc[1])/100)
+                f.ini = (*ini_q, hb, hb, l, l)
                 f.optimize()
-                f.b_qs = (0, np.inf)
+                f.b_qs = f.b_qr = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         if f.success:
             hb, hc, l1, l2 = f.fitted[-4:]
             w1 = 1/(1+(hc/hb)**(l2-l1))
@@ -214,6 +220,21 @@ def swrcfit(f):
         w1, a, m1, m2 = f.get_init_vg2ch()  # Get initial parameter
         f.ini = (*ini_q, w1, a, m1, m2)
         f.optimize()
+        if not f.success:
+            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+            f.b_m = (0, 0.9)
+            a, m = f.get_init_vg()
+            if m > 0.9:
+                m = 0.9
+            f.ini = (*ini_q, 0.5, a, m, m)
+            f.optimize()
+            f.b_qs = (0, np.inf)
+            f.b_m = (0, 1)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         if f.success:
             w1, a1, m1, m2 = f.fitted[-4:]
             q = f.fitted[:-4]
