@@ -290,6 +290,25 @@ def swrcfit(f):
             a, m = f.get_init_vg()
             f.ini = (*ini_q, 0.5, a, m, a, m)
         f.optimize()
+        if not f.success:
+            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+            f.b_qr = (0, min(f.swrc[1]) / 10)
+            f.b_m = (0, 0.8)
+            a, m = f.get_init_vg()
+            if m > 0.8:
+                m = 0.8
+            f.ini = (*ini_q, 0.5, a, m, a, m)
+            f.optimize()
+            if not f.success:
+                f.b_qr = (0, min(f.swrc[1]) / 2)
+                f.optimize()
+            f.b_qs = f.b_qr = (0, np.inf)
+            f.b_m = (0, 1)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success:
+                f = copy.deepcopy(f2)
         if f.success:
             w1, a1, m1, a2, m2 = f.fitted[-5:]
             q = f.fitted[:-5]
