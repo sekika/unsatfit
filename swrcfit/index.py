@@ -59,6 +59,7 @@ def main():
     if getlang in LANGUAGES:
         lang = getlang
     f.lang = lang
+    f.getlang = getlang
 
     # Get model selection
     f.selectedmodel = []
@@ -85,6 +86,7 @@ def main():
     printhead(lang, f)
     print('<body>')
     d = dataset(f.inputtext)
+
     if field.getfirst('button') == 'Clear setting':
         # Clear field storage
         for i in model('savekeys'):
@@ -113,7 +115,36 @@ def main():
         else:
             f.swrc = h, theta = d['data']  # Data of soil water retention
             f.data = d
-            calc(f, field)   # Start main calculation
+            # Get options
+            f.cqs = field.getfirst('cqs', '')
+            f.cqr = field.getfirst('cqr', '')
+            f.qsin = field.getfirst('qsin', str(max(theta)))
+            f.qrin = field.getfirst('qrin', '')
+            # Save field storage to local storage
+            for i in model('savekeys'):
+                value = '//'.join(field.getfirst(i, 'off').splitlines())
+                if i in ['qsin', 'qrin', 'sigmax']:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        value = 'off'
+                    if value == 'off':
+                        if i == 'qsin':
+                            value = ''
+                        if i == 'qrin':
+                            value = 0
+                        if i == 'sigmax':
+                            value = 2.5
+                    else:
+                        if value <= 0:
+                            value = 0
+                        if value < 1 and i == 'sigmax':
+                            value = 1
+                    value = str(value)
+                key = STORAGEPREFIX + i
+                print(
+                    '<script>localStorage.setItem("{0}", "{1}");</script>'.format(key, value))
+            calc(f)   # Start main calculation
     # Print footer
     import platform
     footer = message(lang, "footer")
@@ -126,11 +157,11 @@ def main():
     return
 
 
-def calc(f, field):
+def calc(f):
     """Main calculation"""
     import copy
-    getlang = field.getfirst('lang', 'none')
     lang = f.lang
+    getlang = f.getlang
     d = f.data
     result = []
     # Note
@@ -154,9 +185,9 @@ def calc(f, field):
                     '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
             else:
                 print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
-    for i in getoptiontheta(field, max(f.swrc[1]), True)[0]:
+    for i in getoptiontheta(f, True)[0]:
         bi = ''
-        if field.getfirst('cqr', '') == 'both' and i[0] == 2:
+        if f.cqr == 'both' and i[0] == 2:
             bi = ' for bimodal models'
         par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0]-1]
         print('<li>Constant: {0} = {1}{2}'.format(par, i[1], bi))
@@ -165,31 +196,7 @@ def calc(f, field):
         '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
 
     # Fixed parameters
-    con_q, ini_q, par_theta = getoptiontheta(field, max(f.swrc[1]), False)
-    # Save field storage to local storage
-    for i in model('savekeys'):
-        value = '//'.join(field.getfirst(i, 'off').splitlines())
-        if i in ['qsin', 'qrin', 'sigmax']:
-            try:
-                value = float(value)
-            except ValueError:
-                value = 'off'
-            if value == 'off':
-                if i == 'qsin':
-                    value = ''
-                if i == 'qrin':
-                    value = 0
-                if i == 'sigmax':
-                    value = 2.5
-            else:
-                if value <= 0:
-                    value = 0
-                if value < 1 and i == 'sigmax':
-                    value = 1
-            value = str(value)
-        key = STORAGEPREFIX + i
-        print(
-            '<script>localStorage.setItem("{0}", "{1}");</script>'.format(key, value))
+    con_q, ini_q, par_theta = getoptiontheta(f, False)
 
     # BC (Brooks and Corey) model
     if 'BC' in f.selectedmodel:
@@ -260,7 +267,7 @@ def calc(f, field):
 
     # Bimodal model
     if any(name in f.selectedmodel for name in model('bimodal')):
-        con_q, ini_q, par_theta = getoptiontheta(field, max(f.swrc[1]), True)
+        con_q, ini_q, par_theta = getoptiontheta(f, True)
 
     # dual-BC-CH model
     if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel:
@@ -502,23 +509,23 @@ def showdata(f):
     print('</table>')
 
 
-def getoptiontheta(field, qsin, bimodal):
+def getoptiontheta(f, bimodal):
     """Get options for theta_s and theta_r"""
     con_q = []
     ini_q = []
     par_theta = []
-    if field.getfirst('cqs', '') == 'max':
-        con_q.append([1, qsin])
-    elif field.getfirst('cqs', '') == 'fix':
-        qs = float(field.getfirst('qsin', str(qsin)))
+    if f.cqs == 'max':
+        con_q.append([1, max(f.swrc[1])])
+    elif f.cqs == 'fix':
+        qs = float(f.qsin)
         con_q.append([1, qs])
     else:
-        ini_q.append(qsin)
+        ini_q.append(max(f.swrc[1]))
         par_theta.append('&theta;<sub>s</sub>')
-    cqr = field.getfirst('cqr', '')
+    cqr = f.cqr
     if cqr == 'fix':
-        qr = float(field.getfirst('qrin', '0'))
-        if qr <= 0 or qr > qsin:
+        qr = float(f.qrin)
+        if qr <= 0 or qr > max(f.swrc[1]):
             qr = 0
         con_q.append([2, qr])
     if cqr == 'fit' or cqr == 'both' and not bimodal:
