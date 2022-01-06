@@ -18,7 +18,7 @@ STORAGEPREFIX = 'swrc_'
 os.environ['MPLCONFIGDIR'] = WORKDIR
 
 
-def test():
+def test(minR2):
     import numpy as np
     import unsatfit
     f = unsatfit.Fit()
@@ -41,6 +41,9 @@ def test():
         for i in swrcfit(f):
             if not i.success:
                 print('{0} Failed.'.format(i.model_name))
+            else:
+                if i.r2_ht < minR2:
+                    print('{0} R2 = {1}'.format(i.model_name, i.r2_ht))
 
 
 def swrcfit(f):
@@ -285,7 +288,7 @@ def maincl():
         maincgi()
         return
     if args.test:
-        test()
+        test(0.94)
         return
     parser.print_help()
 
