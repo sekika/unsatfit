@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unit in SWRC Fit</title>
+  <link rel="stylesheet" type="text/css" href="swrc.css">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<h1>Unit in SWRC Fit</h1>
+
+<p>In <a href="./">SWRC Fit</a>, any unit can be used as the input data, and the unit of the calculated data depends on the unit used as the input data.</p>
+
+<h2>Unit of h</h2>
+
+<p>Unit of pressure head (matric head, matric suction) is cm H<sub>2</sub>O in the sample data of UNSODA. Other unit such as kPa for matric potential can also be used for h.</p>
+
+<p>Following paramters has the unit as same as h; h<sub>b</sub> in BC model, h<sub>m</sub> in KO model, a in FX model, and corresponding parameters in bimodal models, hb<sub>1</sub>, hb<sub>2</sub>, hm<sub>1</sub>, hm<sub>2</sub>, and H. If h is in cm, unit of these parameters are also in cm.</p>
+
+<p>&alpha; in VG model has the unit inverse to h. If h is in cm, unit of &alpha; is 1/cm or cm<sup>-1</sup>. Same to corresponding parameterse in bimodal models, &alpha;<sub>1</sub> and &alpha;<sub>2</sub>.
+
+<h2>Unit of &theta;</h2>
+
+<p>Unit of &theta; is dimensionless or expressed cm<sup>3</sup> cm<sup>-3</sup>. &theta;<sub>s</sub> and &theta;<sub>r</sub> has the same unit with &theta;.</p>
+
+<p>When you have gravimetric water content w, &theta; is obtained with the relationship \(\theta = w\frac{\rho_b}{\rho_w}\) where &rho;<sub>b</sub> is bulk density and &rho;<sub>w</sub> is the density of water. Therefore if you have data of bulk density you can convert your data to volumentric water content. You can also directly use (h, w) relationship. In this case &theta;<sub>s</sub> becomes w<sub>s</sub>, gravimetric saturated water content, and &theta;<sub>r</sub> becomes w<sub>r</sub>, gravimetric residual water content.</p>
+
+<p>Similarly, when you have degree of saturation S<sub>r</sub>, &theta; is obtained by \(\theta = \frac{e}{1+e} S_r\) where e is porosity.</p>
+
+<p>Definitions in these terms are summarized.</p>
+
+<ul>
+<li>&theta; (Volumetric water content) = V<sub>w</sub> / V
+<li>w (Gravimetric water content) = M<sub>w</sub> / M<sub>s</sub>
+<li>&rho;<sub>b</sub> (Bulk density) = M<sub>s</sub> / V
+<li>&rho;<sub>w</sub> (Density of water) = M<sub>w</sub> / V<sub>w</sub>
+<li>S<sub>r</sub> (Degree of saturation) = V<sub>w</sub> / (V<sub>a</sub> + V<sub>w</sub>)
+<li>e (Porosity) = (V<sub>a</sub> + V<sub>w</sub>) / V<sub>s</sub>
+</ul>
+
+where
+
+<ul>
+<li>M<sub>w</sub> = Water mass
+<li>M<sub>s</sub> = Dry soil mass
+<li>V<sub>w</sub> = Volume of water
+<li>V<sub>a</sub> = Volume of air
+<li>V = Total volume
+</ul>
+
+<h2>Units of other parameters</h2>
+
+<p>
+Units of other parameters used in SWRC Fit are dimensionless; &lambda; in BC model, n in VG model, &sigma; in KO model, m, n in FX model, &lambda;<sub>1</sub>, &lambda;<sub>2</sub>, n<sub>1</sub>, n<sub>2</sub>, &sigma;<sub>1</sub> and &sigma;<sub>2</sub> in bimodal models.
+</p>
+
+<hr>
+<p>Persistent URL of this page is <a href="http://purl.org/net/swrc/model.html">http://purl.org/net/swrc/model.html</a>.
+</p>
+<p>
+Author: <a href="http://www2.toyo.ac.jp/~seki_k/en/">Katsutoshi Seki</a>
+</p>
+<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
+</body>
+</html>

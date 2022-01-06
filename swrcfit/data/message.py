@@ -131,12 +131,12 @@ def message(lang, ID, URL='./'):
         return '<h2>Question</h2><p>Please send questions and bug reports to <a href="https://github.com/sekika/unsatfit/discussions/categories/q-a">Q&A at unsatfit Discussions</a>. Get GitHub account, sign in, and press the green "New discussion" button. I will reply by comment. It is preferable to send your question publicly this way, because other people having the same question can find answer on the web. However, if your question is confidential, for example when it includes your unpublished data, please contact me by email. You can find my email address in <a href="https://doi.org/10.1002/vzj2.20168">this paper</a>.</p>'
     if ID == 'format':
         if lang == 'ja':
-            return '<h2>入力データ形式</h2>\n<ul>\n<li>サンプルデータのように、測定値の組は (h, &theta;) をこの順番に入力する。\n' \
+            return '<h2>入力データ形式</h2>\n<ul>\n<li>サンプルデータのように、測定値の組は (h, &theta;) をこの順番に入力する。<a href="unit.html">単位について</a>。\n' \
                 + '<li>それぞれの行において、パラメータはスペース、タブ、またはカンマ(,)で区切る。\n' \
                 + '<li>3個以上の数の組があるときには、2つの数だけが読み込まれる。\n' \
                 + '<li>数で始まらない行は測定値とは見なされない。' \
                 + '</ul>'
-        return '<h2>Format of input data</h2>\n<ul>\n<li>As in the sample data, each line of numeric data represents a set of measured (h, &theta;) in this order.\n' \
+        return '<h2>Format of input data</h2>\n<ul>\n<li>As in the sample data, each line of numeric data represents a set of measured (h, &theta;) in this order. <a href="unit.html">Any unit can be used</a>.\n' \
             + '<li>For each line, parameters are separated with space, tab, or comma (,).\n<li>When there are more than 2 numbers only the first 2 numbers are read.\n' \
             + '<li>Lines not beginning with numbers are not regarded as measured data.' \
             + '</ul>'
