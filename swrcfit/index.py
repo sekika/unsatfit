@@ -169,9 +169,11 @@ def swrcfit(f):
             if not f.success:
                 f.b_qs = (max(f.swrc[1]) * 0.9, max(f.swrc[1]))
                 f.b_qr = (0, min(f.swrc[1])/100)
+                f.b_lambda1 = f.b_lambda2 = (0, l*1.5)
                 f.ini = (*ini_q, hb, hb, l, l)
                 f.optimize()
                 f.b_qs = f.b_qr = (0, np.inf)
+                f.b_lambda1 = f.b_lambda2 = (0, np.inf)
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -207,12 +209,10 @@ def swrcfit(f):
                 f.ini = (*ini_q, w1, 1/hb, m, l2)
                 f.optimize()
                 if not f.success:
-                    f.ini = (*ini_q, w1, 1/hb, m1, l2)
-                    f.b_m = (m1 * 0.8, m1 * 1.2)
+                    f.ini = (*ini_q, 0.9, 1/hb, m, l2)
                     f.b_lambda2 = (l2 * 0.8, l2 * 1.2)
                     f.optimize()
                 f.b_qs = f.b_qr = f.b_lambda2 = (0, np.inf)
-                f.q_m = f.q_w1 = (0, 1)
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
                 f.optimize
@@ -220,7 +220,7 @@ def swrcfit(f):
                     f = copy.deepcopy(f2)
         else:
             f.ini = (*ini_q, 0.9, a, m, m/2)
-        f.optimize()
+            f.optimize()
         if f.success:
             w1, a1, m1, l2 = f.fitted[-4:]
             n1 = 1/(1-m1)
@@ -272,11 +272,30 @@ def swrcfit(f):
             hb, hc, l1, l2 = dbch.fitted[-4:]
             w1 = 1/(1+(hc/hb)**(l2-l1))
             q = dbch.fitted[:-4]
-            f.ini = (*q, w1, hb*0.9, l1, (hb*max(f.swrc[0]))**0.5, l2)
+            f.ini = (*ini_q, w1, hb*0.9, l1, (hb*max(f.swrc[0]))**0.5, l2)
+            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
             f.optimize()
             if not f.success:
-                f.ini = (*q, w1, hb*0.9, l1, hb*100, l2)
+                f.b_qr = (0, min(f.swrc[1]) / 10)
+                f.ini = (*ini_q, w1, hb*0.9, l1, hb*1.1, l2)
                 f.optimize()
+                if not f.success:
+                    hb, l = f.get_init_bc()
+                    f.b_lambda1 = f.b_lambda2 = (0, l*1.1)
+                    f.ini = (*ini_q, 0.7, hb, l, hb, l)
+                    f.optimize()
+                f.b_qr = f.b_lambda1 = f.b_lambda2 = (0, np.inf)
+                f2 = copy.deepcopy(f)
+                f.ini = f.fitted
+                f.optimize
+                if not f.success or f.r2_ht < f2.r2_ht:
+                    f = copy.deepcopy(f2)
+            f.b_qs = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize
+            if not f.success or f.r2_ht < f2.r2_ht:
+                f = copy.deepcopy(f2)
         else:
             hb, l = f.get_init_bc()
             f.ini = (*ini_q, 0.7, hb, l, hb, l)
@@ -339,7 +358,7 @@ def swrcfit(f):
             f.fitted_show = (*q, w1, a1, n1, a2, n2)
         f.setting = model('DV')
         f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;<sub>1</sub>',
-                    'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
+                 'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
         f2 = copy.deepcopy(f)
         if 'DV' in f.selectedmodel:
             result.append(f2)
@@ -348,26 +367,42 @@ def swrcfit(f):
     if 'DK' in f.selectedmodel:
         f.set_model('ln2', const=[*con_q])
         if f.success:
+            if n1 < 1.4:
+                n1 = 1.4
             s1 = 1.2*(n1-1)**(-0.8)
-            if s1 > 2:
-                s1 = 2
+            if n2 < 1.4:
+                n2 = 1.4
             s2 = 1.2*(n2-1)**(-0.8)
             if s2 > 2:
                 s2 = 2
             f.ini = (*q, w1, 1/a1, s1, 1/a2, s2)
+            f.b_sigma = (0, 2.5)
             f.optimize()
             if not f.success:
                 f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
                 f.b_qr = (0, min(f.swrc[1]) / 10)
-                f.b_m = (0, 2)
-                f.ini = (*ini_q, 0.5, a, m, a, m)
+                f.ini = (*ini_q, w1, 1/a1, s1, 1/a2, s2)
                 f.optimize()
+                if not f.success:
+                    a, m = f.get_init_vg()
+                    n = 1/(1-m)
+                    if n < 1.4:
+                        n = 1.4
+                    s = 1.2*(n-1)**(-0.8)
+                    f.ini = (*ini_q, 0.5, 1/a, s, 1/a, s)
+                    f.optimize()
                 f.b_qs = f.b_qr = (0, np.inf)
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
-                f.optimize
+                f.optimize()
                 if not f.success:
                     f = copy.deepcopy(f2)
+            f.b_sigma = (0, np.inf)
+            f2 = copy.deepcopy(f)
+            f.ini = f.fitted
+            f.optimize()
+            if not f.success or f.r2_ht < f2.r2_ht:
+                f = copy.deepcopy(f2)
             if f.success:
                 w1, hm1, s1, hm2, s2 = f.fitted[-5:]
                 q = f.fitted[:-5]

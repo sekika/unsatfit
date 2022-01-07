@@ -412,8 +412,8 @@ class Fit:
             l1, = l,
         f.set_model('bc2', const=[[1, 1], [2, 0]])
         f.ini = (hb, hc, l1, l2)
-        f.b_lambda1 = (min(l,l1), l1+2)
-        f.b_lambda2 = (0, max(l,l2))
+        f.b_lambda1 = (min(l, l1), l1+2)
+        f.b_lambda2 = (0, max(l, l2))
         f.optimize()
         if f.success:
             return f.fitted
@@ -1031,7 +1031,6 @@ class Fit:
 
 
 # Figure
-
 
     def __init_fig(self):
         self.show_fig = False
