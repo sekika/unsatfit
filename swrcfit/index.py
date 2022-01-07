@@ -28,7 +28,6 @@ def test(minR2):
     f.cqr = 'fit'
     f.qsin = ''
     f.qrin = '0'
-    f.sigmax = 2.5
     f.debug = False
     for id in sampledata:
         f.selectedmodel = model('all')
@@ -195,12 +194,30 @@ def swrcfit(f):
         f.set_model('vgbcch', const=[*con_q, [9, 1]])
         if dbch.success:
             n1 = l1 + 1
-            if n1 < 1.1:
-                n1 = 1.1
-            if n1 > 10:
-                n1 = 10
             m1 = 1-1/n1
+            if m1 < 0.1:
+                m1 = 0.1
+            if m1 > 0.8:
+                m1 = 0.8
             f.ini = (*q, w1, 1/hb, m1, l2)
+            f.optimize()
+            if not f.success:
+                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+                f.b_qr = (0, min(f.swrc[1]) / 10)
+                f.ini = (*ini_q, w1, 1/hb, m, l2)
+                f.optimize()
+                if not f.success:
+                    f.ini = (*ini_q, w1, 1/hb, m1, l2)
+                    f.b_m = (m1 * 0.8, m1 * 1.2)
+                    f.b_lambda2 = (l2 * 0.8, l2 * 1.2)
+                    f.optimize()
+                f.b_qs = f.b_qr = f.b_lambda2 = (0, np.inf)
+                f.q_m = f.q_w1 = (0, 1)
+                f2 = copy.deepcopy(f)
+                f.ini = f.fitted
+                f.optimize
+                if not f.success:
+                    f = copy.deepcopy(f2)
         else:
             f.ini = (*ini_q, 0.9, a, m, m/2)
         f.optimize()
@@ -332,14 +349,25 @@ def swrcfit(f):
         f.set_model('ln2', const=[*con_q])
         if f.success:
             s1 = 1.2*(n1-1)**(-0.8)
-            if s1 > f.sigmax * 0.8:
-                s1 = f.sigmax * 0.8
+            if s1 > 2:
+                s1 = 2
             s2 = 1.2*(n2-1)**(-0.8)
-            if s2 > f.sigmax * 0.8:
-                s2 = f.sigmax * 0.8
+            if s2 > 2:
+                s2 = 2
             f.ini = (*q, w1, 1/a1, s1, 1/a2, s2)
-            f.b_sigma = (0, f.sigmax)
             f.optimize()
+            if not f.success:
+                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+                f.b_qr = (0, min(f.swrc[1]) / 10)
+                f.b_m = (0, 2)
+                f.ini = (*ini_q, 0.5, a, m, a, m)
+                f.optimize()
+                f.b_qs = f.b_qr = (0, np.inf)
+                f2 = copy.deepcopy(f)
+                f.ini = f.fitted
+                f.optimize
+                if not f.success:
+                    f = copy.deepcopy(f2)
             if f.success:
                 w1, hm1, s1, hm2, s2 = f.fitted[-5:]
                 q = f.fitted[:-5]
@@ -484,13 +512,10 @@ def maincgi():
             f.cqr = field.getfirst('cqr', '')
             f.qsin = field.getfirst('qsin', str(max(theta)))
             f.qrin = field.getfirst('qrin', '')
-            f.sigmax = float(field.getfirst('sigmax', 2.5))
-            if f.sigmax < 1:
-                f.sigmax = 1
             # Save field storage to local storage
             for i in model('savekeys'):
                 value = '//'.join(field.getfirst(i, 'off').splitlines())
-                if i in ['qsin', 'qrin', 'sigmax']:
+                if i in ['qsin', 'qrin']:
                     try:
                         value = float(value)
                     except ValueError:
@@ -500,13 +525,9 @@ def maincgi():
                             value = ''
                         if i == 'qrin':
                             value = 0
-                        if i == 'sigmax':
-                            value = 2.5
                     else:
                         if value <= 0:
                             value = 0
-                        if value < 1 and i == 'sigmax':
-                            value = 1
                     value = str(value)
                 key = STORAGEPREFIX + i
                 print(
@@ -767,7 +788,6 @@ def printform(lang, getlang, f):
 <li><input type="radio" name="cqs" value="fit" checked="checked">Fit &theta;<sub>s</sub>
 <input type="radio" name="cqs" value="max">&theta;<sub>s</sub> = &theta;<sub>max</sub>
 <input type="radio" name="cqs" value="fix">&theta;<sub>s</sub> = <input type="text" name="qsin" id="qsin" size="5" maxlength="10" value="">
-<li>Maximum &sigma; for dual-KO = <input type="text" name="sigmax" id="sigmax" size="5" maxlength="10" value="2.5">
 </ul>
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
@@ -783,7 +803,7 @@ def printform(lang, getlang, f):
     loadchecked('onemodel')
     loadradio('cqr', 'both')
     loadradio('cqs', 'fit')
-    for i in ('qrin', 'sigmax'):
+    for i in ('qrin'):
         loadnum(i)
     loadtext('input')
 
