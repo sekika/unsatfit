@@ -35,6 +35,7 @@ class Fit:
         vgbc  : VG1BC2 with generalized Mualem model
         vgbcch: VG1BC2-CH with generalized Mualem model
         vgbcchp2: VG1BC2-CH with r=1 and independent p1, p2
+        kobcch: KO1BC2-CH with generalized Mualem model
         vgfs  : van Genuchten - Fayer and Simmons model with generalized Mualem model
         fx    : Fredlund und Xing model (SWRC only)
 
@@ -146,6 +147,18 @@ class Fit:
                 'bound': self.bound_vgbcchp2,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8]
+            },
+            'kobcch': {
+                'function': (self.kobcch, self.kobcch_k),
+                'bound': self.bound_kobcch,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'q', 'r'],
+                'k-only': [6, 7, 8, 9]
+            },
+            'kobcchp2': {
+                'function': (self.kobcch, self.kobcchp2_k),
+                'bound': self.bound_kobcchp2,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
+                'k-only': [6, 7, 8, 9]
             },
             'vgfs': {
                 'function': (self.vgfs, self.vgfs_k),
@@ -270,6 +283,7 @@ class Fit:
         self.model_k_only = self.model[model]['k-only']
         self.const = sorted(const)
         # Calculate self.p_k_only from self.model_k_only by eliminating constant
+        # Note: when it is (0,1,3) where 2 is constant, it should be arranged to (0,1,2)
         k_only = set(self.model_k_only)
         for c in sorted(self.const, reverse=True):
             if c[0]-1 in sorted(k_only):
@@ -642,7 +656,7 @@ class Fit:
         for c in self.const:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
         qs, qr, hm, s, ks, p, q, r = par
-        qq = 1 - norm.cdf(np.log(x / hm)/s + s)
+        qq = 1 - norm.cdf(np.log(x / hm)/s + q*s)
         return ks * self.ln_se([hm, s], x)**p * qq**r
 
     # dual-LN model
@@ -797,6 +811,59 @@ class Fit:
         s1 = 1-(1-s1**(1/m1))**m1
         s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
         se = self.vgbcch_se(par[:6]+[q], x)
+        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * bunshi / bunbo
+
+    # KO1BC2-CH model
+
+    def bound_kobcch(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
+                self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
+
+    def kobcch(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.kobcch_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def kobcch_se(self, p, x):
+        qs, qr, w, h, sigma, l2 = p
+        s1 = self.ln_se([h, sigma], x)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2))
+        return w * s1 + (1-w) * s2
+
+    def kobcch_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, h, sigma, l2, ks, p, q, r = par
+        w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
+        w2b2 = (1 - w) / h ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.kobcch_se(par[:6], x)**p * (bunshi / bunbo)**r
+
+    # KO1BC2-CH model with r=1 and independent p1, p2
+
+    def bound_kobcchp2(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
+                self.b_lambda2, self.b_ks, self.b_p, self.b_p, self.b_q]
+
+    def kobcchp2_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, h, sigma, l2, ks, p1, p2, q = par
+        w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
+        w2b2 = (1 - w) / h ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
+        se = self.kobcch_se(par[:6], x)
         bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
