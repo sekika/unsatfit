@@ -1,8 +1,14 @@
 all:
 
 up:
+	make test
 	rsync -avz --delete --exclude swrcfit/data/__pycache__ --exclude swrcfit/img/swrc.png --exclude swrcfit/img/*.json --exclude swrcfit/data/server.txt -e ssh ./ swatch:unsatfit/
 	ssh swatch "make swrc"
+	w3m -dump https://seki.webmasters.gr.jp/swrc/
+
+test:
+	swrcfit/index.py -c
+	swrcfit/index.py -t
 
 format:
 	cd unsatfit; autopep8 -i unsatfit.py
