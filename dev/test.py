@@ -2,4 +2,4 @@
 import sys
 sys.path.append('../swrcfit')
 from index import test
-test()
+test(0.97)

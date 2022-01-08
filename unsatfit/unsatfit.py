@@ -220,7 +220,7 @@ class Fit:
         qs = max(f.swrc[1])
         ks = max(unsat[1])
         a, m = f.get_init_vg()
-        f.set_model('ln', const=[[1, qs], [2, 0]])
+        f.set_model('ln', const=[[1, qs], 'qr=0'])  # 'qr=0' is same as [2, 0]
         hm, s = f.get_init_ln()
         f.ini = (hm, 3)
         f.b_sigma = (0, 3)
@@ -228,60 +228,60 @@ class Fit:
         hm, s = f.fitted
         hb, hc, l1, l2 = f.get_init_bc2()
         w1 = 1/(1+(hc/hb)**(l2-l1))
-        f.set_model('bc2f', const=[[1, qs], [2, 0]])
+        f.set_model('bc2f', const=[[1, qs], 'qr=0'])
         f.ini = (w1, hb, l1, hb*100, l2)
         f.optimize()
         wbc2, hb1, l1f, hb2, l2f = f.fitted
-        f.set_model('vg2', const=[[1, qs], [2, 0], [10, 1]])
+        f.set_model('vg2', const=[[1, qs], 'qr=0', 'q=1'])
         f.ini = (0.5, 0.1, m, 0.0005, m)
         f.optimize()
         wvg2, a1, m1, a2, m2 = f.fitted
-        f.set_model('vgfs', const=[[1, qs], [2, 0], [6, 10**7], [9, 1]])
+        f.set_model('vgfs', const=[[1, qs], 'qr=0', [6, 10**7], 'q=1'])
         f.ini = ((1-wvg2)*qs, a1, m1)
         f.optimize()
         qa, fsa, fsm = f.fitted
-        f.set_model('ln2', const=[[1, qs], [2, 0]])
+        f.set_model('ln2', const=[[1, qs], 'qr=0'])
         s1 = 2
         s2 = 1.2 * (1/(1-m2)-1)**(-0.8)
         f.ini = (wvg2, 1/a1, s1, 1/a2, s2)
         f.optimize()
         wln2, hm1, s1, hm2, s2 = f.fitted
         f.unsat = unsat
-        f.set_model('vg', const=[[7, 1]])
+        f.set_model('vg', const=['q=1'])
         f.ini = (qs, 0, a, m, ks, 2, 1)
         f.optimize()
         f.test_confirm('VG', 965648)
-        f.set_model('ln', const=[[1, qs], [2, 0], [8, 1]])
+        f.set_model('ln', const=[[1, qs], 'qr=0', 'r=1'])
         f.ini = (hm, s, ks, 5, 1)
         f.optimize()
         f.test_confirm('LN', 945102)
-        f.set_model('bc2', const=[[1, qs], [2, 0], [
+        f.set_model('bc2', const=[[1, qs], 'qr=0', [
             3, hb], [4, hc], [5, l1], [6, l2]])
         f.ini = (ks, 0.5, 1, 1)
         f.optimize()
         f.test_confirm('dual-BC-CH', 958167)
-        f.set_model('bc2f', const=[[1, qs], [2, 0], [
+        f.set_model('bc2f', const=[[1, qs], 'qr=0', [
             3, wbc2], [4, hb1], [5, l1f], [6, hb2], [7, l2f]])
         f.ini = (ks, 0.5, 1, 1)
         f.optimize()
         f.test_confirm('dual-BC', 930806)
-        f.set_model('vg2', const=[[1, qs], [2, 0], [3, wvg2], [
-            4, a1], [5, m1], [6, a2], [7, m2], [10, 1]])
+        f.set_model('vg2', const=[[1, qs], 'qr=0', [3, wvg2], [
+            4, a1], [5, m1], [6, a2], [7, m2], 'q=1'])
         f.ini = (ks, 0.5, 2)
         f.optimize()
         f.test_confirm('dual-VG', 901827)
-        f.set_model('vgfs', const=[[1, qs], [2, 0], [3, qa], [
-            4, fsa], [5, fsm], [6, 10**7], [9, 1], [10, 2]])
+        f.set_model('vgfs', const=[[1, qs], 'qr=0', [3, qa], [
+            4, fsa], [5, fsm], [6, 10**7], 'q=1', 'r=2'])
         f.ini = (ks, 0.5)
         f.optimize()
         f.test_confirm('FS', 929316)
-        f.set_model('ln2', const=[[1, qs], [2, 0], [3, wln2], [4, hm1], [
-            5, s1], [6, hm2], [7, s2], [9, 2], [11, 1.5]])
+        f.set_model('ln2', const=[[1, qs], 'qr=0', [3, wln2], [4, hm1], [
+            5, s1], [6, hm2], [7, s2], 'p=2', 'r=1.5'])
         f.ini = (ks, 1)
         f.optimize()
         f.test_confirm('dual-LN', 995779)
-        f.set_model('vgbc', const=[[1, qs], [2, 0], [3, wvg2], [
-            4, a1], [5, m1], [6, hb2], [7, l2], [10, 1]])
+        f.set_model('vgbc', const=[[1, qs], 'qr=0', [3, wvg2], [
+            4, a1], [5, m1], [6, hb2], [7, l2], 'q=1'])
         f.ini = (ks, 0.5, 1)
         f.optimize()
         f.test_confirm('VG-BC', 980322)
@@ -307,7 +307,18 @@ class Fit:
         self.b_func = self.model[model]['bound']
         self.param = self.model[model]['param']
         self.model_k_only = self.model[model]['k-only']
-        self.const = sorted(const)
+        # Recostruct const to allow expression like 'q=1'
+        reconst = []
+        for i in const:
+            if '=' in i:
+                p, value = i.split('=')
+                if p not in self.param:
+                    print('Parameter {0} not in this model'.format(p))
+                    exit(1)
+                reconst.append([self.param.index(p)+1,float(value)])
+            else:
+                reconst.append(i)
+        self.const = sorted(reconst)
         # Calculate self.p_k_only from self.model_k_only by eliminating constant
         # Note: when it is (0,1,3) where 2 is constant, it should be arranged to (0,1,2)
         k_only = set(self.model_k_only)

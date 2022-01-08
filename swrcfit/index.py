@@ -75,7 +75,7 @@ def swrcfit(f):
 
     # VG (van Genuchten) model
     a, m = f.get_init_vg()  # Get initial parameter
-    f.set_model('VG', const=[*con_q, [7, 1]])
+    f.set_model('VG', const=[*con_q, 'q=1'])
     f.ini = (*ini_q, a, m)
     f.optimize()
     if not f.success:
@@ -193,7 +193,7 @@ def swrcfit(f):
 
     # VG1BC2-CH model
     if 'VGBCCH' in f.selectedmodel:
-        f.set_model('VG1BC2-CH', const=[*con_q, [9, 1]])
+        f.set_model('VG1BC2-CH', const=[*con_q, 'q=1'])
         if dbch.success:
             n1 = l1 + 1
             m1 = 1-1/n1
@@ -233,7 +233,7 @@ def swrcfit(f):
 
     # dual-VG-CH model
     if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
-        f.set_model('dual-VG-CH', const=[*con_q, [9, 1]])
+        f.set_model('dual-VG-CH', const=[*con_q, 'q=1'])
         w1, a, m1, m2 = f.get_init_vg2ch()  # Get initial parameter
         f.ini = (*ini_q, w1, a, m1, m2)
         f.optimize()
@@ -317,7 +317,7 @@ def swrcfit(f):
 
     # dual-VG model
     if 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
-        f.set_model('dual-VG', const=[*con_q, [10, 1]])
+        f.set_model('dual-VG', const=[*con_q, 'q=1'])
         if dvch.success:
             w1, a1, m1, m2 = dvch.fitted[-4:]
             q = dvch.fitted[:-4]

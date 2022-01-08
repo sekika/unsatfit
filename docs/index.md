@@ -17,7 +17,7 @@ python3 -m pip install unsatfit
 ```
 import unsatfit
 f = unsatfit.Fit() # Create instance for fitting
-f.set_model('VG', const=[[10, 1]]) # Set model and constant parameters (q=1)
+f.set_model('VG', const=['q=1']) # Set model and constant parameters
 f.swrc = (h, theta) # Data of soil water retention
 f.unsat = (h, K) # Data of unsaturated hydraulic conductivity
 a, m = f.get_init_vg() # Get initial paramter
