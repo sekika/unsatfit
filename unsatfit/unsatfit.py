@@ -205,7 +205,7 @@ class Fit:
         self.model['DK'] = self.model['dual-KO'] = self.model['ln2']
         self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
         self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
-        self.model['VSFS'] = self.model['Fayer-VG'] = self.model['vgfs']
+        self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
 
 
 # Test
