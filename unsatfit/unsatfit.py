@@ -37,6 +37,7 @@ class Fit:
         vgbcch: VG1BC2-CH with generalized Mualem model
         vgbcchp2: VG1BC2-CH with r=1 and independent p1, p2
         kobcch: KO1BC2-CH with generalized Mualem model
+        kobcchp2: KO1BC2-CH with r=1 and independent p1, p2
         vgfs  : van Genuchten - Fayer and Simmons model with generalized Mualem model
         fx    : Fredlund und Xing model (SWRC only)
 
@@ -188,6 +189,24 @@ class Fit:
             'Ks': '.2e', 'p': '.3f', 'p1': '.3f', 'p2': '.3f', 'q': '.3f', 'r': '.3f'
         }
         self.r2_format = '.3f'
+        # Define alias for model name
+        self.model['BC'] = self.model['bc']
+        self.model['VG'] = self.model['vg']
+        self.model['KO'] = self.model['ln']
+        self.model['FX'] = self.model['fx']
+        self.model['DB'] = self.model['dual-BC'] = self.model['bc2f']
+        self.model['DBCH'] = self.model['dual-BC-CH'] = self.model['bc2']
+        self.model['VGBC'] = self.model['VG1BC2'] = self.model['vgbc']
+        self.model['VGBCP2'] = self.model['VG1BC2-p1p2'] = self.model['vgbcp2']
+        self.model['VGBCCH'] = self.model['VG1BC2-CH'] = self.model['vgbcch']
+        self.model['VGBCCHP2'] = self.model['VG1BC2-CH-p1p2'] = self.model['vgbcchp2']
+        self.model['DV'] = self.model['dual-VG'] = self.model['vg2']
+        self.model['DVCH'] = self.model['dual-VG-CH'] = self.model['vg2ch']
+        self.model['DK'] = self.model['dual-KO'] = self.model['ln2']
+        self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
+        self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
+        self.model['VSFS'] = self.model['Fayer-VG'] = self.model['vgfs']
+
 
 # Test
 
