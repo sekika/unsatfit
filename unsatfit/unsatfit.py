@@ -10,7 +10,7 @@ class Fit:
         f.set_model('vg', const=[[10, 1]]) # Set model and constant parameters
         f.swrc = (h, theta) # Data of soil water retention
         f.unsat = (h, K) # Data of unsaturated hydraulic conductivity
-        a, m = f.get_init_vg() # Get initial paramter
+        a, m = f.get_init_vg() # Get initial paramter (f.get_init() is also OK)
         f.ini = (max(theta), 0, a, m, max(K), 0.5, 2) # Set initial paramter
         f.b_qr = (0, 0.05) # Set lower and upper bound
         f.optimize() # Optimize
@@ -81,6 +81,8 @@ class Fit:
                 'bound': self.bound_bc,
                 # Name of parameters
                 'param': ['qs', 'qr', 'hb', 'l', 'Ks', 'p', 'q', 'r'],
+                # Function to get initial WRF parameters except qs, qr
+                'get_init': self.get_init_bc,
                 # Index of parameters (starting from 0) used only for K function
                 'k-only': [4, 5, 6, 7]
             },
@@ -88,6 +90,7 @@ class Fit:
                 'function': (self.bc2, self.bc2_k),
                 'bound': self.bound_bc2,
                 'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_bc2,
                 'k-only': [6, 7, 8, 9]
             },
             'bc2f': {
@@ -100,6 +103,7 @@ class Fit:
                 'function': (self.vg, self.vg_k),
                 'bound': self.bound_vg,
                 'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_vg,
                 'k-only': [4, 5, 7]
             },
             'vg2': {
@@ -112,12 +116,14 @@ class Fit:
                 'function': (self.vg2ch, self.vg2ch_k),
                 'bound': self.bound_vg2ch,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_vg2ch,
                 'k-only': [6, 7, 9]
             },
             'ln': {
                 'function': (self.ln, self.ln_k),
                 'bound': self.bound_ln,
                 'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_ln,
                 'k-only': [4, 5, 6, 7],
             },
             'ln2': {
@@ -307,6 +313,11 @@ class Fit:
         self.b_func = self.model[model]['bound']
         self.param = self.model[model]['param']
         self.model_k_only = self.model[model]['k-only']
+        # Initilize function
+        if 'get_init' in self.model[model]:
+            self.get_init = self.model[model]['get_init']
+        else:
+            self.get_init = self.get_init_not_defined
         # Recostruct const to allow expression like 'q=1'
         reconst = []
         for i in const:
@@ -345,6 +356,10 @@ class Fit:
             self.param_ht = self.param_ht[:c[0]-1] + self.param_ht[c[0]:]
         for c in sorted(self.const, reverse=True):
             self.param = self.param[:c[0]-1] + self.param[c[0]:]
+
+    def get_init_not_defined(self):
+        print('get_init function not defined for {0} model'.format(self.model_name))
+        exit(1)
 
     def __init_bound(self):
         self.b_qs = self.b_qr = (0, np.inf)

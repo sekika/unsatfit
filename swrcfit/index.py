@@ -54,8 +54,8 @@ def swrcfit(f):
 
     # BC (Brooks and Corey) model
     if 'BC' in f.selectedmodel:
-        hb, l = f.get_init_bc()  # Get initial parameter
         f.set_model('BC', const=[*con_q])
+        hb, l = f.get_init()  # Get initial parameter
         f.ini = (*ini_q, hb, l)
         f.optimize()
         if not f.success:
@@ -74,8 +74,8 @@ def swrcfit(f):
         result.append(f2)
 
     # VG (van Genuchten) model
-    a, m = f.get_init_vg()  # Get initial parameter
     f.set_model('VG', const=[*con_q, 'q=1'])
+    a, m = f.get_init()  # Get initial parameter
     f.ini = (*ini_q, a, m)
     f.optimize()
     if not f.success:
@@ -159,7 +159,7 @@ def swrcfit(f):
     # dual-BC-CH model
     if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel:
         f.set_model('dual-BC-CH', const=[*con_q])
-        hb, hc, l1, l2 = f.get_init_bc2()
+        hb, hc, l1, l2 = f.get_init()
         f.ini = (*ini_q, hb, hc, l1, l2)  # Get initial parameter
         f.optimize()
         if not f.success:
@@ -234,7 +234,7 @@ def swrcfit(f):
     # dual-VG-CH model
     if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
         f.set_model('dual-VG-CH', const=[*con_q, 'q=1'])
-        w1, a, m1, m2 = f.get_init_vg2ch()  # Get initial parameter
+        w1, a, m1, m2 = f.get_init()  # Get initial parameter
         f.ini = (*ini_q, w1, a, m1, m2)
         f.optimize()
         if not f.success:
