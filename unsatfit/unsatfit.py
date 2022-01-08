@@ -33,6 +33,7 @@ class Fit:
         vg2ch : dual-VG-CH with generalized Mualem model
         ln2   : dual-KO with generalized Mualem model
         vgbc  : VG1BC2 with generalized Mualem model
+        vgbcp2: VG1BC2 with r=1 and independent p1, p2
         vgbcch: VG1BC2-CH with generalized Mualem model
         vgbcchp2: VG1BC2-CH with r=1 and independent p1, p2
         kobcch: KO1BC2-CH with generalized Mualem model
@@ -135,6 +136,12 @@ class Fit:
                 'bound': self.bound_vgbc,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [7, 8, 10]
+            },
+            'vgbcp2': {
+                'function': (self.vgbc, self.vgbcp2_k),
+                'bound': self.bound_vgbcp2,
+                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'hb2', 'l2', 'Ks', 'p1', 'p2', 'q'],
+                'k-only': [7, 8, 9]
             },
             'vgbcch': {
                 'function': (self.vgbcch, self.vgbcch_k),
@@ -752,6 +759,27 @@ class Fit:
         bunshi = w1b1 * s1 + w2b2 * s2
         bunbo = w1b1 + w2b2
         return ks * self.vgbc_se(par[:7]+[q], x)**p * (bunshi / bunbo)**r
+
+    # VG1BC2 model with r=1 and independent p1, p2
+
+    def bound_vgbcp2(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_a1, self.b_m,
+                self.b_hb2, self.b_lambda2, self.b_ks, self.b_p, self.b_p, self.b_q]
+
+    def vgbcp2_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, a1, m1, hb2, l2, ks, p1, p2, q = par
+        w1b1 = w * (a1 ** q)
+        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
+        s1 = self.vg_se([a1, m1, q], x)
+        s1 = 1-(1-s1**(1/m1))**m1
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
+        se = self.vgbc_se(par[:7]+[q], x)
+        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * bunshi / bunbo
 
     # VG1BC2-CH model
 
