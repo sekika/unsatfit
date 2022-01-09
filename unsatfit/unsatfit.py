@@ -184,6 +184,7 @@ class Fit:
                 'function': (self.fx, False),
                 'bound': self.bound_fx,
                 'param': ['qs', 'qr', 'a', 'm', 'n'],
+                'get_init': self.get_init_fx,
                 'k-only': []
             }
         }
@@ -445,6 +446,18 @@ class Fit:
         if s > 3:
             s = 3
         f.ini = (1/a, s)
+        f.optimize()
+        return f.fitted
+
+    def get_init_fx(self):  # a, m, n
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.set_model('fx', const=[[1, 1], [2, 0]])
+        f.swrc = (x, y)
+        a, m = f.get_init_vg()
+        n = 1/(1-m)
+        f.ini = (1/a, 2.54 * (1-1/n), 0.95 * n)
         f.optimize()
         return f.fitted
 
