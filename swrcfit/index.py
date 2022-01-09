@@ -14,11 +14,12 @@ DEBUG = config.get('Settings', 'debug')
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
 STORAGEPREFIX = 'swrc_'
+TEST_R2 = 0.94
 
 os.environ['MPLCONFIGDIR'] = WORKDIR
 
 
-def test(minR2):
+def test(minR2, strict=False):
     import numpy as np
     import unsatfit
     f = unsatfit.Fit()
@@ -40,9 +41,14 @@ def test(minR2):
         for i in swrcfit(f):
             if not i.success:
                 print('{0} Failed.'.format(i.model_name))
+                if strict:
+                    exit(1)
             else:
                 if i.r2_ht < minR2:
                     print('{0} R2 = {1}'.format(i.model_name, i.r2_ht))
+                    if strict:
+                        print('R2 less than {0}'.format(minR2))
+                        exit(1)
 
 
 def swrcfit(f):
@@ -441,7 +447,7 @@ def maincl():
         maincgi()
         return
     if args.test:
-        test(0.94)
+        test(TEST_R2, strict=True)
         return
     parser.print_help()
 
