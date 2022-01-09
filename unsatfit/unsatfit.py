@@ -181,8 +181,8 @@ class Fit:
             },
             'kobcp2': {
                 'function': (self.kobc, self.kobcp2_k),
-                'bound': self.bound_kobcchp2,
-                'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
+                'bound': self.bound_kobcp2,
+                'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [7, 8, 9, 10]
             },
             'kobcch': {
@@ -1050,11 +1050,11 @@ class Fit:
         par = list(p)
         for c in self.const:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
-        qs, qr, w, h, sigma, l2, ks, p, q, r = par
-        w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
-        w2b2 = (1 - w) / h ** q / (q / l2 + 1)
-        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
-        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
+        qs, qr, w, hm1, sigma1, hb2, l2, ks, p, q, r = par
+        w1b1 = w * (hm1 ** (-q)) * np.exp((q*sigma1)**2 / 2)
+        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / hm1)/sigma1 + q * sigma1)
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
         bunshi = w1b1 * s1 + w2b2 * s2
         bunbo = w1b1 + w2b2
         return ks * self.kobc_se(par[:7], x)**p * (bunshi / bunbo)**r
