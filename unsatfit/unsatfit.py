@@ -173,6 +173,18 @@ class Fit:
                 'get_init': self.get_init_vgbcch,
                 'k-only': [6, 7, 8]
             },
+            'kobc': {
+                'function': (self.kobc, self.kobc_k),
+                'bound': self.bound_kobc,
+                'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
+                'k-only': [7, 8, 9, 10]
+            },
+            'kobcp2': {
+                'function': (self.kobc, self.kobcp2_k),
+                'bound': self.bound_kobcchp2,
+                'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
+                'k-only': [7, 8, 9, 10]
+            },
             'kobcch': {
                 'function': (self.kobcch, self.kobcch_k),
                 'bound': self.bound_kobcch,
@@ -223,6 +235,8 @@ class Fit:
         self.model['DV'] = self.model['dual-VG'] = self.model['vg2']
         self.model['DVCH'] = self.model['dual-VG-CH'] = self.model['vg2ch']
         self.model['DK'] = self.model['dual-KO'] = self.model['ln2']
+        self.model['KOBC'] = self.model['KO1BC2'] = self.model['kobc']
+        self.model['KOBCP2'] = self.model['KO1BC2-p1p2'] = self.model['kobcp2']
         self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
         self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
         self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
@@ -1009,6 +1023,59 @@ class Fit:
         s1 = 1-(1-s1**(1/m1))**m1
         s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
         se = self.vgbcch_se(par[:6]+[q], x)
+        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * bunshi / bunbo
+
+    # KO1BC2 model
+
+    def bound_kobc(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
+                self.b_hb2, self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
+
+    def kobc(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.kobc_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def kobc_se(self, p, x):
+        qs, qr, w, hm1, sigma1, hb2, l2 = p
+        s1 = self.ln_se([hm1, sigma1], x)
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
+        return w * s1 + (1-w) * s2
+
+    def kobc_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, h, sigma, l2, ks, p, q, r = par
+        w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
+        w2b2 = (1 - w) / h ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.kobc_se(par[:7], x)**p * (bunshi / bunbo)**r
+
+    # KO1BC2 model with r=1 and independent p1, p2
+
+    def bound_kobcp2(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
+                self.b_hb2, self.b_lambda2, self.b_ks, self.b_p, self.b_p, self.b_q]
+
+    def kobcp2_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, hm1, sigma1, hb2, l2, ks, p1, p2, q = par
+        w1b1 = w * (hm1 ** (-q)) * np.exp((q*sigma1)**2 / 2)
+        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / hm1)/sigma1 + q * sigma1)
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
+        se = self.kobc_se(par[:7], x)
         bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
