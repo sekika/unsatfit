@@ -63,11 +63,12 @@ class Fit:
 
         get_init_bc()  : get (hb, lambda) for BC model
         get_init_vg()  : get (alpha, m) for VG model. m=1-q/n
-        get_init_ln()  : get (hm, sigma) for Kosugi model.
-        get_init_fx()  : get (a, m, n) for Fredlund and Xing model.
-        get_init_bc2() : get (hm, hc, l1, l2) for dual-BC-CH model.
+        get_init_ln()  : get (hm, sigma) for Kosugi model
+        get_init_fx()  : get (a, m, n) for Fredlund and Xing model
+        get_init_bc2() : get (hm, hc, l1, l2) for dual-BC-CH model
                          w1 = 1/(1+(hc/hb)^(l2-l1))
-        get_init_vg2ch():get (w1, alpha, m1, m2) for dual-VG-CH model.
+        get_init_vg2ch():get (w1, alpha, m1, m2) for dual-VG-CH model
+        get_init_kobcch(): get (w1, hm, sigma1, l2) for KO-BC-CH model
 
     Instance properties:
 
