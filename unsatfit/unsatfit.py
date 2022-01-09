@@ -953,12 +953,12 @@ class Fit:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
         qs, qr, w, a1, m1, hb2, l2, ks, p1, p2, q = par
         w1b1 = w * (a1 ** q)
-        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
+        w2b2 = (1 - w) / (hb2 ** q) / (q / l2 + 1)
         s1 = self.vg_se([a1, m1, q], x)
-        s1 = 1-(1-s1**(1/m1))**m1
-        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
-        se = self.vgbc_se(par[:7]+[q], x)
-        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
+        w1a1 = w1b1 * (1-(1-s1**(1/m1))**m1)
+        w2a2 = w2b2 * (np.where(x < hb2, 1, (x/hb2) ** (-l2-q)))
+        bunshi = s1**p1 * w1a1 + s2**p2 * w2a2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
 
@@ -1018,12 +1018,12 @@ class Fit:
         qs, qr, w, a1, m1, l2, ks, p1, p2, q = par
         hb2 = 1/a1
         w1b1 = w * (a1 ** q)
-        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
+        w2b2 = (1 - w) / (hb2 ** q) / (q / l2 + 1)
         s1 = self.vg_se([a1, m1, q], x)
-        s1 = 1-(1-s1**(1/m1))**m1
-        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
-        se = self.vgbcch_se(par[:6]+[q], x)
-        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
+        w1a1 = w1b1 * (1-(1-s1**(1/m1))**m1)
+        w2a2 = w2b2 * (np.where(x < hb2, 1, (x/hb2) ** (-l2-q)))
+        bunshi = s1**p1 * w1a1 + s2**p2 * w2a2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
 
@@ -1072,11 +1072,12 @@ class Fit:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
         qs, qr, w, hm1, sigma1, hb2, l2, ks, p1, p2, q = par
         w1b1 = w * (hm1 ** (-q)) * np.exp((q*sigma1)**2 / 2)
-        w2b2 = (1 - w) / hb2 ** q / (q / l2 + 1)
-        s1 = 1 - norm.cdf(np.log(x / hm1)/sigma1 + q * sigma1)
-        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
-        se = self.kobc_se(par[:7], x)
-        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        w2b2 = (1 - w) / (hb2 ** q) / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / hm1)/sigma1)
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
+        w1a1 = w1b1 * (1 - norm.cdf(np.log(x / hm1)/sigma1 + q * sigma1))
+        w2a2 = w2b2 * (np.where(x < hb2, 1, (x/hb2) ** (-l2-q)))
+        bunshi = s1**p1 * w1a1 + s2**p2 * w2a2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
 
@@ -1126,10 +1127,11 @@ class Fit:
         qs, qr, w, h, sigma, l2, ks, p1, p2, q = par
         w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
         w2b2 = (1 - w) / h ** q / (q / l2 + 1)
-        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
-        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
-        se = self.kobcch_se(par[:6], x)
-        bunshi = se**p1 * w1b1 * s1 + se**p2 * w2b2 * s2
+        s1 = 1 - norm.cdf(np.log(x / h)/sigma)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2))
+        w1a1 = w1b1 * (1 - norm.cdf(np.log(x / h)/sigma + q * sigma))
+        w2a2 = w2b2 * (np.where(x < h, 1, (x/h) ** (-l2-q)))
+        bunshi = s1**p1 * w1a1 + s2**p2 * w2a2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
 
