@@ -24,24 +24,29 @@ class Fit:
 
     Models:
 
-        bc    : Brooks and Corey (BC) with generalized Mualem model
-        vg    : van Genuchten (VG) with generalized Mualem model
-        ln    : Kosugi model (KO) with generalized Mualem model
-        bc2   : dual-BC-CH (common H) with generalized Mualem model
-        bc2f  : dual-BC with generalized Mualem model
-        vg2   : dual-VG with generalized Mualem model
-        vg2ch : dual-VG-CH with generalized Mualem model
-        ln2   : dual-KO with generalized Mualem model
-        vgbc  : VG1BC2 with generalized Mualem model
-        vgbcp2: VG1BC2 with r=1 and independent p1, p2
-        vgbcch: VG1BC2-CH with generalized Mualem model
+        ===== Basic unimodal models =====
+        bc: Brooks and Corey (BC) with generalized Mualem model
+        vg: van Genuchten (VG) with generalized Mualem model
+        ln: Kosugi model (KO) with generalized Mualem model
+        fx: Fredlund und Xing model (SWRC only)
+        
+        ===== Bimodal models with generalized Mualem model =====
+        bc2f    : dual-BC
+        bc2     : dual-BC-CH (common H)
+        vg2     : dual-VG
+        vg2ch   : dual-VG-CH
+        ln2     : dual-KO
+        vgbc    : VG1BC2
+        vgbcp2  : VG1BC2 with r=1 and independent p1, p2
+        vgbcch  : VG1BC2-CH
         vgbcchp2: VG1BC2-CH with r=1 and independent p1, p2
-        kobcch: KO1BC2-CH with generalized Mualem model
+        kobcch  : KO1BC2-CH
         kobcchp2: KO1BC2-CH with r=1 and independent p1, p2
-        vgfs  : van Genuchten - Fayer and Simmons model with generalized Mualem model
-        fx    : Fredlund und Xing model (SWRC only)
 
-        See list of parameters in __init_model()
+        ===== Exponential decrease to zero water content =====
+        vgfs  : van Genuchten - Fayer and Simmons model with generalized Mualem model
+
+        See list of parameters and alias names for the models in __init_model()
 
     Methods:
 
@@ -54,12 +59,15 @@ class Fit:
         test()         : (for development) test integrity of the code
 
         Methods to get initial paramteres for SWRC
+        Note that they can be accessed by get_init() when model is set
 
         get_init_bc()  : get (hb, lambda) for BC model
         get_init_vg()  : get (alpha, m) for VG model. m=1-q/n
         get_init_ln()  : get (hm, sigma) for Kosugi model.
-        get_init_bc2() : get (hm, hc, l1, l2) for dual-BC model.
+        get_init_fx()  : get (a, m, n) for Fredlund and Xing model.
+        get_init_bc2() : get (hm, hc, l1, l2) for dual-BC-CH model.
                          w1 = 1/(1+(hc/hb)^(l2-l1))
+        get_init_vg2ch():get (w1, alpha, m1, m2) for dual-VG-CH model.
 
     Instance properties:
 
