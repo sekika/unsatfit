@@ -29,7 +29,7 @@ class Fit:
         vg: van Genuchten (VG) with generalized Mualem model
         ln: Kosugi model (KO) with generalized Mualem model
         fx: Fredlund und Xing model (SWRC only)
-        
+
         ===== Bimodal models with generalized Mualem model =====
         bc2f    : dual-BC
         bc2     : dual-BC-CH (common H)
@@ -162,24 +162,28 @@ class Fit:
                 'function': (self.vgbcch, self.vgbcch_k),
                 'bound': self.bound_vgbcch,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_vgbcch,
                 'k-only': [6, 7, 9]
             },
             'vgbcchp2': {
                 'function': (self.vgbcchp2, self.vgbcchp2_k),
                 'bound': self.bound_vgbcchp2,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p1', 'p2', 'q'],
+                'get_init': self.get_init_vgbcch,
                 'k-only': [6, 7, 8]
             },
             'kobcch': {
                 'function': (self.kobcch, self.kobcch_k),
                 'bound': self.bound_kobcch,
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'q', 'r'],
+                'get_init': self.get_init_kobcch,
                 'k-only': [6, 7, 8, 9]
             },
             'kobcchp2': {
                 'function': (self.kobcch, self.kobcchp2_k),
                 'bound': self.bound_kobcchp2,
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
+                'get_init': self.get_init_kobcch,
                 'k-only': [6, 7, 8, 9]
             },
             'vgfs': {
@@ -224,6 +228,7 @@ class Fit:
 
 
 # Test
+
 
     def test(self):
         f = Fit()
@@ -335,7 +340,7 @@ class Fit:
                 if p not in self.param:
                     print('Parameter {0} not in this model'.format(p))
                     exit(1)
-                reconst.append([self.param.index(p)+1,float(value)])
+                reconst.append([self.param.index(p)+1, float(value)])
             else:
                 reconst.append(i)
         self.const = sorted(reconst)
@@ -367,7 +372,8 @@ class Fit:
             self.param = self.param[:c[0]-1] + self.param[c[0]:]
 
     def get_init_not_defined(self):
-        print('get_init function not defined for {0} model'.format(self.model_name))
+        print('get_init function not defined for {0} model'.format(
+            self.model_name))
         exit(1)
 
     def __init_bound(self):
@@ -465,9 +471,27 @@ class Fit:
         f.swrc = (x, y)
         a, m = f.get_init_vg()
         n = 1/(1-m)
-        f.ini = (1/a, 2.54 * (1-1/n), 0.95 * n)
+        vg = f.ini = (1/a, 2.54 * (1-1/n), 0.95 * n)
         f.optimize()
-        return f.fitted
+        if f.success:
+            return f.fitted
+        hm, sigma = f.get_init_ln()
+        f.ini = (hm, 2.54, 1.52 / sigma)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        hb, l = f.get_init_bc()
+        n = l+1
+        f.ini = (hb, 2.54 * (1-1/n), 0.95 * n)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        f.set_model('fx', const=[[2, 0]])
+        f.ini = (1, *vg)
+        f.optimize()
+        if f.success:
+            return f.fitted[1:]
+        return vg
 
     def get_init_bc2(self):  # hb, hc, l1, l2
         x, t = self.swrc
@@ -504,8 +528,13 @@ class Fit:
         f.optimize()
         if f.success:
             return f.fitted
-        else:
-            return f.ini
+        f.ini = (hb, hb, l, l)
+        f.b_lambda1 = (0, np.inf)
+        f.b_lambda2 = (0, np.inf)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
     def get_init_vg2ch(self):  # w, alpha, m1, m2
         x, t = self.swrc
@@ -538,8 +567,73 @@ class Fit:
         f.optimize()
         if f.success:
             return f.fitted
-        else:
-            return f.ini
+        a, m = f.get_init_vg()
+        f.ini = (0.5, a, m, m)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
+
+    def get_init_vgbcch(self):  # w, alpha, m1, l2
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        w, a, m1, m2 = f.get_init_vg2ch()
+        f.set_model('vgbcch', const=[[1, 1], [2, 0], 'q=1'])
+        n2 = 1/(1-m2)
+        if n2 < 1.1:
+            n2 = 1.1
+        f.ini = (w, a, m1, n2-1)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        hb, hc, l1, l2 = f.get_init_bc2()
+        w = 1/(1+(hc/hb)**(l2-l1))
+        n1 = l1+1
+        f.ini = (w, 1/hb, 1-1/n1, l2)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        f.ini = (w, 1/hb, m1, l2)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        a, m = f.get_init_vg()
+        f.b_w1 = (0.8, 1)
+        f.ini = (0.99, a, m, 0.001)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
+
+    def get_init_kobcch(self):  # w1, hm, sigma1, l2
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        w1, a, m1, l2 = f.get_init_vgbcch()
+        f.set_model('kobcch', const=[[1, 1], [2, 0]])
+        if l2 < 0.1:
+            l2 = 0.1
+        n1 = 1/(1-m1)
+        sigma1 = 1.2*(n1-1)**(-0.8)
+        if sigma1 > 2.5:
+            sigma1 = 2.5
+        f.ini = (w1, 1/a, sigma1, l2)
+        f.b_sigma = (0, 2.5)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        f.b_sigma = (0, np.inf)
+        h, sigma = f.get_init_ln()
+        f.ini = (0.99, h, sigma, 0.01)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
     # Linear regression y = ax
 
@@ -557,6 +651,9 @@ class Fit:
         return self.bc_se(p, x) * (p[0]-p[1]) + p[1]
 
     def bc_se(self, p, x):
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
         return np.where(x < p[2], 1, (x/p[2]) ** (-p[3]))
 
     def bc_k(self, p, x):  # Not defined yet
@@ -589,6 +686,9 @@ class Fit:
 
     def bc2_se(self, p, x):
         w = 1/(1+(p[3]/p[2])**(p[5]-p[4]))
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
         s1 = (x/p[2]) ** (-p[4])
         s2 = (x/p[2]) ** (-p[5])
         return np.where(x < p[2], 1, w * s1 + (1-w) * s2)
@@ -863,6 +963,9 @@ class Fit:
         qs, qr, w, a1, m1, l2, q = p
         hb2 = 1/a1
         s1 = self.vg_se([a1, m1, q], x)
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
         s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
         return w * s1 + (1-w) * s2
 
@@ -1192,6 +1295,7 @@ class Fit:
 
 
 # Figure
+
 
     def __init_fig(self):
         self.show_fig = False
