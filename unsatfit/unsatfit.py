@@ -218,7 +218,7 @@ class Fit:
             'm': '.3f', 'n': '.3f', 'm1': '.3f', 'm2': '.3f', 'hm': '.2f', 'hm1': '.2f', 'hm2': '.2f',
             'sigma': '.3f', 'sigma1': '.3f', 'sigma2': '.3f', 'hb': '.2f', 'hb1': '.2f', 'hb2': '.2f',
             'hc': '.2f', 'l': '.3f', 'l1': '.3f', 'l2': '.5f', 'he': '.2f',
-            'Ks': '.2e', 'p': '.3f', 'p1': '.3f', 'p2': '.3f', 'q': '.3f', 'r': '.3f'
+            'Ks': '.2e', 'p': '.3f', 'p1': '.3f', 'p2': '.3f', 'q': '.3f', 'q1': '.3f', 'q2': '.3f', 'r': '.3f', 'omega': '.3f'
         }
         self.r2_format = '.3f'
         # Define alias for model name
@@ -243,7 +243,6 @@ class Fit:
 
 
 # Test
-
 
     def test(self):
         f = Fit()
@@ -1088,7 +1087,7 @@ class Fit:
         # bunshi = s1**p1 * w1a1 + s2**p2 * w2a2
         # Corrected from Si(h) to Se(h)
         se = self.kobc_se(par[:7], x)
-        bunshi = se**p1 * w1a1 + se**p2 * w2a2 # Corrected
+        bunshi = se**p1 * w1a1 + se**p2 * w2a2  # Corrected
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
 
@@ -1380,7 +1379,6 @@ class Fit:
 
 # Figure
 
-
     def __init_fig(self):
         self.show_fig = False
         self.save_fig = False
@@ -1499,12 +1497,12 @@ class Fit:
         ax1.axis([self.min_x, self.max_x, self.min_y1, self.max_y1])
         if not self.ht_only:
             ax1.xaxis.set_major_formatter(ticker.NullFormatter())
+            ax2.axis([self.min_x, self.max_x, self.min_y2, self.max_y2])
             if self.log_x:
                 ax2.loglog(base=10)
             else:
                 ax2.set_yscale = ("log")
-            ax2.xaxis.set_major_formatter(ticker.ScalarFormatter())
-            ax2.axis([self.min_x, self.max_x, self.min_y2, self.max_y2])
+                ax2.xaxis.set_major_formatter(ticker.ScalarFormatter())
 
         # Draw labels
         if self.ht_only:
