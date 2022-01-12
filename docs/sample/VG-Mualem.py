@@ -28,8 +28,8 @@ print(f.message)  # Show result
 f.label_head = 'Matric head (cm)'
 f.label_theta = 'Volumetric water content'
 f.label_k = 'Hydraulic conductivity (cm/s)'
-f.data_legend = 'UNSODA 3393'
-f.line_legend = 'VG-Mualem with p={0:.2} r={1:.2}'.format(p, r)
+f.data_legend = 'Silt loam (UNSODA 3393)'
+f.line_legend = 'VG-Mualem p={0:.2f} r={1:.2f}'.format(p, r)
 f.legend_loc = 'center right'
 f.save_fig = True
 f.filename = FIG
