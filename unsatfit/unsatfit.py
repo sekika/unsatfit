@@ -367,11 +367,11 @@ class Fit:
                     for j in p:
                         reconst.append([j+1, i[k]])
                         k += 1
-                else:  # expression like [2, 0]
+                else:
                     print(
                         '{0} parameters required for water retention function, but {1} given.'.format(p, i))
                     exit()
-            else:
+            else:  # expression like [2, 0]
                 reconst.append(i)
         self.const = sorted(reconst)
         # Calculate self.p_k_only from self.model_k_only by eliminating constant
