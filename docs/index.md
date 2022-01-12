@@ -14,22 +14,13 @@ python3 -m pip install unsatfit
 
 ## Sample code
 
-```
-import unsatfit
-f = unsatfit.Fit() # Create instance for fitting
-f.set_model('VG', const=['q=1']) # Set model and constant parameters
-f.swrc = (h, theta) # Data of soil water retention
-f.unsat = (h, K) # Data of unsaturated hydraulic conductivity
-a, m = f.get_init_vg() # Get initial paramter
-f.ini = (max(theta), 0, a, m, max(K), 0.5, 2) # Set initial paramter
-f.b_qr = (0, 0.05) # Set lower and upper bound
-f.optimize() # Optimize
-print(f.fitted) # Show result as an array
-print(f.message)  # Show result
-f.show_fig = True
-f.plot()  # Draw a graph
-f.contour('a', 'm')  # Draw contour of RMSE for a and m
-```
+Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) and [unsaturated hydraulic conductivity curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) of UNSODA 3393 in the same directory as [this sample code](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.py) and run it with Python 3. You get the optimized parameters for VG-Mualem equation as
+
+Ks = 8.89e-01 p = 0.897 r = 1.446 R2 q = 0.993 R2 logK = 0.973
+
+where R2 q means R<sup>2</sup> for water retention curve and R2 logK means R<sup>2</sup> for hydraulic conductivity curve. Following figure is produced.
+
+![VG-Mualem](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.png "VG-Mualem")
 
 ## SWRC Fit
 
