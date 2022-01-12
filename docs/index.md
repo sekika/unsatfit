@@ -18,7 +18,7 @@ Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sa
 
 Ks = 8.89e-01 p = 0.897 r = 1.446 R2 q = 0.993 R2 logK = 0.973
 
-where R2 q means R<sup>2</sup> for water retention curve and R2 logK means R<sup>2</sup> for hydraulic conductivity curve. Following figure is produced.
+where R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve. Following figure is produced.
 
 ![VG-Mualem](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.png "VG-Mualem")
 
