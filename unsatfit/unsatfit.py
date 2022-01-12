@@ -98,8 +98,8 @@ class Fit:
             'bc2': {
                 'function': (self.bc2, self.bc2_k),
                 'bound': self.bound_bc2,
-                'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_bc2,
+                'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 8, 9]
             },
             'bc2f': {
@@ -111,8 +111,8 @@ class Fit:
             'vg': {
                 'function': (self.vg, self.vg_k),
                 'bound': self.bound_vg,
-                'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_vg,
+                'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
                 'k-only': [4, 5, 7]
             },
             'vg2': {
@@ -124,15 +124,15 @@ class Fit:
             'vg2ch': {
                 'function': (self.vg2ch, self.vg2ch_k),
                 'bound': self.bound_vg2ch,
-                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_vg2ch,
+                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 9]
             },
             'ln': {
                 'function': (self.ln, self.ln_k),
                 'bound': self.bound_ln,
-                'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_ln,
+                'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
                 'k-only': [4, 5, 6, 7],
             },
             'ln2': {
@@ -162,41 +162,43 @@ class Fit:
             'vgbcch': {
                 'function': (self.vgbcch, self.vgbcch_k),
                 'bound': self.bound_vgbcch,
-                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_vgbcch,
+                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 9]
             },
             'vgbcchp2': {
                 'function': (self.vgbcchp2, self.vgbcchp2_k),
                 'bound': self.bound_vgbcchp2,
-                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'get_init': self.get_init_vgbcch,
+                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8]
             },
             'kobc': {
                 'function': (self.kobc, self.kobc_k),
                 'bound': self.bound_kobc,
+                'get_wrf': self.get_wrf_kobc,
                 'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [7, 8, 9, 10]
             },
             'kobcp2': {
                 'function': (self.kobc, self.kobcp2_k),
                 'bound': self.bound_kobcp2,
+                'get_wrf': self.get_wrf_kobc,
                 'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [7, 8, 9, 10]
             },
             'kobcch': {
                 'function': (self.kobcch, self.kobcch_k),
                 'bound': self.bound_kobcch,
-                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'get_init': self.get_init_kobcch,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 8, 9]
             },
             'kobcchp2': {
                 'function': (self.kobcch, self.kobcchp2_k),
                 'bound': self.bound_kobcchp2,
-                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'get_init': self.get_init_kobcch,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8, 9]
             },
             'vgfs': {
@@ -208,8 +210,8 @@ class Fit:
             'fx': {
                 'function': (self.fx, False),
                 'bound': self.bound_fx,
-                'param': ['qs', 'qr', 'a', 'm', 'n'],
                 'get_init': self.get_init_fx,
+                'param': ['qs', 'qr', 'a', 'm', 'n'],
                 'k-only': []
             }
         }
@@ -243,6 +245,7 @@ class Fit:
 
 
 # Test
+
 
     def test(self):
         f = Fit()
@@ -346,15 +349,28 @@ class Fit:
             self.get_init = self.model[model]['get_init']
         else:
             self.get_init = self.get_init_not_defined
-        # Recostruct const to allow expression like 'q=1'
+        # Recostruct const to allow alternative expressions
         reconst = []
         for i in const:
-            if '=' in i:
+            if '=' in i:  # expression like 'q=1'
                 p, value = i.split('=')
                 if p not in self.param:
                     print('Parameter {0} not in this model'.format(p))
                     exit(1)
                 reconst.append([self.param.index(p)+1, float(value)])
+            elif len(i) > 2:  # tuple or list of all water retention parameters
+                p = list(range(len(self.param)))
+                for j in self.model_k_only:
+                    p.remove(j)
+                if len(p) == len(i):
+                    k = 0
+                    for j in p:
+                        reconst.append([j+1, i[k]])
+                        k += 1
+                else:  # expression like [2, 0]
+                    print(
+                        '{0} parameters required for water retention function, but {1} given.'.format(p, i))
+                    exit()
             else:
                 reconst.append(i)
         self.const = sorted(reconst)
@@ -409,7 +425,32 @@ class Fit:
     def bound_ln(self):
         return [self.b_qs, self.b_qr, self.b_hm, self.b_sigma, self.b_ks, self.b_p, self.b_q, self.b_r]
 
-# Get initial estimate
+    # Linear regression y = ax
+
+    def linear_regress(self, x, y):
+        return np.dot(x, y)/(x**2).sum()
+
+# Definition of water retention and hydraulic conductivity functions
+
+    # Brooks and Corey model
+
+    def bc(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.bc_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def bc_se(self, p, x):
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
+        return np.where(x < p[2], 1, (x/p[2]) ** (-p[3]))
+
+    def bc_k(self, p, x):  # Not defined yet
+        p = list(p)
+        for c in self.const:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return
 
     def get_init_bc(self):  # hb and lambda
         import math
@@ -448,6 +489,28 @@ class Fit:
                 hb, l = f.fitted[1:]
         return hb, l
 
+    # van Genuchten model
+
+    def vg(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.vg_se(p[2:5], x) * (p[0]-p[1]) + p[1]
+
+    def vg_se(self, p, x):
+        a, m, q = p
+        n = q/(1-m)
+        return (1 + (a * x)**n)**(-m)
+
+    def vg_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, a, m, ks, p, q, r = par
+        s = self.vg_se([a, m, q], x)
+        k = ks * s**p * (1-(1-s**(1/m))**m)**r
+        return k
+
     def get_init_vg(self):  # alpha and m
         x, t = self.swrc
         y = t / max(t)
@@ -459,6 +522,31 @@ class Fit:
         f.ini = (1/hb, 1-1/n)
         f.optimize()
         return f.fitted
+
+    # Kosugi model
+
+    def ln(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        qs, qr, hm, s = p
+        return self.ln_se([hm, s], x) * (qs-qr) + qr
+
+    def ln_se(self, p, x):
+        from scipy.stats import norm
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
+        return 1 - norm.cdf(np.log(x / p[0])/p[1])
+
+    def ln_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, hm, s, ks, p, q, r = par
+        qq = 1 - norm.cdf(np.log(x / hm)/s + q*s)
+        return ks * self.ln_se([hm, s], x)**p * qq**r
 
     def get_init_ln(self):  # hm and sigma
         x, t = self.swrc
@@ -476,6 +564,21 @@ class Fit:
         f.ini = (1/a, s)
         f.optimize()
         return f.fitted
+
+    # Fredlund and Xing model
+
+    def bound_fx(self):
+        return [self.b_qs, self.b_qr, self.b_fxa, self.b_fxm, self.b_fxn]
+
+    def fx(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.fx_se(p[2:], x) * (p[0]-p[1]) + p[1]
+
+    def fx_se(self, p, x):
+        a, m, n = p
+        return (np.log(np.e + (x/a)**n))**(-m)
 
     def get_init_fx(self):  # a, m, n
         x, t = self.swrc
@@ -506,6 +609,72 @@ class Fit:
         if f.success:
             return f.fitted[1:]
         return vg
+
+    # dual-BC model
+
+    def bound_bc2f(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hb, self.b_lambda1, self.b_hb2,
+                self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
+
+    def bc2f(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.bc2f_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def bc2f_se(self, p, x):
+        qs, qr, w1, hb1, l1, hb2, l2 = p
+        s1 = np.where(x < hb1, 1, (x/hb1) ** (-l1))
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
+        return w1 * s1 + (1-w1) * s2
+
+    def bc2f_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w1, hb1, l1, hb2, l2, ks, p, q, r = par
+        w1b1 = w1 / hb1 ** q / (q / l1 + 1)
+        w2b2 = (1 - w1) / hb2 ** q / (q / l2 + 1)
+        s1 = np.where(x < hb1, 1, (x/hb1) ** (-l1-q))
+        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.bc2f_se(par[:7], x)**p * (bunshi / bunbo)**r
+
+    # dual-BC-CH model
+
+    def bound_bc2(self):
+        return [self.b_qs, self.b_qr, self.b_hb, self.b_hc, self.b_lambda1,
+                self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
+
+    def bc2(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.bc2_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def bc2_se(self, p, x):
+        w = 1/(1+(p[3]/p[2])**(p[5]-p[4]))
+        # Ignore runtime warning, because divide by zero is warned when x=0
+        import warnings
+        warnings.simplefilter('ignore', category=RuntimeWarning)
+        s1 = (x/p[2]) ** (-p[4])
+        s2 = (x/p[2]) ** (-p[5])
+        return np.where(x < p[2], 1, w * s1 + (1-w) * s2)
+
+    def bc2_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, hb, hc, l1, l2, ks, p, q, r = par
+        w1 = 1/(1+(hc/hb)**(l2-l1))
+        w1b1 = w1 / (q / l1 + 1)
+        w2b2 = (1 - w1) / (q / l2 + 1)
+        s1 = np.where(x < hb, 1, (x/hb) ** (-l1-q))
+        s2 = np.where(x < hb, 1, (x/hb) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.bc2_se(par[:6], x)**p * (bunshi / bunbo)**r
 
     def get_init_bc2(self):  # hb, hc, l1, l2
         x, t = self.swrc
@@ -549,218 +718,6 @@ class Fit:
         if f.success:
             return f.fitted
         return f.ini
-
-    def get_init_vg2ch(self):  # w, alpha, m1, m2
-        x, t = self.swrc
-        y = t / max(t)
-        f = Fit()
-        f.debug = self.debug
-        f.swrc = (x, y)
-        a, m1 = f.get_init_vg()
-        hb, l = f.get_init_bc()
-        hc, max_hc = hb * (0.3, 0.1) ** (-1/l)
-        w = 1/(1+(hc/hb)**(-l))
-        i = sum(x < max_hc)
-        if len(x) - i > 1:
-            x = np.log(x[i:] / hb)
-            y = -np.log(y[i:] / (1-w))
-            l2 = self.linear_regress(x, y)
-            if l2 < 0.01:
-                l2 = 0.01
-        else:
-            l2 = 0
-        n2 = l2+1
-        m2 = 1-1/n2
-        f.set_model('vg2ch', const=[[1, 1], [2, 0], [
-                    3, w], [4, a], [6, m2], [9, 1]])
-        f.ini = (m1)
-        f.optimize()
-        m1, = f.fitted
-        f.set_model('vg2ch', const=[[1, 1], [2, 0], [9, 1]])
-        f.ini = (w, a, m1, m2)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        a, m = f.get_init_vg()
-        f.ini = (0.5, a, m, m)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        return f.ini
-
-    def get_init_vgbcch(self):  # w, alpha, m1, l2
-        x, t = self.swrc
-        y = t / max(t)
-        f = Fit()
-        f.debug = self.debug
-        f.swrc = (x, y)
-        w, a, m1, m2 = f.get_init_vg2ch()
-        f.set_model('vgbcch', const=[[1, 1], [2, 0], 'q=1'])
-        n2 = 1/(1-m2)
-        if n2 < 1.1:
-            n2 = 1.1
-        f.ini = (w, a, m1, n2-1)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        hb, hc, l1, l2 = f.get_init_bc2()
-        w = 1/(1+(hc/hb)**(l2-l1))
-        n1 = l1+1
-        f.ini = (w, 1/hb, 1-1/n1, l2)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        f.ini = (w, 1/hb, m1, l2)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        a, m = f.get_init_vg()
-        f.b_w1 = (0.8, 1)
-        f.ini = (0.99, a, m, 0.001)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        return f.ini
-
-    def get_init_kobcch(self):  # w1, hm, sigma1, l2
-        x, t = self.swrc
-        y = t / max(t)
-        f = Fit()
-        f.debug = self.debug
-        f.swrc = (x, y)
-        w1, a, m1, l2 = f.get_init_vgbcch()
-        f.set_model('kobcch', const=[[1, 1], [2, 0]])
-        if l2 < 0.1:
-            l2 = 0.1
-        n1 = 1/(1-m1)
-        sigma1 = 1.2*(n1-1)**(-0.8)
-        if sigma1 > 2.5:
-            sigma1 = 2.5
-        f.ini = (w1, 1/a, sigma1, l2)
-        f.b_sigma = (0, 2.5)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        f.b_sigma = (0, np.inf)
-        h, sigma = f.get_init_ln()
-        f.ini = (0.99, h, sigma, 0.01)
-        f.optimize()
-        if f.success:
-            return f.fitted
-        return f.ini
-
-    # Linear regression y = ax
-
-    def linear_regress(self, x, y):
-        return np.dot(x, y)/(x**2).sum()
-
-# Definition of water retention and hydraulic conductivity functions
-
-    # Brooks and Corey model
-
-    def bc(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return self.bc_se(p, x) * (p[0]-p[1]) + p[1]
-
-    def bc_se(self, p, x):
-        # Ignore runtime warning, because divide by zero is warned when x=0
-        import warnings
-        warnings.simplefilter('ignore', category=RuntimeWarning)
-        return np.where(x < p[2], 1, (x/p[2]) ** (-p[3]))
-
-    def bc_k(self, p, x):  # Not defined yet
-        p = list(p)
-        for c in self.const:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return
-
-    # dual-BC model
-
-    def bound_bc2(self):
-        return [self.b_qs, self.b_qr, self.b_hb, self.b_hc, self.b_lambda1,
-                self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
-
-    def bound_bc2f(self):
-        return [self.b_qs, self.b_qr, self.b_w1, self.b_hb, self.b_lambda1, self.b_hb2,
-                self.b_lambda2, self.b_ks, self.b_p, self.b_q, self.b_r]
-
-    def bc2(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return self.bc2_se(p, x) * (p[0]-p[1]) + p[1]
-
-    def bc2f(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return self.bc2f_se(p, x) * (p[0]-p[1]) + p[1]
-
-    def bc2_se(self, p, x):
-        w = 1/(1+(p[3]/p[2])**(p[5]-p[4]))
-        # Ignore runtime warning, because divide by zero is warned when x=0
-        import warnings
-        warnings.simplefilter('ignore', category=RuntimeWarning)
-        s1 = (x/p[2]) ** (-p[4])
-        s2 = (x/p[2]) ** (-p[5])
-        return np.where(x < p[2], 1, w * s1 + (1-w) * s2)
-
-    def bc2f_se(self, p, x):
-        qs, qr, w1, hb1, l1, hb2, l2 = p
-        s1 = np.where(x < hb1, 1, (x/hb1) ** (-l1))
-        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2))
-        return w1 * s1 + (1-w1) * s2
-
-    def bc2_k(self, p, x):
-        par = list(p)
-        for c in self.const:
-            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
-        qs, qr, hb, hc, l1, l2, ks, p, q, r = par
-        w1 = 1/(1+(hc/hb)**(l2-l1))
-        w1b1 = w1 / (q / l1 + 1)
-        w2b2 = (1 - w1) / (q / l2 + 1)
-        s1 = np.where(x < hb, 1, (x/hb) ** (-l1-q))
-        s2 = np.where(x < hb, 1, (x/hb) ** (-l2-q))
-        bunshi = w1b1 * s1 + w2b2 * s2
-        bunbo = w1b1 + w2b2
-        return ks * self.bc2_se(par[:6], x)**p * (bunshi / bunbo)**r
-
-    def bc2f_k(self, p, x):
-        par = list(p)
-        for c in self.const:
-            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
-        qs, qr, w1, hb1, l1, hb2, l2, ks, p, q, r = par
-        w1b1 = w1 / hb1 ** q / (q / l1 + 1)
-        w2b2 = (1 - w1) / hb2 ** q / (q / l2 + 1)
-        s1 = np.where(x < hb1, 1, (x/hb1) ** (-l1-q))
-        s2 = np.where(x < hb2, 1, (x/hb2) ** (-l2-q))
-        bunshi = w1b1 * s1 + w2b2 * s2
-        bunbo = w1b1 + w2b2
-        return ks * self.bc2f_se(par[:7], x)**p * (bunshi / bunbo)**r
-
-    # van Genuchten model
-
-    def vg(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return self.vg_se(p[2:5], x) * (p[0]-p[1]) + p[1]
-
-    def vg_se(self, p, x):
-        a, m, q = p
-        n = q/(1-m)
-        return (1 + (a * x)**n)**(-m)
-
-    def vg_k(self, p, x):
-        par = list(p)
-        for c in self.const:
-            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
-        qs, qr, a, m, ks, p, q, r = par
-        s = self.vg_se([a, m, q], x)
-        k = ks * s**p * (1-(1-s**(1/m))**m)**r
-        return k
 
     # dual-VG model
 
@@ -821,32 +778,45 @@ class Fit:
         bunshi = w * (1-(1-s1**(1/m1))**m1) + (1-w) * (1-(1-s2**(1/m2))**m2)
         return ks * self.vg2ch_se(par[:6]+[q], x)**p * bunshi**r
 
-    # Kosugi model
+    def get_init_vg2ch(self):  # w, alpha, m1, m2
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        a, m1 = f.get_init_vg()
+        hb, l = f.get_init_bc()
+        hc, max_hc = hb * (0.3, 0.1) ** (-1/l)
+        w = 1/(1+(hc/hb)**(-l))
+        i = sum(x < max_hc)
+        if len(x) - i > 1:
+            x = np.log(x[i:] / hb)
+            y = -np.log(y[i:] / (1-w))
+            l2 = self.linear_regress(x, y)
+            if l2 < 0.01:
+                l2 = 0.01
+        else:
+            l2 = 0
+        n2 = l2+1
+        m2 = 1-1/n2
+        f.set_model('vg2ch', const=[[1, 1], [2, 0], [
+                    3, w], [4, a], [6, m2], [9, 1]])
+        f.ini = (m1)
+        f.optimize()
+        m1, = f.fitted
+        f.set_model('vg2ch', const=[[1, 1], [2, 0], [9, 1]])
+        f.ini = (w, a, m1, m2)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        a, m = f.get_init_vg()
+        f.ini = (0.5, a, m, m)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
-    def ln(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        qs, qr, hm, s = p
-        return self.ln_se([hm, s], x) * (qs-qr) + qr
-
-    def ln_se(self, p, x):
-        from scipy.stats import norm
-        # Ignore runtime warning, because divide by zero is warned when x=0
-        import warnings
-        warnings.simplefilter('ignore', category=RuntimeWarning)
-        return 1 - norm.cdf(np.log(x / p[0])/p[1])
-
-    def ln_k(self, p, x):
-        from scipy.stats import norm
-        par = list(p)
-        for c in self.const:
-            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
-        qs, qr, hm, s, ks, p, q, r = par
-        qq = 1 - norm.cdf(np.log(x / hm)/s + q*s)
-        return ks * self.ln_se([hm, s], x)**p * qq**r
-
-    # dual-LN model
+    # dual-KO model
 
     def bound_ln2(self):
         return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
@@ -877,7 +847,7 @@ class Fit:
         bunbo = w1b1 + w2b2
         return ks * self.ln2_se(par[:7], x)**p * (bunshi / bunbo)**r
 
-    # dual-LN-CH model
+    # dual-KO-CH model
 
     def bound_ln2ch(self):
         return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
@@ -1001,6 +971,40 @@ class Fit:
         bunbo = w1b1 + w2b2
         return ks * self.vgbcch_se(par[:6]+[q], x)**p * (bunshi / bunbo)**r
 
+    def get_init_vgbcch(self):  # w, alpha, m1, l2
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        w, a, m1, m2 = f.get_init_vg2ch()
+        f.set_model('vgbcch', const=[[1, 1], [2, 0], 'q=1'])
+        n2 = 1/(1-m2)
+        if n2 < 1.1:
+            n2 = 1.1
+        f.ini = (w, a, m1, n2-1)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        hb, hc, l1, l2 = f.get_init_bc2()
+        w = 1/(1+(hc/hb)**(l2-l1))
+        n1 = l1+1
+        f.ini = (w, 1/hb, 1-1/n1, l2)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        f.ini = (w, 1/hb, m1, l2)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        a, m = f.get_init_vg()
+        f.b_w1 = (0.8, 1)
+        f.ini = (0.99, a, m, 0.001)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
+
     # VG1BC2-CH model with r=1 and independent p1, p2
 
     def bound_vgbcchp2(self):
@@ -1065,6 +1069,18 @@ class Fit:
         bunbo = w1b1 + w2b2
         return ks * self.kobc_se(par[:7], x)**p * (bunshi / bunbo)**r
 
+    def get_wrf_kobc(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        w1, h1, s1, l2 = f.get_init_kobcch()
+        f.set_model('kobc', const=['qr=0'])
+        f.ini = (max(f.swrc[1]), w1, h1, s1, h1 * np.exp(2 * s1), l2)
+        f.optimize()
+        if f.success:
+            return (f.fitted[0], 0, *f.fitted[1:])
+        return (f.ini[0], 0, *f.ini[1:])
+
     # KO1BC2 model with r=1 and independent p1, p2
 
     def bound_kobcp2(self):
@@ -1122,6 +1138,33 @@ class Fit:
         bunshi = w1b1 * s1 + w2b2 * s2
         bunbo = w1b1 + w2b2
         return ks * self.kobcch_se(par[:6], x)**p * (bunshi / bunbo)**r
+
+    def get_init_kobcch(self):  # w1, hm, sigma1, l2
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        w1, a, m1, l2 = f.get_init_vgbcch()
+        f.set_model('kobcch', const=[[1, 1], [2, 0]])
+        if l2 < 0.1:
+            l2 = 0.1
+        n1 = 1/(1-m1)
+        sigma1 = 1.2*(n1-1)**(-0.8)
+        if sigma1 > 2.5:
+            sigma1 = 2.5
+        f.ini = (w1, 1/a, sigma1, l2)
+        f.b_sigma = (0, 2.5)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        f.b_sigma = (0, np.inf)
+        h, sigma = f.get_init_ln()
+        f.ini = (0.99, h, sigma, 0.01)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
     # KO1BC2-CH model with r=1 and independent p1, p2
 
@@ -1220,21 +1263,6 @@ class Fit:
         gamma_max = gamma(h0, a, m, n, hm, sa, gse) + gamma_0c
         integral = gamma(x, a, m, n, hm, sa, gse) / gamma_max
         return ks * self.vgfs_se(par[:6]+[q], x)**p * integral**r
-
-    # Fredlund and Xing model
-
-    def bound_fx(self):
-        return [self.b_qs, self.b_qr, self.b_fxa, self.b_fxm, self.b_fxn]
-
-    def fx(self, p, x):
-        p = list(p)
-        for c in self.const_ht:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return self.fx_se(p[2:], x) * (p[0]-p[1]) + p[1]
-
-    def fx_se(self, p, x):
-        a, m, n = p
-        return (np.log(np.e + (x/a)**n))**(-m)
 
 # Cost function
 
@@ -1378,6 +1406,7 @@ class Fit:
 
 
 # Figure
+
 
     def __init_fig(self):
         self.show_fig = False
