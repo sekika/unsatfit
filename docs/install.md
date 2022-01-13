@@ -1,4 +1,4 @@
-## Install
+# Install unsatfit
 
 ```
 python3 -m pip install unsatfit
