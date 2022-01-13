@@ -1,6 +1,6 @@
 # Install unsatfit
 
-[Install Python 3](https://wiki.python.org/moin/BeginnersGuide/Download). Mac and Linux distributions may include an outdated version of Python (Python 2), but you should install an updated one (Python 3).
+[Install Python 3](https://wiki.python.org/moin/BeginnersGuide/Download). Mac and Linux distributions may include an outdated version of Python (Python 2), but you should install an updated one (Python 3). You can check your installed version of Python by ```python -V```.
 
 Install unsatfit library for Python 3 with [pip](https://pip.pypa.io/en/stable/getting-started/) by
 
