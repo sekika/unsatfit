@@ -1,7 +1,9 @@
 # Install unsatfit
 
+Install [Python 3](https://realpython.com/installing-python/) and then install unsatfit library with [pip](https://pip.pypa.io/en/stable/getting-started/) by
+
 ```
-python3 -m pip install unsatfit
+python -m pip install unsatfit
 ```
 
-[PyPI Project page](https://pypi.org/project/unsatfit/)
+- [Release history](https://pypi.org/project/unsatfit/#history)
