@@ -24,8 +24,8 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 ### Kosugi (KO) model
 - Name: ln, KO
 - WRF parameters: qs, qr, hm, sigma
-- get_init() = get_init_vg(): returns hm, sigma
-- get_wrf() = get_wrf_vg(): returns full WRF parameters
+- get_init() = get_init_ln(): returns hm, sigma
+- get_wrf() = get_wrf_ln(): returns full WRF parameters
 - HCF: Generalized mualem model
 - Paramters which only appears in HCF: ks, p, q, r
 
