@@ -14,6 +14,8 @@ or to specify Python 3
 python3 -m pip install unsatfit
 ```
 
+Now you can use unsatfit library. [Sample code](code.md) is shown to show how to use.
+
 ## Version control
 - Latest release can be checked by [release history](https://pypi.org/project/unsatfit/#history).
 - Installed version can be checked by ```python -m pip show unsatfit```
