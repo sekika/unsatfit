@@ -1,3 +1,4 @@
+from sqlite3 import paramstyle
 import numpy as np
 
 
@@ -221,9 +222,39 @@ class Fit:
         self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
         self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
 
+    # Modified model
+    def modified_model(self, hs):
+        """Modified model introducing air entry head
+        Call modified_model(hs) after set_model()
+
+        Requirement: param starts with (qs, qr) and k_only starts with Ks
+        """
+        import copy
+        self.hs = hs
+        self.f_ht_org = copy.deepcopy(self.f_ht)
+        self.f_hk_org = copy.deepcopy(self.f_hk)
+        self.f_ht = self.modified_ht
+        self.f_hk = self.modified_hk
+
+    def modified_ht(self, p, x):
+        par = list(p)
+        for c in self.const_ht:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr = par[:2]
+        modify = (qs-qr)/(self.f_ht_org(p, self.hs) - qr)
+        se = (self.f_ht_org(p, x) - qr) / (qs-qr)
+        return np.where(x < self.hs, qs, modify * se * (qs-qr) + qr)
+
+    def modified_hk(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        ks = par[self.model_k_only[0]]
+        modify = ks/self.f_hk_org(p, self.hs)
+        k = self.f_hk_org(p, x)
+        return np.where(x < self.hs, ks, modify * k)
 
 # Test
-
 
     def test(self):
         f = Fit()
@@ -398,7 +429,8 @@ class Fit:
         self.b_qa = self.b_w1 = self.b_m = (0, 1)
         self.b_a = self.b_a1 = self.b_a2 = self.b_hm = self.b_hm1 = self.b_hm2 = self.b_sigma = self.b_he = (
             0, np.inf)
-        self.b_hb = self.b_hb2 = self.b_hc = self.b_hs = self.b_lambda = self.b_lambda1 = self.b_lambda2 = (0, np.inf)
+        self.b_hb = self.b_hb2 = self.b_hc = self.b_hs = self.b_lambda = self.b_lambda1 = self.b_lambda2 = (
+            0, np.inf)
         self.b_fxa = self.b_fxm = self.b_fxn = (0, np.inf)
         self.b_ks = self.b_p = self.b_q = self.b_r = (0, np.inf)
 
@@ -1464,12 +1496,12 @@ class Fit:
 
 # Figure
 
-
     def __init_fig(self):
         self.show_fig = False
         self.save_fig = False
         self.data_only = False
         self.fig_h_0to1 = False
+        self.have_new_plot = True
         self.curves_ht = []
         self.curves_hk = []
         self.fig_width = 4.3  # inch
@@ -1561,21 +1593,22 @@ class Fit:
                             self.right_margin, left=self.left_margin, hspace=0)
 
         # Draw plots, curves and legends
-        self.add_curve()
-        ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
-                 linestyle='', label=self.data_legend)
-        if not self.data_only:
-            for curve in self.curves_ht:
-                ax1.plot(*curve['data'], color=curve['color'],
-                         linestyle=curve['style'], label=curve['legend'])
-            if not self.ht_only:
-                ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
-                         marker='o', linestyle='', label='_nolegend_')
-                for curve in self.curves_hk:
-                    ax2.plot(*curve['data'], color=curve['color'],
-                             linestyle=curve['style'], label='_nolegend_')
-            fig.legend(loc=self.legend_loc)
-            # plt.legend()
+        if self.have_new_plot:
+            self.add_curve()
+            ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
+                     linestyle='', label=self.data_legend)
+            if not self.data_only:
+                for curve in self.curves_ht:
+                    ax1.plot(*curve['data'], color=curve['color'],
+                             linestyle=curve['style'], label=curve['legend'])
+                if not self.ht_only:
+                    ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
+                             marker='o', linestyle='', label='_nolegend_')
+                    for curve in self.curves_hk:
+                        ax2.plot(*curve['data'], color=curve['color'],
+                                 linestyle=curve['style'], label='_nolegend_')
+                fig.legend(loc=self.legend_loc)
+                # plt.legend()
 
         # Draw scale
         if self.log_x:

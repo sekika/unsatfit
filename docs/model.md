@@ -29,6 +29,8 @@ Modified model (Vogel et al., 2000)
 - HCF: Generalized Mualem model
 - Parameters which only appears in HCF: Ks, p, r
 
+In general, modified model can be made by calling modified_model(hs) after set_model()
+
 ### Kosugi (KO) model
 - Name: ln, KO
 - WRF parameters: qs, qr, hm, sigma
