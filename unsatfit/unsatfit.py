@@ -112,6 +112,7 @@ class Fit:
                 'function': (self.vg, self.vg_k),
                 'bound': self.bound_vg,
                 'get_init': self.get_init_vg,
+                'get_wrf': self.get_wrf_vg,
                 'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
                 'k-only': [4, 5, 7]
             },
@@ -369,7 +370,7 @@ class Fit:
                         k += 1
                 else:
                     print(
-                        '{0} parameters required for water retention function, but {1} given.'.format(p, i))
+                        '{0} parameters required for water retention function, but {1} given.'.format(len(p), i))
                     exit()
             else:  # expression like [2, 0]
                 reconst.append(i)
@@ -522,6 +523,18 @@ class Fit:
         f.ini = (1/hb, 1-1/n)
         f.optimize()
         return f.fitted
+
+    def get_wrf_vg(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        a, m = f.get_init_vg()
+        f.set_model('vg', const=['q=1'])
+        f.ini = (max(f.swrc[1]), 0, a, m)
+        f.optimize()
+        if f.success:
+            return (*f.fitted, 1)
+        return (*f.ini, 1)
 
     # Kosugi model
 
