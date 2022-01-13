@@ -24,6 +24,9 @@ f.set_model('VG', const=[wrf])  # Set model and constant parameters
 f.ini = (max(k), 2, 2)  # Set initial paramter
 f.b_Ks = (max(k)*0.9, max(k)*2)  # Set bound for Ks
 f.optimize()  # Optimize
+if not f.success:
+    print(f.message)
+    exit(1)
 ks, p, r = f.fitted  # Get result
 print('Hydraulic conductivity parameters')
 print(f.message)  # Show result
