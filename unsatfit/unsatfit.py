@@ -229,6 +229,7 @@ class Fit:
         self.model['DV'] = self.model['dual-VG'] = self.model['vg2']
         self.model['DVCH'] = self.model['dual-VG-CH'] = self.model['vg2ch']
         self.model['DK'] = self.model['dual-KO'] = self.model['ln2']
+        self.model['DKCH'] = self.model['dual-KO-CH'] = self.model['ln2ch']
         self.model['KOBC'] = self.model['KO1BC2'] = self.model['kobc']
         self.model['KOBCP2'] = self.model['KO1BC2-p1p2'] = self.model['kobcp2']
         self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
