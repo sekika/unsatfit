@@ -16,9 +16,12 @@ python3 -m pip install unsatfit
 
 Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) and [unsaturated hydraulic conductivity curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) of UNSODA 3393 in the same directory as [this sample code](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.py) and run it with Python 3. You get the optimized parameters for VG-Mualem equation as
 
-Ks = 8.89e-01 p = 0.897 r = 1.446 R2 q = 0.993 R2 logK = 0.973
+    Water retention parameters with m=1-1/n (q=1)
+    qs = 0.355 qr = 0.000 a = 0.00532 m = 0.106
+    Hydraulic conductivity parameters
+    Ks = 8.89e-01 p = 0.897 r = 1.446 R2 q = 0.993 R2 logK = 0.973
 
-where R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve. Following figure is produced.
+where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively, and R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve. Following figure is produced.
 
 ![VG-Mualem](sample/VG-Mualem.png "VG-Mualem")
 
