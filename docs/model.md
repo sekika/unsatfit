@@ -1,6 +1,6 @@
 # Hydraulic models in unsatfit
 
-See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fit](https://seki.webmasters.gr.jp/swrc/model.html). WRF = water retention function, HCF = hydraulic conductivity function.
+See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fit](https://seki.webmasters.gr.jp/swrc/model.html). WRF = water retention function, HCF = hydraulic conductivity function, CH = common H.
 
 ## Basic unimodal models
 
@@ -34,3 +34,23 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - WRF parameters: qs, qr, a, m, n
 - get_init() = get_init_fx(): returns a, m, n
 - HCF: not provided
+
+## Bimodal models
+
+### dual-BC model
+- Name: bc2f, DB, dual-BC
+- WRF parameters: qs, qr, w1, hb1, l1, hb2, l2
+- get_init() = not provided
+- get_wrf() = not provided
+- HCF: Generalized mualem model
+- Paramters which only appears in HCF: ks, p, q, r
+
+#### dual-BC-CH model
+- Name: bc2, DBCH, dual-BC-CH
+- WRF parameters: qs, qr, hb, hc, l1, l2
+- Converted parameter: w1 = 1/(1+(hc/hb)^(l2-l1))
+- get_init() = get_init_bc2(): returns hb, hc, l1, l2
+- get_wrf() = not provided
+- HCF: Generalized mualem model
+- Paramters which only appears in HCF: ks, p, q, r
+
