@@ -1,9 +1,17 @@
 # Install unsatfit
 
-[Install Python 3](https://realpython.com/installing-python/) and then install unsatfit library with [pip](https://pip.pypa.io/en/stable/getting-started/) by
+[Install Python 3](https://wiki.python.org/moin/BeginnersGuide/Download). Mac and Linux distributions may include an outdated version of Python (Python 2), but you should install an updated one (Python 3).
+
+Install unsatfit library for Python 3 with [pip](https://pip.pypa.io/en/stable/getting-started/) by
 
 ```
 python -m pip install unsatfit
+```
+
+or to specify Python 3
+
+```
+python3 -m pip install unsatfit
 ```
 
 ## Version control
