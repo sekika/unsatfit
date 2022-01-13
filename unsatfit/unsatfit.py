@@ -95,6 +95,28 @@ class Fit:
                 # Index of parameters (starting from 0) used only for K function
                 'k-only': [4, 5, 6, 7]
             },
+            'vg': {
+                'function': (self.vg, self.vg_k),
+                'bound': self.bound_vg,
+                'get_init': self.get_init_vg,
+                'get_wrf': self.get_wrf_vg,
+                'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
+                'k-only': [4, 5, 7]
+            },
+            'ln': {
+                'function': (self.ln, self.ln_k),
+                'bound': self.bound_ln,
+                'get_init': self.get_init_ln,
+                'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
+                'k-only': [4, 5, 6, 7],
+            },
+            'fx': {
+                'function': (self.fx, False),
+                'bound': self.bound_fx,
+                'get_init': self.get_init_fx,
+                'param': ['qs', 'qr', 'a', 'm', 'n'],
+                'k-only': []
+            },
             'bc2': {
                 'function': (self.bc2, self.bc2_k),
                 'bound': self.bound_bc2,
@@ -108,14 +130,6 @@ class Fit:
                 'param': ['qs', 'qr', 'w1', 'hb1', 'l1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [7, 8, 9, 10]
             },
-            'vg': {
-                'function': (self.vg, self.vg_k),
-                'bound': self.bound_vg,
-                'get_init': self.get_init_vg,
-                'get_wrf': self.get_wrf_vg,
-                'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
-                'k-only': [4, 5, 7]
-            },
             'vg2': {
                 'function': (self.vg2, self.vg2_k),
                 'bound': self.bound_vg2,
@@ -128,13 +142,6 @@ class Fit:
                 'get_init': self.get_init_vg2ch,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 9]
-            },
-            'ln': {
-                'function': (self.ln, self.ln_k),
-                'bound': self.bound_ln,
-                'get_init': self.get_init_ln,
-                'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
-                'k-only': [4, 5, 6, 7],
             },
             'ln2': {
                 'function': (self.ln2, self.ln2_k),
@@ -207,13 +214,6 @@ class Fit:
                 'bound': self.bound_vgfs,
                 'param': ['qs', 'qr', 'qa', 'a', 'm', 'he', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 9]
-            },
-            'fx': {
-                'function': (self.fx, False),
-                'bound': self.bound_fx,
-                'get_init': self.get_init_fx,
-                'param': ['qs', 'qr', 'a', 'm', 'n'],
-                'k-only': []
             }
         }
         self.output_format = {
