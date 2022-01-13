@@ -9,4 +9,6 @@ Seki, K., Toride, N., & Th. van Genuchten, M. (2021) [Closed-form hydraulic cond
 - [Install](install.md)
 - [Models](model.md)
 - [Sample code](code.md)
+
+## Web version
 - [SWRC Fit](swrcfit.md)
