@@ -6,25 +6,7 @@ Seki, K., Toride, N., & Th. van Genuchten, M. (2021) [Closed-form hydraulic cond
 
 ## Contents
 
+- [Install](install.md)
 - [Models](model.md)
 - [Sample code](code.md)
-
-## Install
-
-```
-python3 -m pip install unsatfit
-```
-
-[PyPI Project page](https://pypi.org/project/unsatfit/)
-
-## SWRC Fit
-
-SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function. Source code is in the [repository](https://github.com/sekika/unsatfit/tree/main/swrcfit).
-
-- [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)
-
-[GNU Octave version of SWRC Fit](https://github.com/sekika/swrcfit/blob/master/doc/en/README.md) is no longer maintained but the code is available.
-
-## About unsatfit
-* Author: [Katsutoshi Seki](https://scholar.google.com/citations?user=Gs_ABawAAAAJ)
-* License: MIT License
+- [SWRC Fit](swrcfit.md)
