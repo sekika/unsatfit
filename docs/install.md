@@ -8,5 +8,5 @@ python -m pip install unsatfit
 
 ## Version control
 - Latest release can be checked by [release history](https://pypi.org/project/unsatfit/#history).
-- Installed version can be checked by `python -m pip show unsatfit`
-- Upgrade unsatfit by `python -m pip install --upgrade unsatfit`
+- Installed version can be checked by ```python -m pip show unsatfit```
+- Upgrade unsatfit by ```python -m pip install --upgrade unsatfit```
