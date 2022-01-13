@@ -71,6 +71,12 @@ class Fit:
                 'param': ['qs', 'qr', 'a', 'm', 'Ks', 'p', 'q', 'r'],
                 'k-only': [4, 5, 7]
             },
+            'mvg': {
+                'function': (self.mvg, self.mvg_k),
+                'bound': self.bound_mvg,
+                'param': ['qs', 'qr', 'a', 'm', 'hs', 'Ks', 'p', 'q', 'r'],
+                'k-only': [5, 6, 8]
+            },
             'ln': {
                 'function': (self.ln, self.ln_k),
                 'bound': self.bound_ln,
@@ -196,6 +202,7 @@ class Fit:
         # Define alias for model name
         self.model['BC'] = self.model['bc']
         self.model['VG'] = self.model['vg']
+        self.model['MVG'] = self.model['Modified VG'] = self.model['mvg']
         self.model['KO'] = self.model['ln']
         self.model['FX'] = self.model['fx']
         self.model['DB'] = self.model['dual-BC'] = self.model['bc2f']
@@ -391,19 +398,9 @@ class Fit:
         self.b_qa = self.b_w1 = self.b_m = (0, 1)
         self.b_a = self.b_a1 = self.b_a2 = self.b_hm = self.b_hm1 = self.b_hm2 = self.b_sigma = self.b_he = (
             0, np.inf)
-        self.b_hb = self.b_hb2 = self.b_hc = self.b_lambda = self.b_lambda1 = self.b_lambda2 = (
-            0, np.inf)
+        self.b_hb = self.b_hb2 = self.b_hc = self.b_hs = self.b_lambda = self.b_lambda1 = self.b_lambda2 = (0, np.inf)
         self.b_fxa = self.b_fxm = self.b_fxn = (0, np.inf)
         self.b_ks = self.b_p = self.b_q = self.b_r = (0, np.inf)
-
-    def bound_bc(self):
-        return [self.b_qs, self.b_qr, self.b_hb, self.b_lambda, self.b_ks, self.b_p, self.b_q, self.b_r]
-
-    def bound_vg(self):
-        return [self.b_qs, self.b_qr, self.b_a, self.b_m, self.b_ks, self.b_p, self.b_q, self.b_r]
-
-    def bound_ln(self):
-        return [self.b_qs, self.b_qr, self.b_hm, self.b_sigma, self.b_ks, self.b_p, self.b_q, self.b_r]
 
     # Linear regression y = ax
 
@@ -413,6 +410,9 @@ class Fit:
 # Definition of water retention and hydraulic conductivity functions
 
     # Brooks and Corey model
+
+    def bound_bc(self):
+        return [self.b_qs, self.b_qr, self.b_hb, self.b_lambda, self.b_ks, self.b_p, self.b_q, self.b_r]
 
     def bc(self, p, x):
         p = list(p)
@@ -486,6 +486,9 @@ class Fit:
 
     # van Genuchten model
 
+    def bound_vg(self):
+        return [self.b_qs, self.b_qr, self.b_a, self.b_m, self.b_ks, self.b_p, self.b_q, self.b_r]
+
     def vg(self, p, x):
         p = list(p)
         for c in self.const_ht:
@@ -530,7 +533,37 @@ class Fit:
             return (*f.fitted, 1)
         return (*f.ini, 1)
 
+    # Modified van Genuchten model (Vogel, 2000)
+
+    def bound_mvg(self):
+        return [self.b_qs, self.b_qr, self.b_a, self.b_m, self.b_hs, self.b_ks, self.b_p, self.b_q, self.b_r]
+
+    def mvg(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.mvg_se(p[2:6], x) * (p[0]-p[1]) + p[1]
+
+    def mvg_se(self, p, x):
+        a, m, hs, q = p
+        n = q/(1-m)
+        sm = (1 + (a * hs)**n)**(m)
+        return np.where(x < hs, 1, sm * (1 + (a * x)**n)**(-m))
+
+    def mvg_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, a, m, hs, ks, p, q, r = par
+        s = self.vg_se([a, m, q], x)
+        shs = self.vg_se([a, m, q], hs)
+        ah = (1-(1-s**(1/m))**m) / (1-(1-shs**(1/m))**m)
+        return np.where(x < hs, ks, ks * s**p * ah**r)
+
     # Kosugi model
+
+    def bound_ln(self):
+        return [self.b_qs, self.b_qr, self.b_hm, self.b_sigma, self.b_ks, self.b_p, self.b_q, self.b_r]
 
     def ln(self, p, x):
         p = list(p)

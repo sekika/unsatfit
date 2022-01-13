@@ -21,6 +21,14 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - HCF: Generalized Mualem model
 - Parameters which only appears in HCF: Ks, p, r
 
+Modified model (Vogel et al., 2000)
+- Name: mvg, MVG, Modified VG
+- WRF parameters: qs, qr, a, m, hs, q
+- Converted parameter: n = q/(1-m) i.e. m = 1-q/n
+- hs = 2 cm for 1&lt;n&lt;2 in Vogel et al., (2000)
+- HCF: Generalized Mualem model
+- Parameters which only appears in HCF: Ks, p, r
+
 ### Kosugi (KO) model
 - Name: ln, KO
 - WRF parameters: qs, qr, hm, sigma
@@ -88,7 +96,7 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - HCF: Generalized Mualem model
 - Parameters which only appears in HCF: Ks, p, q, r
 
-### VG<sub>1</sub>BC</sub>2</sub> model
+### VG<sub>1</sub>BC<sub>2</sub> model
 - Name: vgbc, VGBC, VG1BC2
 - WRF parameters: qs, qr, w1, a1, m1, hb2, l2, q
 - Converted parameter: n1 = q/(1-m1)
@@ -102,7 +110,7 @@ HCF variation: r=1 and independent p
 - Name: vgbcp2, VGBCP2, VG1BC2-p1p2
 - Parameters which only appears in HCF: Ks, p1, p2
 
-### VG<sub>1</sub>BC</sub>2</sub>-CH model
+### VG<sub>1</sub>BC<sub>2</sub>-CH model
 - Name: vgbcch, VGBCCH, VG1BC2-CH
 - WRF parameters: qs, qr, w1, a1, m1, l2, q
 - Converted parameter: n1 = q/(1-m1)
@@ -116,7 +124,7 @@ HCF variation: r=1 and independent p
 - Name: vgbcchp2, VGBCCHP2, VG1BC2CH-p1p2
 - Parameters which only appears in HCF: Ks, p1, p2
 
-### KO<sub>1</sub>BC</sub>2</sub> model
+### KO<sub>1</sub>BC<sub>2</sub> model
 - Name: kobc, KOBC, KO1BC2
 - WRF parameters: qs, qr, w1, hm1, sigma1, hb2, l2
 - get_init() = not provided
@@ -129,7 +137,7 @@ HCF variation: r=1 and independent p
 - Name: kobcp2, KOBCP2, KO1BC2-p1p2
 - Parameters which only appears in HCF: Ks, p1, p2, q
 
-### KO<sub>1</sub>BC</sub>2</sub>-CH model
+### KO<sub>1</sub>BC<sub>2</sub>-CH model
 - Name: kobcch, KOBCCH, KO1BC2-CH
 - WRF parameters: qs, qr, w1, hm, sigma1, l2
 - get_init() = get_init_kobcch(): returns w1, hm, sigma1, l2
