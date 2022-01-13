@@ -92,6 +92,8 @@ class Fit:
                 'param': ['qs', 'qr', 'hb', 'l', 'Ks', 'p', 'q', 'r'],
                 # Function to get initial WRF parameters except qs, qr
                 'get_init': self.get_init_bc,
+                # Function to get initial WRF parameters
+                'get_wrf': self.get_wrf_bc,
                 # Index of parameters (starting from 0) used only for K function
                 'k-only': [4, 5, 6, 7]
             },
@@ -107,6 +109,7 @@ class Fit:
                 'function': (self.ln, self.ln_k),
                 'bound': self.bound_ln,
                 'get_init': self.get_init_ln,
+                'get_wrf': self.get_wrf_ln,
                 'param': ['qs', 'qr', 'hm', 'sigma', 'Ks', 'p', 'q', 'r'],
                 'k-only': [4, 5, 6, 7],
             },
@@ -345,11 +348,15 @@ class Fit:
         self.b_func = self.model[model]['bound']
         self.param = self.model[model]['param']
         self.model_k_only = self.model[model]['k-only']
-        # Initilize function
+        # get_init and get_wrf functions
         if 'get_init' in self.model[model]:
             self.get_init = self.model[model]['get_init']
         else:
             self.get_init = self.get_init_not_defined
+        if 'get_wrf' in self.model[model]:
+            self.get_wrf = self.model[model]['get_wrf']
+        else:
+            self.get_wrf = self.get_wrf_not_defined
         # Recostruct const to allow alternative expressions
         reconst = []
         for i in const:
@@ -407,6 +414,11 @@ class Fit:
             self.model_name))
         exit(1)
 
+    def get_wrf_not_defined(self):
+        print('get_wrf function not defined for {0} model'.format(
+            self.model_name))
+        exit(1)
+
     def __init_bound(self):
         self.b_qs = self.b_qr = (0, np.inf)
         self.b_qa = self.b_w1 = self.b_m = (0, 1)
@@ -448,10 +460,13 @@ class Fit:
         return np.where(x < p[2], 1, (x/p[2]) ** (-p[3]))
 
     def bc_k(self, p, x):  # Not defined yet
-        p = list(p)
+        par = list(p)
         for c in self.const:
-            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
-        return
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, hb, l, ks, p, q, r = par
+        s = self.bc_se(par[:4], x)
+        k = ks * s**p * (np.where(x < hb, 1, (x/hb) ** (-l-q)))**r
+        return k
 
     def get_init_bc(self):  # hb and lambda
         import math
@@ -489,6 +504,18 @@ class Fit:
             if f.r2_ht > r2:
                 hb, l = f.fitted[1:]
         return hb, l
+
+    def get_wrf_bc(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        hb, l = f.get_init_bc()
+        f.set_model('bc', const=[])
+        f.ini = (max(f.swrc[1]), 0, hb, l)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
     # van Genuchten model
 
@@ -577,6 +604,18 @@ class Fit:
         f.ini = (1/a, s)
         f.optimize()
         return f.fitted
+
+    def get_wrf_ln(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        hm, s = f.get_init_ln()
+        f.set_model('bc', const=[])
+        f.ini = (max(f.swrc[1]), 0, hm, s)
+        f.optimize()
+        if f.success:
+            return f.fitted
+        return f.ini
 
     # Fredlund and Xing model
 
@@ -1354,6 +1393,11 @@ class Fit:
             self.ht_only = False
             if min(self.unsat[1]) <= 0:
                 self.message = 'Error: K should be positive.'
+                self.success = False
+                return
+            if 0 in self.f_hk(self.ini, self.unsat[0]):
+                self.message = 'Overflow error: K(h) is too small and calculated as 0'
+                self.success = False
                 return
             a = (self.swrc[0], self.swrc[1], self.unsat[0], self.unsat[1])
             cost = self.total_cost
