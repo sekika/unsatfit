@@ -12,29 +12,7 @@ class Fit:
 
     Models:
 
-        ===== Basic unimodal models =====
-        bc: Brooks and Corey (BC) with generalized Mualem model
-        vg: van Genuchten (VG) with generalized Mualem model
-        ln: Kosugi model (KO) with generalized Mualem model
-        fx: Fredlund und Xing model (SWRC only)
-
-        ===== Bimodal models with generalized Mualem model =====
-        bc2f    : dual-BC
-        bc2     : dual-BC-CH (common H)
-        vg2     : dual-VG
-        vg2ch   : dual-VG-CH
-        ln2     : dual-KO
-        vgbc    : VG1BC2
-        vgbcp2  : VG1BC2 with r=1 and independent p1, p2
-        vgbcch  : VG1BC2-CH
-        vgbcchp2: VG1BC2-CH with r=1 and independent p1, p2
-        kobcch  : KO1BC2-CH
-        kobcchp2: KO1BC2-CH with r=1 and independent p1, p2
-
-        ===== Exponential decrease to zero water content =====
-        vgfs  : van Genuchten - Fayer and Simmons model with generalized Mualem model
-
-        See list of parameters and alias names for the models in __init_model()
+        See https://sekika.github.io/unsatfit/model.html
 
     Methods:
 
