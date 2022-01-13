@@ -4,21 +4,9 @@ import numpy as np
 class Fit:
     """Fit water retention and unsaturated hydraulic conductivity functions
 
-    Sample usage:
+    Sample code:
 
-        f = unsatfit.Fit() # Create instance for fitting
-        f.set_model('vg', const=[[10, 1]]) # Set model and constant parameters
-        f.swrc = (h, theta) # Data of soil water retention
-        f.unsat = (h, K) # Data of unsaturated hydraulic conductivity
-        a, m = f.get_init_vg() # Get initial paramter (f.get_init() is also OK)
-        f.ini = (max(theta), 0, a, m, max(K), 0.5, 2) # Set initial paramter
-        f.b_qr = (0, 0.05) # Set lower and upper bound
-        f.optimize() # Optimize
-        print(f.fitted) # Show result as an array
-        print(f.message)  # Show result
-        f.show_fig = True
-        f.plot()  # Draw a graph
-        f.contour('a', 'm')  # Draw contour of RMSE for a and m
+        See document at https://sekika.github.io/unsatfit/
 
         See also the code of test() function
 
