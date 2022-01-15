@@ -1386,7 +1386,7 @@ class Fit:
         if len(self.swrc) != 2:
             self.message = 'Error: No data of soil water retention curve.'
             return
-        
+
         try:
             a = self.ini[0][0]
             gl = True
@@ -1598,17 +1598,17 @@ class Fit:
         if self.have_new_plot:
             self.add_curve()
         ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
-                    linestyle='', label=self.data_legend)
+                 linestyle='', label=self.data_legend)
         if not self.data_only:
             for curve in self.curves_ht:
                 ax1.plot(*curve['data'], color=curve['color'],
-                            linestyle=curve['style'], label=curve['legend'])
+                         linestyle=curve['style'], label=curve['legend'])
             if not self.ht_only:
                 ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
-                            marker='o', linestyle='', label='_nolegend_')
+                         marker='o', linestyle='', label='_nolegend_')
                 for curve in self.curves_hk:
                     ax2.plot(*curve['data'], color=curve['color'],
-                                linestyle=curve['style'], label='_nolegend_')
+                             linestyle=curve['style'], label='_nolegend_')
             fig.legend(loc=self.legend_loc)
             # plt.legend()
 
