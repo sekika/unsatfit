@@ -5,45 +5,18 @@ import numpy as np
 class Fit:
     """Fit water retention and unsaturated hydraulic conductivity functions
 
-    Sample code:
+    unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties (water retention function and unsaturated hydraulic conductivity function).
 
-        See document at https://sekika.github.io/unsatfit/
+    See document at https://sekika.github.io/unsatfit/
 
-        See also the code of test() function
+    PyPI: https://pypi.org/project/unsatfit/
+    Source: https://github.com/sekika/unsatfit
+    Author: Katsutoshi Seki
+    License: MIT License
 
-    Models:
+    Reference
 
-        See https://sekika.github.io/unsatfit/model.html
-
-    Methods:
-
-        optimize()     : optimize
-        plot()         : plot
-        add_curve()    : add a curve for plot
-        clear_curves() : clear curves
-        contour(x,y)   : Draw contour of RMSE for x and y in parameter name
-
-        test()         : (for development) test integrity of the code
-
-        Methods to get initial paramteres for SWRC
-        Note that they can be accessed by get_init() when model is set
-
-        get_init_bc()  : get (hb, lambda) for BC model
-        get_init_vg()  : get (alpha, m) for VG model. m=1-q/n
-        get_init_ln()  : get (hm, sigma) for Kosugi model
-        get_init_fx()  : get (a, m, n) for Fredlund and Xing model
-        get_init_bc2() : get (hm, hc, l1, l2) for dual-BC-CH model
-                         w1 = 1/(1+(hc/hb)^(l2-l1))
-        get_init_vg2ch():get (w1, alpha, m1, m2) for dual-VG-CH model
-        get_init_kobcch(): get (w1, hm, sigma1, l2) for KO-BC-CH model
-
-    Instance properties:
-
-        See
-        __init_bound() for boundary conditions
-        __init_lsq()   for least square optimization
-        __init_fig()   for figure options
-
+    Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168. https://doi.org/10.1002/vzj2.20168
     """
 
 # Definition of hydraulic models
@@ -382,7 +355,7 @@ class Fit:
                         k += 1
                 else:
                     print(
-                        '{0} parameters required for water retention function, but {1} given.'.format(len(p), i))
+                        '{0} parameters required for water retention function, but {1} parameters {2} given.'.format(len(p), len(i), i))
                     exit()
             else:  # expression like [2, 0]
                 reconst.append(i)
@@ -1413,6 +1386,18 @@ class Fit:
         if len(self.swrc) != 2:
             self.message = 'Error: No data of soil water retention curve.'
             return
+        
+        try:
+            a = self.ini[0][0]
+            gl = True
+        except:
+            gl = False
+        if gl:
+            f = self.multi_ini()
+            if f.success:
+                self.ini = f.fitted
+            else:
+                self.ini = f.ini
 
         self.mean_theta = np.average(self.swrc[1])
         self.var_theta = np.average((self.swrc[1] - self.mean_theta)**2)
@@ -1425,11 +1410,9 @@ class Fit:
             self.ht_only = False
             if min(self.unsat[1]) <= 0:
                 self.message = 'Error: K should be positive.'
-                self.success = False
                 return
             if 0 in self.f_hk(self.ini, self.unsat[0]):
                 self.message = 'Overflow error: K(h) is too small and calculated as 0'
-                self.success = False
                 return
             a = (self.swrc[0], self.swrc[1], self.unsat[0], self.unsat[1])
             cost = self.total_cost
@@ -1493,6 +1476,25 @@ class Fit:
             self.message = self.format(
                 self.param, True).format(*self.fitted, self.r2_ht, self.r2_ln_hk)
 
+    def multi_ini(self):
+        import copy
+        import itertools
+        comb = list(itertools.product(*self.ini))
+        max_cost = -100000
+        for ini in comb:
+            self.ini = ini
+            self.optimize()
+            if self.success:
+                if len(self.unsat) == 2:
+                    cost = self.r2_ht + self.r2_ln_hk
+                else:
+                    cost = self.r2_ht
+                if cost > max_cost:
+                    max_cost = cost
+                    max_f = copy.deepcopy(self)
+        if max_cost == -100000:
+            return self
+        return max_f
 
 # Figure
 
@@ -1595,20 +1597,20 @@ class Fit:
         # Draw plots, curves and legends
         if self.have_new_plot:
             self.add_curve()
-            ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
-                     linestyle='', label=self.data_legend)
-            if not self.data_only:
-                for curve in self.curves_ht:
-                    ax1.plot(*curve['data'], color=curve['color'],
-                             linestyle=curve['style'], label=curve['legend'])
-                if not self.ht_only:
-                    ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
-                             marker='o', linestyle='', label='_nolegend_')
-                    for curve in self.curves_hk:
-                        ax2.plot(*curve['data'], color=curve['color'],
-                                 linestyle=curve['style'], label='_nolegend_')
-                fig.legend(loc=self.legend_loc)
-                # plt.legend()
+        ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
+                    linestyle='', label=self.data_legend)
+        if not self.data_only:
+            for curve in self.curves_ht:
+                ax1.plot(*curve['data'], color=curve['color'],
+                            linestyle=curve['style'], label=curve['legend'])
+            if not self.ht_only:
+                ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
+                            marker='o', linestyle='', label='_nolegend_')
+                for curve in self.curves_hk:
+                    ax2.plot(*curve['data'], color=curve['color'],
+                                linestyle=curve['style'], label='_nolegend_')
+            fig.legend(loc=self.legend_loc)
+            # plt.legend()
 
         # Draw scale
         if self.log_x:
