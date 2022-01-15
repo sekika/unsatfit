@@ -5,7 +5,9 @@ import numpy as np
 class Fit:
     """Fit water retention and unsaturated hydraulic conductivity functions
 
-    unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties (water retention function and unsaturated hydraulic conductivity function).
+    unsatfit is a Python library for optimizing parameters of functions of
+    soil hydraulic properties (water retention function and unsaturated
+    hydraulic conductivity function).
 
     See document at https://sekika.github.io/unsatfit/
 
@@ -16,7 +18,9 @@ class Fit:
 
     Reference
 
-    Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168. https://doi.org/10.1002/vzj2.20168
+    Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic
+        conductivity equations for multimodal unsaturated soil hydraulic properties.
+        Vadose Zone J. 2021; e20168. https://doi.org/10.1002/vzj2.20168
     """
 
 # Definition of hydraulic models
