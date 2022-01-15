@@ -27,7 +27,7 @@ It is all about Fit class of unsatfit.
 <dd>Draw contour of RMSE for x and y in parameter name.</dd>
 <dt>test()</dt>
 <dd>Test integrity of the code for development.</dd>
-<dl>
+</dl>
 
 ## Properties
 
