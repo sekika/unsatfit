@@ -154,6 +154,14 @@ HCF variation: r=1 and independent p
 
 ## Exponential decrease to zero water content
 
+### Peters model (Kosugi type)
+- Name: pk, PK, Peters-KO
+- WRF parameters: qs, qr, w1, hm, sigma1, he,
+- get_init() = not provided
+- get_wrf() = not provided
+- HCF: Peters (2013)
+- Parameters which only appears in HCF: Ks, p, a, omega
+
 ### Fayer and Simmons model (van Genuchten type)
 - Name: vgfs, VGFS, Fayer-VG
 - WRF parameters: qs, qr, qa, a, m, he, q

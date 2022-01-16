@@ -161,6 +161,12 @@ class Fit:
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8, 9]
             },
+            'pk': {
+                'function': (self.pk, self.pk_k),
+                'bound': self.bound_pk,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'he', 'Ks', 'p', 'a', 'omega'],
+                'k-only': [6, 7, 8, 9]
+            },
             'vgfs': {
                 'function': (self.vgfs, self.vgfs_k),
                 'bound': self.bound_vgfs,
@@ -196,6 +202,7 @@ class Fit:
         self.model['KOBCP2'] = self.model['KO1BC2-p1p2'] = self.model['kobcp2']
         self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
         self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
+        self.model['PK'] = self.model['Peters-KO'] = self.model['pk']
         self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
 
     # Modified model
@@ -1323,6 +1330,38 @@ class Fit:
         gamma_max = gamma(h0, a, m, n, hm, sa, gse) + gamma_0c
         integral = gamma(x, a, m, n, hm, sa, gse) / gamma_max
         return ks * self.vgfs_se(par[:6]+[q], x)**p * integral**r
+
+
+    # Peters model with Kosugi
+
+    def bound_pk(self):
+        return [self.b_qs, self.b_qr, self.b_w1, self.b_hm1, self.b_sigma,
+                self.b_he, self.b_ks, self.b_p, self.b_a, self.b_w1]
+
+    def pk(self, p, x):
+        p = list(p)
+        for c in self.const_ht:
+            p = p[:c[0]-1] + [c[1]] + p[c[0]-1:]
+        return self.pk_se(p, x) * (p[0]-p[1]) + p[1]
+
+    def pk_se(self, p, x):
+        qs, qr, w, ha, sigma1, he = p
+        s1 = self.ln_se([ha, sigma1], x)
+        bunbo = np.log(1+he/ha)
+        xm = 1/(1-np.log(2)/bunbo)
+        s2 = np.where(x < ha, 1, xm * (1-np.log(1+x/ha)/bunbo))
+        return w * s1 + (1-w) * s2
+
+    def pk_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, ha, sigma1, he, ks, p, a, omega = par
+        s1 = 1 - norm.cdf(np.log(x / ha)/sigma1 + sigma1)
+        k1 = self.pk_se(par[:6], x)**p * s1**2
+        k2 = np.where(x < ha, 1, (x/ha) ** (-a))
+        return ks * ((1-omega) * k1 + omega * k2)
 
 # Cost function
 

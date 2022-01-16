@@ -513,7 +513,6 @@ def maincgi():
     f.right_margin = 0.05
     f.legend_loc = 'upper right'
     f.color_marker = 'blue'
-    f.color = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
 
     f.sampledata = sample()
     printhead(lang, f)
