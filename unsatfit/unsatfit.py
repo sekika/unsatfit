@@ -1520,6 +1520,8 @@ class Fit:
         self.show_r2 = True
         self.log_x = True
         self.min_x_log = 1
+        # self.max_x = 10**4
+        # self.min_y2 = 10**(-12)
         self.max_y2_log = 5
         self.curve_smooth = 200
         self.contour_smooth = 50
@@ -1528,9 +1530,11 @@ class Fit:
         self.label_head = 'Matric head'
         self.label_theta = 'Volumetric water content'
         self.label_k = 'Hydraulic conductivity'
+        self.marker = 'o'
         self.color_marker = 'black'
-        self.color_line = 'black'
-        self.line_style = 'dashed'
+        self.color = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
+        self.style = ['dashed', 'dashdot', 'solid', 'dotted']
+        self.line_num = 0
         self.legend = True
         self.legend_loc = 'center right'
         self.data_legend = 'Measured'
@@ -1540,9 +1544,9 @@ class Fit:
         x1, y1 = self.swrc
         if self.log_x:
             self.min_x = self.min_x_log
-            try:
-                self.max_x
-            except AttributeError:
+            if hasattr(self, 'max_x'):
+                self.max_x = max(self.max_x, max(x1) * 1.5)
+            else:
                 self.max_x = max(x1) * 1.5
         else:
             self.min_x = min(0, min(x1) * 0.85)
@@ -1554,12 +1558,17 @@ class Fit:
         self.max_y1 = max(y1) * 1.15
         if not self.ht_only:
             x2, y2 = self.unsat
-            self.min_y2 = min(y2) * 0.2
+            if hasattr(self, 'min_y2'):
+                self.min_y2 = min(self.min_y2, min(y2) * 0.2)
+            else:
+                self.min_y2 = min(y2) * 0.2
             self.max_y2 = max(y2) * self.max_y2_log
 
     def add_curve(self):
         import math
         self.set_scale()
+        color = self.color[self.line_num % len(self.color)]
+        style = self.style[self.line_num % len(self.style)]
         if self.log_x:
             x = 2**np.linspace(math.log2(self.min_x),
                                math.log2(self.max_x), num=self.curve_smooth)
@@ -1567,16 +1576,18 @@ class Fit:
             x = np.linspace(self.min_x, self.max_x, num=self.curve_smooth)
         if self.ht_only:
             self.curves_ht.append({'data': (x, self.f_ht(
-                self.fitted, x)), 'color': self.color_line, 'style': self.line_style, 'legend': self.line_legend})
+                self.fitted, x)), 'color': color, 'style': style, 'legend': self.line_legend})
         else:
             self.curves_ht.append({'data': (x, self.f_ht(self.p_ht(
-                self.fitted), x)), 'color': self.color_line, 'style': self.line_style, 'legend': self.line_legend})
+                self.fitted), x)), 'color': color, 'style': style, 'legend': self.line_legend})
             self.curves_hk.append({'data': (x, self.f_hk(
-                self.fitted, x)), 'color': self.color_line, 'style': self.line_style, 'legend': self.line_legend})
+                self.fitted, x)), 'color': color, 'style': style, 'legend': self.line_legend})
+        self.line_num += 1
 
     def clear_curves(self):
         self.curves_ht = []
         self.curves_hk = []
+        self.line_num = 0
 
     def h_0to1(self, data):
         if not self.fig_h_0to1:
@@ -1601,7 +1612,7 @@ class Fit:
         # Draw plots, curves and legends
         if self.have_new_plot:
             self.add_curve()
-        ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker='o',
+        ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker=self.marker,
                  linestyle='', label=self.data_legend)
         if not self.data_only:
             for curve in self.curves_ht:
@@ -1609,7 +1620,7 @@ class Fit:
                          linestyle=curve['style'], label=curve['legend'])
             if not self.ht_only:
                 ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
-                         marker='o', linestyle='', label='_nolegend_')
+                         marker=self.marker, linestyle='', label='_nolegend_')
                 for curve in self.curves_hk:
                     ax2.plot(*curve['data'], color=curve['color'],
                              linestyle=curve['style'], label='_nolegend_')

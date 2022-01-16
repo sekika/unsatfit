@@ -513,7 +513,7 @@ def maincgi():
     f.right_margin = 0.05
     f.legend_loc = 'upper right'
     f.color_marker = 'blue'
-    f.linecolors = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
+    f.color = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
 
     f.sampledata = sample()
     printhead(lang, f)
@@ -691,12 +691,8 @@ def calc(f):
         if i.success:
             if f.onemodel:
                 if count == aic_min:
-                    f.color_line = 'red'
-                    f.line_style = 'solid'
                     f.plot()
             else:
-                f.color_line = f.linecolors[count % len(f.linecolors)]
-                f.line_style = 'dashed'
                 if len(result) > count:
                     f.plot()
                 else:
