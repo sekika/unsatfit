@@ -150,7 +150,7 @@ HCF variation: r=1 and independent p
 HCF variation: r=1 and independent p
 
 - Name: kobcch2, KOBCCHIP, KO1BC2-CH-IP, KBC-IP
-- Parameters which only appears in HCF: Ks, p1, p2
+- Parameters which only appears in HCF: Ks, p1, p2, q
 
 ## Exponential decrease to zero water content
 
