@@ -130,7 +130,7 @@ HCF variation: r=1 and independent p
 - Name: kobc, KOBC, KO1BC2, KB
 - WRF parameters: qs, qr, w1, hm1, sigma1, hb2, l2
 - get_init() = not provided
-- get_wrf() = get_wrf_kobc(): returns full WRF parameters
+- get_wrf() = get_wrf_kobc(): returns full WRF parameters with qr=0
 - HCF: Generalized Mualem model
 - Parameters which only appears in HCF: Ks, p, q, r
 
@@ -143,7 +143,7 @@ HCF variation: r=1 and independent p
 - Name: kobcch, KOBCCH, KO1BC2-CH, KBC
 - WRF parameters: qs, qr, w1, hm, sigma1, l2
 - get_init() = get_init_kobcch(): returns w1, hm, sigma1, l2
-- get_wrf() = not provided
+- get_wrf() = get_wrf_kobcch(): returns full WRF parameters with qr=0
 - HCF: Generalized Mualem model
 - Parameters which only appears in HCF: Ks, p, q, r
 
