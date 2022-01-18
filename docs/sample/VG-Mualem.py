@@ -28,8 +28,8 @@ if n < 2:
     model = 'Modified VGM'
     print('Modified VG model with hs=2cm is used because n<2')
 f.ini = (max(k), 1.5)  # Set initial paramter
-f.b_ks = (max(k)*0.9, max(k)*5)  # Set bound for Ks
-f.b_q = (-0.5, 10)
+f.b_ks = (max(k), max(k)*5)  # Set bound for Ks
+f.b_p = (-10, 10)
 f.optimize()  # Optimize
 if not f.success:
     print(f.message)
