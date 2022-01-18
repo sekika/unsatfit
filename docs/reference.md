@@ -4,9 +4,11 @@ It is all about Fit class of unsatfit.
 
 ## Methods
 
+For optimization.
 <dl>
 <dt>set_model(model, const=[])</dt>
 <dd>Set hydraulic model for model with constant parameters of const.</dd>
+<dt>modified_model(hs)</dt>
 <dt>optimize()</dt>
 <dd>Optimize parameteres.</dd>
 <dt>f_ht(p, x)</dt>
@@ -17,6 +19,11 @@ It is all about Fit class of unsatfit.
 <dd>Get initial estimate of water retention parameters except qs and qr. To be accessed after set_model. See <a href="model.html">models</a> for function names by specifying a model.</dd>
 <dt>get_wrf()</dt>
 <dd>Get water retention parameters. To be accessed after set_model. See <a href="model.html">models</a> for function names by specifying a model.</dd>
+<dd>Change the hydraulic model to modified model with hs value by [Vogel et al. (2000)](https://doi.org/10.1016/S0309-1708(00)00037-3).</dd>
+</dl>
+
+For figures etc.
+<dl>
 <dt>plot()</dt>
 <dd>Plot a figure.</dd>
 <dt>add_curve()</dt>
@@ -44,7 +51,7 @@ It is all about Fit class of unsatfit.
 - For least square optimization, see __init_lsq() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
 - For figure options, see  __init_fig() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
 
-## Properties for return values
+## Properties for return values of optimize()
 
 <dl>
 <dt>fitted</dt>
