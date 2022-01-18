@@ -4,9 +4,10 @@ Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sa
 
     Water retention parameters with m=1-1/n (q=1)
     qs = 0.355 qr = 0.000 a = 0.00531 m = 0.107
+    Modified VG model with hs=2cm is used because n<2
     Hydraulic conductivity parameters
-    Ks = 8.88e-01 p = 0.895 r = 1.447 R2 q = 0.992 R2 logK = 0.973
+    Ks = 3.46e-01 p = 7.642 R2 q = 0.992 R2 logK = 0.928
 
-where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively, and R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve. Following figure is produced.
+where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively, and R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve. Modified model of [Vogel et al. (2000)](https://doi.org/10.1016/S0309-1708(00)00037-3) is used because n<2, as specified in the sample code. Following figure is produced.
 
 ![VG-Mualem](sample/VG-Mualem.png "VG-Mualem")
