@@ -151,6 +151,7 @@ class Fit:
                 'function': (self.kobcch, self.kobcch_k),
                 'bound': self.bound_kobcch,
                 'get_init': self.get_init_kobcch,
+                'get_wrf': self.get_wrf_kobcch,
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 8, 9]
             },
@@ -158,6 +159,7 @@ class Fit:
                 'function': (self.kobcch, self.kobcchp2_k),
                 'bound': self.bound_kobcchp2,
                 'get_init': self.get_init_kobcch,
+                'get_wrf': self.get_wrf_kobcch,
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8, 9]
             },
@@ -190,19 +192,19 @@ class Fit:
         self.model['FX'] = self.model['fx']
         self.model['DB'] = self.model['dual-BC'] = self.model['bc2f']
         self.model['DBCH'] = self.model['dual-BC-CH'] = self.model['bc2']
-        self.model['VGBC'] = self.model['VG1BC2'] = self.model['vgbc']
-        self.model['VGBCP2'] = self.model['VG1BC2-p1p2'] = self.model['vgbcp2']
-        self.model['VGBCCH'] = self.model['VG1BC2-CH'] = self.model['vgbcch']
-        self.model['VGBCCHP2'] = self.model['VG1BC2-CH-p1p2'] = self.model['vgbcchp2']
+        self.model['VGBC'] = self.model['VG1BC2'] = self.model['VB'] = self.model['vgbc']
+        self.model['VGBCIP'] = self.model['VG1BC2-IP'] = self.model['VB-IP'] = self.model['vgbcp2']
+        self.model['VGBCCH'] = self.model['VG1BC2-CH'] = self.model['VBC'] = self.model['vgbcch']
+        self.model['VGBCCHIP'] = self.model['VG1BC2-CH-IP'] = self.model['VBC-IP'] = self.model['vgbcchp2']
         self.model['DV'] = self.model['dual-VG'] = self.model['vg2']
         self.model['DVCH'] = self.model['dual-VG-CH'] = self.model['vg2ch']
         self.model['DK'] = self.model['dual-KO'] = self.model['ln2']
         self.model['DKCH'] = self.model['dual-KO-CH'] = self.model['ln2ch']
-        self.model['KOBC'] = self.model['KO1BC2'] = self.model['kobc']
-        self.model['KOBCP2'] = self.model['KO1BC2-p1p2'] = self.model['kobcp2']
-        self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['kobcch']
-        self.model['KOBCCHP2'] = self.model['KO1BC2-CH-p1p2'] = self.model['kobcchp2']
-        self.model['PK'] = self.model['Peters-KO'] = self.model['pk']
+        self.model['KOBC'] = self.model['KO1BC2'] = self.model['KB'] = self.model['kobc']
+        self.model['KOBCIP'] = self.model['KO1BC2-IP'] = self.model['KB-IP'] = self.model['kobcp2']
+        self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['KBC'] = self.model['kobcch']
+        self.model['KOBCCHIP'] = self.model['KO1BC2-CH-IP'] = self.model['KBC-IP'] = self.model['kobcchp2']
+        self.model['PK'] = self.model['Peters-KO'] = self.model['PE'] = self.model['pk']
         self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
 
     # Modified model
@@ -1248,18 +1250,50 @@ class Fit:
         sigma1 = 1.2*(n1-1)**(-0.8)
         if sigma1 > 2.5:
             sigma1 = 2.5
-        f.ini = (w1, 1/a, sigma1, l2)
+        ini = f.ini = (w1, 1/a, sigma1, l2)
         f.b_sigma = (0, 2.5)
         f.optimize()
         if f.success:
             return f.fitted
-        f.b_sigma = (0, 3)
         h, sigma = f.get_init_ln()
-        f.ini = (0.9, h, sigma, l2)
+        if sigma > 2.5:
+            sigma = 2.5
+        f.ini = ([0.2, 0.8], [h,1/a], [sigma,], [l2,])
         f.optimize()
         if f.success:
             return f.fitted
-        return f.ini
+        return ini
+    
+    def get_wrf_kobcch(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        w1, h1, s1, l2 = f.get_init_kobcch()
+        f.set_model('kobcch', const=['qr=0'])
+        qs = max(f.swrc[1])
+        f.ini = (qs, w1, h1, s1, l2)
+        f.b_sigma = (0, 2.5)
+        f.optimize()
+        if f.success:
+            import copy
+            f2 = copy.deepcopy(f)
+            f.optimize()
+            if f.success:
+                return (f.fitted[0], 0, *f.fitted[1:])
+            else:
+                return (f2.fitted[0], 0, *f2.fitted[1:])
+        f.b_qs = (qs * 0.95, qs * 1.5)
+        f.optimize()
+        if f.success:
+            return (f.fitted[0], 0, *f.fitted[1:])
+        hb, hc, l1, l2 = f.get_init_bc2()
+        w = 1/(1+(hc/hb)**(l2-l1))
+        s1 = 1.2*l1**(-0.8)
+        if s1 > 2.5:
+            s1 = 2.5
+        f.ini = (qs, w, hb, s1, l2)
+        f.optimize()
+        return (qs, 0, *f.ini[1:])
 
     # KO1BC2-CH model with r=1 and independent p1, p2
 

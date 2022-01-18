@@ -99,7 +99,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Parameters which only appears in HCF: Ks, p, q, r
 
 ### VG<sub>1</sub>BC<sub>2</sub> model
-- Name: vgbc, VGBC, VG1BC2
+- Name: vgbc, VGBC, VG1BC2, VB
 - WRF parameters: qs, qr, w1, a1, m1, hb2, l2, q
 - Converted parameter: n1 = q/(1-m1)
 - get_init() = not provided
@@ -109,11 +109,11 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 
 HCF variation: r=1 and independent p
 
-- Name: vgbcp2, VGBCP2, VG1BC2-p1p2
+- Name: vgbcp2, VGBCIP, VG1BC2-IP, VB-IP
 - Parameters which only appears in HCF: Ks, p1, p2
 
 ### VG<sub>1</sub>BC<sub>2</sub>-CH model
-- Name: vgbcch, VGBCCH, VG1BC2-CH
+- Name: vgbcch, VGBCCH, VG1BC2-CH, VBC
 - WRF parameters: qs, qr, w1, a1, m1, l2, q
 - Converted parameter: n1 = q/(1-m1)
 - get_init() = get_init_vgbcch(): returns w1, a1, m1, l2 where q=1
@@ -123,11 +123,11 @@ HCF variation: r=1 and independent p
 
 HCF variation: r=1 and independent p
 
-- Name: vgbcchp2, VGBCCHP2, VG1BC2CH-p1p2
+- Name: vgbcchp2, VGBCCHIP, VG1BC2CH-IP, VBC-IP
 - Parameters which only appears in HCF: Ks, p1, p2
 
 ### KO<sub>1</sub>BC<sub>2</sub> model
-- Name: kobc, KOBC, KO1BC2
+- Name: kobc, KOBC, KO1BC2, KB
 - WRF parameters: qs, qr, w1, hm1, sigma1, hb2, l2
 - get_init() = not provided
 - get_wrf() = get_wrf_kobc(): returns full WRF parameters
@@ -136,11 +136,11 @@ HCF variation: r=1 and independent p
 
 HCF variation: r=1 and independent p
 
-- Name: kobcp2, KOBCP2, KO1BC2-p1p2
+- Name: kobcp2, KOBCIP, KO1BC2-IP, KB-IP
 - Parameters which only appears in HCF: Ks, p1, p2, q
 
 ### KO<sub>1</sub>BC<sub>2</sub>-CH model
-- Name: kobcch, KOBCCH, KO1BC2-CH
+- Name: kobcch, KOBCCH, KO1BC2-CH, KBC
 - WRF parameters: qs, qr, w1, hm, sigma1, l2
 - get_init() = get_init_kobcch(): returns w1, hm, sigma1, l2
 - get_wrf() = not provided
@@ -149,13 +149,13 @@ HCF variation: r=1 and independent p
 
 HCF variation: r=1 and independent p
 
-- Name: kobcch2, KOBCCHP2, KO1BC2-CH-p1p2
+- Name: kobcch2, KOBCCHIP, KO1BC2-CH-IP, KBC-IP
 - Parameters which only appears in HCF: Ks, p1, p2
 
 ## Exponential decrease to zero water content
 
 ### Peters model (Kosugi type)
-- Name: pk, PK, Peters-KO
+- Name: pk, PK, PE, Peters-KO
 - WRF parameters: qs, qr, w1, hm, sigma1, he,
 - get_init() = not provided
 - get_wrf() = not provided
