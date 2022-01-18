@@ -542,7 +542,14 @@ class Fit:
         f.debug = self.debug
         a, m = f.get_init_vg()
         f.set_model('vg', const=['q=1'])
-        f.ini = (max(f.swrc[1]), 0, a, m)
+        qs = max(f.swrc[1])
+        f.ini = (qs, 0, a, m)
+        f.b_a = (0, a*100)
+        f.optimize()
+        if f.success:
+            return (*f.fitted, 1)
+        f.b_qs = (qs * 0.95, qs * 1.5)
+        f.b_qr = (0, min(f.swrc[1]))
         f.optimize()
         if f.success:
             return (*f.fitted, 1)
@@ -617,6 +624,7 @@ class Fit:
         if s > 3:
             s = 3
         f.ini = (1/a, s)
+        f.b_sigma = (0, 3.2)
         f.optimize()
         return f.fitted
 
@@ -625,8 +633,28 @@ class Fit:
         f.swrc = self.swrc
         f.debug = self.debug
         hm, s = f.get_init_ln()
-        f.set_model('bc', const=[])
-        f.ini = (max(f.swrc[1]), 0, hm, s)
+        f.set_model('ln', const=[])
+        qs = max(f.swrc[1])
+        if s > 2.4:
+            s = 2.4
+        f.ini = (qs, 0, hm, s)
+        f.b_sigma = (0, 2.5)
+        f.optimize()
+        if f.success:
+            f.b_sigma = (0, np.inf)
+            import copy
+            f2 = copy.deepcopy(f)
+            f.optimize()
+            if f.success:
+                return f.fitted
+            else:
+                return f2.fitted
+        hb, l = f.get_init_bc()
+        sigma = 1.2*l**(-0.8)
+        if sigma > 2.5:
+            sigma = 2.5
+        f.ini = (qs, 0, hb, sigma)
+        f.b_qs = (qs*0.95, qs*1.5)
         f.optimize()
         if f.success:
             return f.fitted
