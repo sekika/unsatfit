@@ -29,8 +29,36 @@ It is all about Fit class of unsatfit.
 <dd>Test integrity of the code for development.</dd>
 </dl>
 
-## Properties
+## Properties for settings
+
+<dl>
+<dt>swrc</dt>
+<dd>(h, &theta;) dataset; h and &theta; as list respectively</dd>
+<dt>unsat</dt>
+<dd>(h, K) dataset (optimize only WRF when empty list [] is provided)</dd>
+<dt>ini</dt>
+<dd>Initial parameters</dd>
+</dl>
 
 - For boundary conditions, see __init_bound() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
 - For least square optimization, see __init_lsq() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
 - For figure options, see  __init_fig() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
+
+## Properties for return values
+
+<dl>
+<dt>fitted</dt>
+<dd>Fitted parameters</dd>
+<dt>message</dt>
+<dd>Return message</dd>
+<dt>success</dt>
+<dd>True if optimization succeeded</dd>
+<dt>mse_ht, mse_ln_hk</dt>
+<dd>Mean squared error for &theta; and ln(K), respectively</dd>
+<dt>se_ht, se_ln_hk</dt>
+<dd>Standard error for &theta; and ln(K), respectively</dd>
+<dt>r2_ht, r2_ln_hk</dt>
+<dd>Coefficient of determination (R<sup>2</sup>) for &theta; and ln(K), respectively</dd>
+<dt>aic_ht, aic_ln_hk</dt>
+<dd>AIC for &theta; and ln(K), respectively</dd>
+</dl>
