@@ -18,16 +18,22 @@ f = unsatfit.Fit()  # Create instance for fitting
 f.swrc = (h_t, theta)  # Data of soil water retention
 f.unsat = (h_k, k)  # Data of unsaturated hydraulic conductivity
 wrf = f.get_wrf_vg()  # Get water retention paramters
+n = 1/(1-wrf[3])
 print('Water retention parameters with m=1-1/n (q=1)')
 print('qs = {0:.3f} qr = {1:.3f} a = {2:.3} m = {3:.3}'.format(*wrf[:4]))
-f.set_model('VG', const=[wrf])  # Set model and constant parameters
-f.ini = (max(k), 2, 2)  # Set initial paramter
-f.b_Ks = (max(k)*0.9, max(k)*2)  # Set bound for Ks
+model = 'VG-Mualem'
+f.set_model('VG', const=[wrf, 'r=1'])  # Set model and constant parameters
+if n < 2:
+    f.modified_model(2)
+    model = 'Modified VGM'
+    print('Modified VG model with hs=2cm is used because n<2')
+f.ini = (max(k), 1.5)  # Set initial paramter
+f.b_ks = (max(k)*0.9, max(k)*5)  # Set bound for Ks
 f.optimize()  # Optimize
 if not f.success:
     print(f.message)
     exit(1)
-ks, p, r = f.fitted  # Get result
+ks, p = f.fitted  # Get result
 print('Hydraulic conductivity parameters')
 print(f.message)  # Show result
 ### Save figure ###
@@ -35,7 +41,7 @@ f.label_head = 'Matric head (cm)'
 f.label_theta = 'Volumetric water content'
 f.label_k = 'Hydraulic conductivity (cm/s)'
 f.data_legend = 'Silt loam (UNSODA 3393)'
-f.line_legend = 'VG-Mualem p={0:.2f} r={1:.2f}'.format(p, r)
+f.line_legend = '{0} p={1:.2f}'.format(model, p)
 f.legend_loc = 'center right'
 f.save_fig = True
 f.filename = FIG
