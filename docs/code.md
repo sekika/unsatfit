@@ -1,6 +1,6 @@
 # Sample code of unsatfit
 
-Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/ht3393.csv) and [unsaturated hydraulic conductivity curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) of UNSODA 3393 in the same directory as [this sample code](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.py) and run it with Python 3. You get the optimized parameters for VG-Mualem equation as
+Put [water retention curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/ht3393.csv) and [unsaturated hydraulic conductivity curve](https://github.com/sekika/unsatfit/blob/main/docs/sample/hk3393.csv) of UNSODA 3393 in the same directory as [this sample code](https://github.com/sekika/unsatfit/blob/main/docs/sample/VG-Mualem.py) and run it with Python 3. You get the optimized parameters for van Genuchten (VG) - Mualem equation as
 
     Water retention parameters with m=1-1/n (q=1)
     qs = 0.355 qr = 0.000 a = 0.00531 m = 0.107
