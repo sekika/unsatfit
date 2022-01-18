@@ -22,13 +22,14 @@ n = 1/(1-wrf[3])
 print('Water retention parameters with m=1-1/n (q=1)')
 print('qs = {0:.3f} qr = {1:.3f} a = {2:.3} m = {3:.3}'.format(*wrf[:4]))
 model = 'VG-Mualem'
-f.set_model('VG', const=[wrf, 'r=1'])  # Set model and constant parameters
+f.set_model('VG', const=[wrf, 'r=2'])  # Set model and constant parameters
 if n < 2:
     f.modified_model(2)
     model = 'Modified VGM'
     print('Modified VG model with hs=2cm is used because n<2')
 f.ini = (max(k), 1.5)  # Set initial paramter
 f.b_ks = (max(k)*0.9, max(k)*5)  # Set bound for Ks
+f.b_q = (-0.5, 10)
 f.optimize()  # Optimize
 if not f.success:
     print(f.message)
