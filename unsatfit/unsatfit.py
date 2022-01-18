@@ -1225,9 +1225,9 @@ class Fit:
         f.optimize()
         if f.success:
             return f.fitted
-        f.b_sigma = (0, np.inf)
+        f.b_sigma = (0, 3)
         h, sigma = f.get_init_ln()
-        f.ini = (0.99, h, sigma, 0.01)
+        f.ini = (0.9, h, sigma, l2)
         f.optimize()
         if f.success:
             return f.fitted
@@ -1638,6 +1638,9 @@ class Fit:
         import matplotlib.pyplot as plt
         import matplotlib.ticker as ticker
 
+        if self.data_only:
+            self.set_scale()
+
         # Set subplots
         if self.ht_only:
             fig, ax1 = plt.subplots(figsize=[self.fig_width, self.fig_height])
@@ -1648,11 +1651,11 @@ class Fit:
                             self.right_margin, left=self.left_margin, hspace=0)
 
         # Draw plots, curves and legends
-        if self.have_new_plot:
-            self.add_curve()
         ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker=self.marker,
-                 linestyle='', label=self.data_legend)
+            linestyle='', label=self.data_legend)
         if not self.data_only:
+            if self.have_new_plot:
+                self.add_curve()
             for curve in self.curves_ht:
                 ax1.plot(*curve['data'], color=curve['color'],
                          linestyle=curve['style'], label=curve['legend'])
