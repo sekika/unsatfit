@@ -1,4 +1,4 @@
-# Quick reference
+# Reference
 
 It is all about Fit class of unsatfit.
 
