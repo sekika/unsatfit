@@ -14,9 +14,9 @@ It is all about Fit class of unsatfit.
 <dt>f_hk(p, x)</dt>
 <dd>Hydraulic conductivity with free parameters p and pressure heads x. To be accessed after set_model.</dd>
 <dt>get_init()</dt>
-<dd>Get initial estimate of water retention parameters except qs and qr. To be accessed after set_model. See [models](model.md) for function names for each model.</dd>
+<dd>Get initial estimate of water retention parameters except qs and qr. To be accessed after set_model. See <a href="model.html">models</a> for function names by specifying a model.</dd>
 <dt>get_wrf()</dt>
-<dd>Get water retention parameters. To be accessed after set_model. See [models](model.md) for function names for each model.</dd>
+<dd>Get water retention parameters. To be accessed after set_model. See <a href="model.html">models</a> for function names by specifying a model.</dd>
 <dt>plot()</dt>
 <dd>Plot a figure.</dd>
 <dt>add_curve()</dt>
