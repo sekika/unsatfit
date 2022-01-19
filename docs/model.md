@@ -155,7 +155,7 @@ HCF variation: r=1 and independent p
 ## Exponential decrease to zero water content
 
 ### Peters model (Kosugi type)
-- Name: pk, PK, PE, Peters-KO
+- Name: pk, PK, Peters-KO, PE, Peters
 - WRF parameters: qs, qr, w1, hm, sigma1, he,
 - get_init() = not provided
 - get_wrf() = not provided
