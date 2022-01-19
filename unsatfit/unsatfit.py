@@ -204,7 +204,7 @@ class Fit:
         self.model['KOBCIP'] = self.model['KO1BC2-IP'] = self.model['KB-IP'] = self.model['kobcp2']
         self.model['KOBCCH'] = self.model['KO1BC2-CH'] = self.model['KBC'] = self.model['kobcch']
         self.model['KOBCCHIP'] = self.model['KO1BC2-CH-IP'] = self.model['KBC-IP'] = self.model['kobcchp2']
-        self.model['PK'] = self.model['Peters-KO'] = self.model['PE'] = self.model['pk']
+        self.model['PK'] = self.model['Peters-KO'] = self.model['Peters'] = self.model['PE'] = self.model['pk']
         self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs']
 
     # Modified model
@@ -220,6 +220,8 @@ class Fit:
         self.f_hk_org = copy.deepcopy(self.f_hk)
         self.f_ht = self.modified_ht
         self.f_hk = self.modified_hk
+        self.model_name = "Modified " + self.model_name
+        self.model_description = self.model_name + ' model (hs = ' + str(hs) + ') with ' + self.const_description
 
     def modified_ht(self, p, x):
         par = list(p)
@@ -372,6 +374,7 @@ class Fit:
             else:  # expression like [2, 0]
                 reconst.append(i)
         self.const = sorted(reconst)
+        # print(self.model_description)
         # Calculate self.p_k_only from self.model_k_only by eliminating constant
         # Note: when it is (0,1,3) where 2 is constant, it should be arranged to (0,1,2)
         k_only = set(self.model_k_only)
@@ -398,6 +401,14 @@ class Fit:
             self.param_ht = self.param_ht[:c[0]-1] + self.param_ht[c[0]:]
         for c in sorted(self.const, reverse=True):
             self.param = self.param[:c[0]-1] + self.param[c[0]:]
+        # Model description
+        self.param_const = []
+        self.value_const = []
+        for i in self.const:
+            self.param_const.append(self.model[model]['param'][i[0]-1])
+            self.value_const.append(float(i[1]))
+        self.const_description = self.format(self.param_const, ShowR2=False).format(*self.value_const)
+        self.model_description = self.model_name + ' model with ' + self.const_description
 
     def get_init_not_defined(self):
         print('get_init function not defined for {0} model'.format(
@@ -1176,7 +1187,8 @@ class Fit:
         f.optimize()
         if f.success:
             return (f.fitted[0], 0, *f.fitted[1:])
-        return (f.ini[0], 0, *f.ini[1:])
+        qs, qr, w1, h1, s1, l2 = f.get_wrf_kobcch()
+        return (qs, qr, w1, h1, s1, h1, l2)
 
     # KO1BC2 model with r=1 and independent p1, p2
 
@@ -1466,19 +1478,20 @@ class Fit:
         self.lsq_ftol_swrc = 1e-8
         self.lsq_ftol_dual = 0.001
 
-    def format(self, param, DualFitting):
+    def format(self, param, ShowR2=True, DualFitting=False):
         format = ''
         count = 0
         for i in param:
             format += i + ' = {' + str(count) + ':' + \
                 self.output_format[i] + '} '
             count += 1
-        if DualFitting:
-            format += 'R2 q = {' + str(count) + \
-                ':' + self.r2_format + \
-                '} R2 logK = {' + str(count+1) + ':' + self.r2_format + '}'
-        else:
-            format += 'R2 = {' + str(count) + ':' + self.r2_format + '}'
+        if ShowR2:
+            if DualFitting:
+                format += 'R2 q = {' + str(count) + \
+                    ':' + self.r2_format + \
+                    '} R2 logK = {' + str(count+1) + ':' + self.r2_format + '}'
+            else:
+                format += 'R2 = {' + str(count) + ':' + self.r2_format + '}'
         return format
 
     def optimize(self):

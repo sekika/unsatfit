@@ -18,15 +18,13 @@ f = unsatfit.Fit()  # Create instance for fitting
 f.swrc = (h_t, theta)  # Data of soil water retention
 f.unsat = (h_k, k)  # Data of unsaturated hydraulic conductivity
 wrf = f.get_wrf_vg()  # Get water retention paramters
-n = 1/(1-wrf[3])
-print('Water retention parameters with m=1-1/n (q=1)')
-print('qs = {0:.3f} qr = {1:.3f} a = {2:.3} m = {3:.3}'.format(*wrf[:4]))
 model = 'VG-Mualem'
 f.set_model('VG', const=[wrf, 'r=2'])  # Set model and constant parameters
+n = 1/(1-wrf[3])
 if n < 2:
     f.modified_model(2)
     model = 'Modified VGM'
-    print('Modified VG model with hs=2cm is used because n<2')
+print(f.model_description)
 f.ini = (max(k), 1.5)  # Set initial paramter
 f.b_ks = (max(k), max(k)*5)  # Set bound for Ks
 f.b_p = (-10, 10)
