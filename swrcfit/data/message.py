@@ -143,8 +143,8 @@ def message(lang, ID, URL='./'):
     if ID == 'seki2007':
         return 'Seki, K. (2007) SWRC fit - a nonlinear fitting program with a water retention curve for soils having unimodal and bimodal pore structure. Hydrol. Earth Syst. Sci. Discuss., 4: 407-437. ' \
             + '<a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a>'
-    if ID == 'seki2011':
-        return 'Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 2021; e20168. ' \
+    if ID == 'seki2022':
+        return 'Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21, e20168. ' \
             + '<a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a>'
     if ID == 'fredlund1994':
         return 'Fredlund, D.G. and Xing, A. (1994): Equations for the soil-water characteristic curve. Can. Geotech. J., 31: 521-532. ' \
