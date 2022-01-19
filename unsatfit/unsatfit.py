@@ -73,6 +73,7 @@ class Fit:
                 'function': (self.bc2, self.bc2_k),
                 'bound': self.bound_bc2,
                 'get_init': self.get_init_bc2,
+                'get_wrf': self.get_wrf_bc2,
                 'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 8, 9]
             },
@@ -185,10 +186,10 @@ class Fit:
         }
         self.r2_format = '.3f'
         # Define alias for model name
-        self.model['BC'] = self.model['bc']
-        self.model['VG'] = self.model['vg']
+        self.model['Brooks and Corey'] = self.model['BC'] = self.model['bc']
+        self.model['van Genuchten'] = self.model['VG'] = self.model['vg']
         self.model['MVG'] = self.model['Modified VG'] = self.model['mvg']
-        self.model['KO'] = self.model['ln']
+        self.model['Kosugi'] = self.model['KO'] = self.model['ln']
         self.model['FX'] = self.model['fx']
         self.model['DB'] = self.model['dual-BC'] = self.model['bc2f']
         self.model['DBCH'] = self.model['dual-BC-CH'] = self.model['bc2']
@@ -221,7 +222,8 @@ class Fit:
         self.f_ht = self.modified_ht
         self.f_hk = self.modified_hk
         self.model_name = "Modified " + self.model_name
-        self.model_description = self.model_name + ' model (hs = ' + str(hs) + ') with ' + self.const_description
+        self.model_description = self.model_name + \
+            ' model (hs = ' + str(hs) + ') with ' + self.const_description
 
     def modified_ht(self, p, x):
         par = list(p)
@@ -250,79 +252,36 @@ class Fit:
             [0.36, 0.35, 0.34, 0.33, 0.32, 0.3, 0.28, 0.26, 0.24, 0.22, 0.2]))
         unsat = (np.array([10, 28, 74, 160, 288, 640, 1250, 2950, 6300, 10600]), np.array(
             [0.384, 0.0988, 0.0293, 0.0137, 0.00704, 0.00315, 0.00085, 0.000206, 0.000101, 0.00006])/60/60/24)
-        qs = max(f.swrc[1])
         ks = max(unsat[1])
-        a, m = f.get_init_vg()
-        f.set_model('ln', const=[[1, qs], 'qr=0'])  # 'qr=0' is same as [2, 0]
-        hm, s = f.get_init_ln()
-        f.ini = (hm, 3)
-        f.b_sigma = (0, 3)
-        f.optimize()
-        hm, s = f.fitted
-        hb, hc, l1, l2 = f.get_init_bc2()
-        w1 = 1/(1+(hc/hb)**(l2-l1))
-        f.set_model('bc2f', const=[[1, qs], 'qr=0'])
-        f.ini = (w1, hb, l1, hb*100, l2)
-        f.optimize()
-        wbc2, hb1, l1f, hb2, l2f = f.fitted
-        f.set_model('vg2', const=[[1, qs], 'qr=0', 'q=1'])
-        f.ini = (0.5, 0.1, m, 0.0005, m)
-        f.optimize()
-        wvg2, a1, m1, a2, m2 = f.fitted
-        f.set_model('vgfs', const=[[1, qs], 'qr=0', [6, 10**7], 'q=1'])
-        f.ini = ((1-wvg2)*qs, a1, m1)
-        f.optimize()
-        qa, fsa, fsm = f.fitted
-        f.set_model('ln2', const=[[1, qs], 'qr=0'])
-        s1 = 2
-        s2 = 1.2 * (1/(1-m2)-1)**(-0.8)
-        f.ini = (wvg2, 1/a1, s1, 1/a2, s2)
-        f.optimize()
-        wln2, hm1, s1, hm2, s2 = f.fitted
         f.unsat = unsat
-        f.set_model('vg', const=['q=1'])
-        f.ini = (qs, 0, a, m, ks, 2, 1)
+        f.set_model('Brooks and Corey', const=[f.get_wrf_bc(), 'q=1', 'r=2'])
+        f.ini = (ks, 1.5)
         f.optimize()
-        f.test_confirm('VG', 965648)
-        f.set_model('ln', const=[[1, qs], 'qr=0', 'r=1'])
-        f.ini = (hm, s, ks, 5, 1)
+        f.test_confirm(829426)
+        f.set_model('van Genuchten', const=[f.get_wrf_vg(), 'r=2'])
+        f.modified_model(2)
         f.optimize()
-        f.test_confirm('LN', 945102)
-        f.set_model('bc2', const=[[1, qs], 'qr=0', [
-            3, hb], [4, hc], [5, l1], [6, l2]])
-        f.ini = (ks, 0.5, 1, 1)
+        f.test_confirm(883732)
+        f.set_model('Kosugi', const=[f.get_wrf_ln(), 'q=1', 'r=2'])
         f.optimize()
-        f.test_confirm('dual-BC-CH', 958167)
-        f.set_model('bc2f', const=[[1, qs], 'qr=0', [
-            3, wbc2], [4, hb1], [5, l1f], [6, hb2], [7, l2f]])
-        f.ini = (ks, 0.5, 1, 1)
+        f.test_confirm(950139)
+        f.set_model('dual-BC-CH', const=[f.get_wrf_bc2(), 'q=1', 'r=2'])
         f.optimize()
-        f.test_confirm('dual-BC', 930806)
-        f.set_model('vg2', const=[[1, qs], 'qr=0', [3, wvg2], [
-            4, a1], [5, m1], [6, a2], [7, m2], 'q=1'])
-        f.ini = (ks, 0.5, 2)
+        f.test_confirm(829332)
+        f.set_model('dual-VG-CH', const=[f.get_wrf_vg2ch(), 'r=2'])
         f.optimize()
-        f.test_confirm('dual-VG', 901827)
-        f.set_model('vgfs', const=[[1, qs], 'qr=0', [3, qa], [
-            4, fsa], [5, fsm], [6, 10**7], 'q=1', 'r=2'])
-        f.ini = (ks, 0.5)
+        f.test_confirm(894724)
+        f.set_model('KO1BC2-CH', const=[f.get_wrf_kobcch(), 'q=1', 'r=2'])
         f.optimize()
-        f.test_confirm('FS', 929316)
-        f.set_model('ln2', const=[[1, qs], 'qr=0', [3, wln2], [4, hm1], [
-            5, s1], [6, hm2], [7, s2], 'p=2', 'r=1.5'])
-        f.ini = (ks, 1)
+        f.test_confirm(898221)
+        f.set_model('KO1BC2', const=[f.get_wrf_kobc(), 'q=1', 'r=2'])
         f.optimize()
-        f.test_confirm('dual-LN', 995779)
-        f.set_model('vgbc', const=[[1, qs], 'qr=0', [3, wvg2], [
-            4, a1], [5, m1], [6, hb2], [7, l2], 'q=1'])
-        f.ini = (ks, 0.5, 1)
-        f.optimize()
-        f.test_confirm('VG-BC', 980322)
+        f.test_confirm(848180)
 
-    def test_confirm(self, case, expect):
+    def test_confirm(self, expect):
         result = int((self.r2_ht + self.r2_ln_hk) * 500000)
         assert expect == result, 'Test failed for {0}. Expected: {1} Actual: {2}\nResult: {3}'.format(
-            case, expect, result, self.message)
+            self.model_name, expect, result, self.message)
 
 # Initialization
 
@@ -352,7 +311,7 @@ class Fit:
         # Recostruct const to allow alternative expressions
         reconst = []
         for i in const:
-            if '=' in i:  # expression like 'q=1'
+            if '=' in str(i):  # expression like 'q=1'
                 p, value = i.split('=')
                 if p not in self.param:
                     print('Parameter {0} not in this model'.format(p))
@@ -407,8 +366,10 @@ class Fit:
         for i in self.const:
             self.param_const.append(self.model[model]['param'][i[0]-1])
             self.value_const.append(float(i[1]))
-        self.const_description = self.format(self.param_const, ShowR2=False).format(*self.value_const)
-        self.model_description = self.model_name + ' model with ' + self.const_description
+        self.const_description = self.format(
+            self.param_const, ShowR2=False).format(*self.value_const)
+        self.model_description = self.model_name + \
+            ' model with ' + self.const_description
 
     def get_init_not_defined(self):
         print('get_init function not defined for {0} model'.format(
@@ -827,6 +788,18 @@ class Fit:
             return f.fitted
         return f.ini
 
+    def get_wrf_bc2(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        hb, hc, l1, l2 = f.get_init_bc2()
+        f.set_model('bc2', const=['qr=0'])
+        f.ini = (max(f.swrc[1]), hb, hc, l1, l2)
+        f.optimize()
+        if f.success:
+            return (f.fitted[0], 0, *f.fitted[1:])
+        return (f.ini[0], 0, *f.ini[1:])
+
     # dual-VG model
 
     def bound_vg2(self):
@@ -923,6 +896,18 @@ class Fit:
         if f.success:
             return f.fitted
         return f.ini
+
+    def get_wrf_vg2ch(self):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        w, a, m1, m2 = f.get_init_vg2ch()
+        f.set_model('vg2ch', const=['qr=0', 'q=1'])
+        f.ini = (max(f.swrc[1]), w, a, m1, m2)
+        f.optimize()
+        if f.success:
+            return (f.fitted[0], 0, *f.fitted[1:], 1)
+        return (f.ini[0], 0, *f.ini[1:], 1)
 
     # dual-KO model
 
@@ -1270,12 +1255,12 @@ class Fit:
         h, sigma = f.get_init_ln()
         if sigma > 2.5:
             sigma = 2.5
-        f.ini = ([0.2, 0.8], [h,1/a], [sigma,], [l2,])
+        f.ini = ([0.2, 0.8], [h, 1/a], [sigma, ], [l2, ])
         f.optimize()
         if f.success:
             return f.fitted
         return ini
-    
+
     def get_wrf_kobcch(self):
         f = Fit()
         f.swrc = self.swrc
@@ -1404,7 +1389,6 @@ class Fit:
         gamma_max = gamma(h0, a, m, n, hm, sa, gse) + gamma_0c
         integral = gamma(x, a, m, n, hm, sa, gse) / gamma_max
         return ks * self.vgfs_se(par[:6]+[q], x)**p * integral**r
-
 
     # Peters model with Kosugi
 
@@ -1727,7 +1711,7 @@ class Fit:
 
         # Draw plots, curves and legends
         ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker=self.marker,
-            linestyle='', label=self.data_legend)
+                 linestyle='', label=self.data_legend)
         if not self.data_only:
             if self.have_new_plot:
                 self.add_curve()
