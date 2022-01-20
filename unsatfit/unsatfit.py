@@ -167,6 +167,8 @@ class Fit:
             'pk': {
                 'function': (self.pk, self.pk_k),
                 'bound': self.bound_pk,
+                'get_init': self.get_init_pk,
+                'get_wrf': self.get_wrf_pk,
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'he', 'Ks', 'p', 'a', 'omega'],
                 'k-only': [6, 7, 8, 9]
             },
@@ -265,7 +267,7 @@ class Fit:
         f.set_model('dual-VG-CH', const=[f.get_wrf_vg2ch(), 'r=2'])
         f.test_confirm(8947)
         f.set_model('KO1BC2-CH', const=[f.get_wrf_kobcch(), 'q=1', 'r=2'])
-        f.test_confirm(8982)
+        f.test_confirm(9512)
         f.set_model('KO1BC2', const=[f.get_wrf_kobc(), 'q=1', 'r=2'])
         f.modified_model(2)
         f.test_confirm(8485)
@@ -1267,8 +1269,9 @@ class Fit:
         if f.success:
             import copy
             f2 = copy.deepcopy(f)
+            f.b_sigma = (0, np.inf)
             f.optimize()
-            if f.success:
+            if f.success and f.r2_ht > f2.r2_ht:
                 return (f.fitted[0], 0, *f.fitted[1:])
             else:
                 return (f2.fitted[0], 0, *f2.fitted[1:])
@@ -1413,6 +1416,68 @@ class Fit:
         k1 = self.pk_se(par[:6], x)**p * s1**2
         k2 = np.where(x < ha, 1, (x/ha) ** (-a))
         return ks * ((1-omega) * k1 + omega * k2)
+
+    def get_init_pk(self, he):  # w1, hm, s1
+        x, t = self.swrc
+        y = t / max(t)
+        f = Fit()
+        f.debug = self.debug
+        f.swrc = (x, y)
+        w1, h1, s1, l2 = f.get_init_kobcch()
+        result = f.ini = (w1, h1, s1)
+        f.set_model('Peters', const=[[1, 1], [2, 0], [6, he]])
+        r2 = -1000
+        f.b_sigma = (0, 2.5)
+        for f.b_hm1 in [(h1*0.9, h1*1.1), (0, np.inf)]:
+            f.optimize()
+            if f.success and f.r2_ht > r2:
+                result = f.fitted
+                r2 = f.r2_ht
+        if r2 < 0.8:
+            f.b_sigma = (0, 5)
+            hm, sigma = f.get_init_ln()
+            if sigma > 4:
+                sigma = 4
+            w1, a, m1, l2 = f.get_init_vgbcch()
+            n1 = 1/(1-m1)
+            sigma1 = 1.2*(n1-1)**(-0.8)
+            if sigma1 > 3:
+                sigma1 = 3
+            f.ini = [(0.05, 0.95), (h1, hm, 1/a), (sigma1, sigma, s1)]
+            f.optimize()
+            if f.success and f.r2_ht > r2:
+                result = f.fitted
+                r2 = f.r2_ht
+        return result
+
+    def get_wrf_pk(self, he):
+        f = Fit()
+        f.swrc = self.swrc
+        f.debug = self.debug
+        w1, hm, s1 = f.get_init_pk(he)
+        if s1 > 2.5:
+            s1 = 2.5
+        f.set_model('pk', const=['qr=0', [6, he]])
+        qs = max(f.swrc[1])
+        f.ini = (qs, w1, hm, s1)
+        f.b_sigma = (0, 2.5)
+        f.b_qs = (qs * 0.95, qs * 3)
+        f.optimize()
+        if f.success:
+            import copy
+            f2 = copy.deepcopy(f)
+            f.b_sigma = (0, 3)
+            f.optimize()
+            print(f.r2_ht, f2.r2_ht)
+            if f.success and f.r2_ht > f2.r2_ht:
+                return (f.fitted[0], 0, *f.fitted[1:], he)
+            else:
+                return (f2.fitted[0], 0, *f2.fitted[1:], he)
+        f.b_qs = (qs * 0.95, qs * 1.2)
+        f.optimize()
+        if f.success:
+            return (f.fitted[0], 0, *f.fitted[1:], he)
+        return (qs, 0, *f.ini[1:], he)
 
 # Cost function
 

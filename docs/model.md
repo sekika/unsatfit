@@ -156,9 +156,9 @@ HCF variation: r=1 and independent p
 
 ### Peters model (Kosugi type)
 - Name: pk, PK, Peters-KO, PE, Peters
-- WRF parameters: qs, qr, w1, hm, sigma1, he,
-- get_init() = not provided
-- get_wrf() = not provided
+- WRF parameters: qs, qr, w1, hm, sigma1, he
+- get_init() = get_init_pk(he): w1, hm, sigma1
+- get_wrf() = get_wrf_pk(he): returns full WRF parameters with qr=0
 - HCF: Peters (2013)
 - Parameters which only appears in HCF: Ks, p, a, omega
 
