@@ -1633,7 +1633,7 @@ class Fit:
             self.r2_ln_hk = 1-self.mse_ln_hk/self.var_ln_k  # Coefficient of determination
             self.aic_ln_hk = n * np.log(self.mse_ln_hk) + 2 * k  # AIC
             self.message = self.format(
-                self.param, True).format(*self.fitted, self.r2_ht, self.r2_ln_hk)
+                self.param, DualFitting=True).format(*self.fitted, self.r2_ht, self.r2_ln_hk)
 
     def multi_ini(self):
         import copy
