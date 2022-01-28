@@ -1691,6 +1691,7 @@ class Fit:
         self.style = ['dashed', 'dashdot', 'solid', 'dotted']
         self.line_num = 0
         self.legend = True
+        self.legend_fontsize = 10
         self.legend_loc = 'center right'
         self.data_legend = 'Measured'
         self.line_legend = 'Fitted'
@@ -1782,7 +1783,7 @@ class Fit:
                 for curve in self.curves_hk:
                     ax2.plot(*curve['data'], color=curve['color'],
                              linestyle=curve['style'], label='_nolegend_')
-            fig.legend(loc=self.legend_loc)
+            fig.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
             # plt.legend()
 
         # Draw scale
