@@ -1820,7 +1820,7 @@ class Fit:
         import matplotlib.pyplot as plt
 
         # Set data and residual function
-        param = self.model[self.model_name]['param']
+        param = self.model[self.model_name.replace('Modified ', '')]['param']
         if self.ht_only:
             data = self.swrc
             par = list(self.fitted)
@@ -1844,7 +1844,11 @@ class Fit:
             const = const[:i] + const[i+1:]
 
         f = Fit()
-        f.set_model(self.model_name, const=const)
+        if 'Modified' in self.model_name:
+            f.set_model(self.model_name.replace('Modified ', ''), const=const)
+            f.modified_model(self.hs)
+        else:
+            f.set_model(self.model_name, const=const)
         if self.ht_only:
             residual = f.residual_ht
         else:
@@ -1885,7 +1889,7 @@ class Fit:
 
     def label(self, name):
         label = '$' + name + '$'
-        for i in [['q', '\\theta_'], ['hb', 'h_b'], ['hm2', 'h_{m2}'], ['hm', 'h_m'], ['Ks', 'K_s'], ['sigma', '\\sigma'], ['1', '_1'], ['2', '_2']]:
+        for i in [['qs', '\\theta_s'], ['qr', '\\theta_r'], ['hb', 'h_b'], ['hm2', 'h_{m2}'], ['hm', 'h_m'], ['Ks', 'K_s'], ['sigma', '\\sigma'], ['1', '_1'], ['2', '_2']]:
             label = label.replace(i[0], i[1])
         return label
 
