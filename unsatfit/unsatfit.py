@@ -255,28 +255,27 @@ class Fit:
         f.unsat = (np.array([10, 28, 74, 160, 288, 640, 1250, 2950, 6300, 10600]), np.array(
             [0.384, 0.0988, 0.0293, 0.0137, 0.00704, 0.00315, 0.00085, 0.000206, 0.000101, 0.00006])/60/60/24)
         f.ini = (max(f.unsat[1]), 1.5)  # Initial values of Ks and p
-        f.lsq_ftol = 0.001
         f.set_model('Brooks and Corey', const=[f.get_wrf_bc(), 'q=1', 'r=2'])
-        f.test_confirm(8294)
+        f.test_confirm(829)
         f.set_model('van Genuchten', const=[f.get_wrf_vg(), 'r=2'])
         f.modified_model(2)
-        f.test_confirm(8837)
+        f.test_confirm(922)
         f.set_model('Kosugi', const=[f.get_wrf_ln(), 'q=1', 'r=2'])
-        f.test_confirm(9501)
+        f.test_confirm(954)
         f.set_model('dual-BC-CH', const=[f.get_wrf_bc2(), 'q=1', 'r=2'])
-        f.test_confirm(8293)
+        f.test_confirm(829)
         f.set_model('dual-VG-CH', const=[f.get_wrf_vg2ch(), 'r=2'])
-        f.test_confirm(8947)
+        f.test_confirm(893)
         f.set_model('KO1BC2-CH', const=[f.get_wrf_kobcch(), 'q=1', 'r=2'])
-        f.test_confirm(9512)
+        f.test_confirm(966)
         f.set_model('KO1BC2', const=[f.get_wrf_kobc(), 'q=1', 'r=2'])
         f.modified_model(2)
-        f.test_confirm(8485)
+        f.test_confirm(856)
 
     def test_confirm(self, expect):
         self.optimize()
-        result = int((self.r2_ht + self.r2_ln_hk) * 5000)
-        assert expect == result, 'Test failed for {0}. Expected: {1} Actual: {2}\nResult: {3}'.format(
+        result = int((self.r2_ht + self.r2_ln_hk) * 500)
+        assert abs(expect - result) < 2, 'Test failed for {0}. Expected: {1} Actual: {2}\nResult: {3}'.format(
             self.model_name, expect, result, self.message)
 
 # Initialization
@@ -1516,8 +1515,9 @@ class Fit:
         self.lsq_jac = '2-point'
         self.lsq_loss = 'linear'
         self.lsq_verbose = 0
-        self.lsq_max_nfev = 3000  # Number of evaluation
-        self.lsq_ftol = 1e-8
+        self.lsq_ftol = [0.1, 0.01, 1e-3, 1e-4, 1e-6, 1e-8]
+        self.lsq_ftol_global = [1, 0.1]
+        self.lsq_max_nfev = 1000  # Number of evaluation
 
     def format(self, param, ShowR2=True, DualFitting=False):
         format = ''
@@ -1536,6 +1536,7 @@ class Fit:
         return format
 
     def optimize(self):
+        import copy
         import math
         from scipy import optimize
 
@@ -1592,9 +1593,20 @@ class Fit:
             print('ini = {0}\nbounds = {1}'.format(
                 self.ini, b))  # for debugging
 
-        result = optimize.least_squares(
-            cost, self.ini, jac=self.lsq_jac, method=self.lsq_method, loss=self.lsq_loss,
-            ftol=self.lsq_ftol, max_nfev=self.lsq_max_nfev, bounds=b, verbose=self.lsq_verbose, args=a)
+        ini = self.ini
+        success = False
+        for ftol in self.lsq_ftol:
+            result = optimize.least_squares(
+                cost, ini, jac=self.lsq_jac, method=self.lsq_method, loss=self.lsq_loss,
+                ftol=ftol, max_nfev=self.lsq_max_nfev, bounds=b, verbose=self.lsq_verbose, args=a)
+            if result.success:
+                ini = result.x
+                success = True
+                prev_result = copy.deepcopy(result)
+            else:
+                if success:
+                    result = copy.deepcopy(prev_result)
+                break
 
         self.success = result.success  # True if convergence criteria is satisfied
         if not self.success:
@@ -1635,6 +1647,8 @@ class Fit:
         import itertools
         comb = list(itertools.product(*self.ini))
         max_cost = -100000
+        ftol = self.lsq_ftol
+        self.lsq_ftol = self.lsq_ftol_global
         for ini in comb:
             self.ini = ini
             self.optimize()
@@ -1646,6 +1660,7 @@ class Fit:
                 if cost > max_cost:
                     max_cost = cost
                     max_f = copy.deepcopy(self)
+        self.lsq_ftol = ftol
         if max_cost == -100000:
             return self
         return max_f
@@ -1674,6 +1689,10 @@ class Fit:
         # self.min_y2 = 10**(-12)
         self.max_y2_log = 5
         self.curve_smooth = 200
+        self.contour_level = 8
+        self.contour_color = None  # specified by cmap. specify a color as 'black'
+        self.contour_show_marker = True
+        self.contour_marker_color = 'red'
         self.contour_smooth = 50
         self.contour_range_x = 0.3, 1.5
         self.contour_range_y = 0.5, 1.5
@@ -1872,10 +1891,14 @@ class Fit:
         fig, ax = plt.subplots(figsize=[self.fig_width, self.fig_height])
         fig.subplots_adjust(top=1-self.top_margin, bottom=self.bottom_margin,
                             right=1 - self.right_margin, left=self.left_margin)
-        CS = ax.contour(X, Y, Z)
+        CS = ax.contour(X, Y, Z, self.contour_level, colors=self.contour_color)
         ax.set_xlabel(self.label(x_name))
         ax.set_ylabel(self.label(y_name))
         ax.clabel(CS, inline=True, fontsize=10)
+
+        if self.contour_show_marker:
+            ax.plot(x, y, color=self.contour_marker_color,
+                    marker='o', linestyle='')
 
         if self.save_fig:
             plt.savefig(self.filename)
