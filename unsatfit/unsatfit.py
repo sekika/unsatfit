@@ -255,6 +255,7 @@ class Fit:
         f.unsat = (np.array([10, 28, 74, 160, 288, 640, 1250, 2950, 6300, 10600]), np.array(
             [0.384, 0.0988, 0.0293, 0.0137, 0.00704, 0.00315, 0.00085, 0.000206, 0.000101, 0.00006])/60/60/24)
         f.ini = (max(f.unsat[1]), 1.5)  # Initial values of Ks and p
+        f.lsq_ftol = 0.001
         f.set_model('Brooks and Corey', const=[f.get_wrf_bc(), 'q=1', 'r=2'])
         f.test_confirm(8294)
         f.set_model('van Genuchten', const=[f.get_wrf_vg(), 'r=2'])
@@ -1515,10 +1516,8 @@ class Fit:
         self.lsq_jac = '2-point'
         self.lsq_loss = 'linear'
         self.lsq_verbose = 0
-        self.lsq_nfev_swrc = 500  # Number of evaluation for fitting SWRC only
-        self.lsq_nfev_dual = 3000  # Number of evaluation for dual fitting of SWRC and K
-        self.lsq_ftol_swrc = 1e-8
-        self.lsq_ftol_dual = 0.001
+        self.lsq_max_nfev = 3000  # Number of evaluation
+        self.lsq_ftol = 1e-8
 
     def format(self, param, ShowR2=True, DualFitting=False):
         format = ''
@@ -1575,8 +1574,6 @@ class Fit:
                 return
             a = (self.swrc[0], self.swrc[1], self.unsat[0], self.unsat[1])
             cost = self.total_cost
-            self.max_nfev = self.lsq_nfev_dual
-            self.ftol = self.lsq_ftol_dual
             self.mean_k = np.average(self.unsat[1])
             self.var_k = np.average((self.unsat[1] - self.mean_k)**2)
             self.mean_ln_k = np.average(np.log(self.unsat[1]))
@@ -1586,8 +1583,6 @@ class Fit:
             self.ht_only = True
             a = self.swrc
             cost = self.residual_ht
-            self.max_nfev = self.lsq_nfev_swrc
-            self.ftol = self.lsq_ftol_swrc
             for c in sorted(self.p_k_only, reverse=True):
                 b = b[:c] + b[c+1:]
 
@@ -1599,7 +1594,7 @@ class Fit:
 
         result = optimize.least_squares(
             cost, self.ini, jac=self.lsq_jac, method=self.lsq_method, loss=self.lsq_loss,
-            ftol=self.ftol, max_nfev=self.max_nfev, bounds=b, verbose=self.lsq_verbose, args=a)
+            ftol=self.lsq_ftol, max_nfev=self.lsq_max_nfev, bounds=b, verbose=self.lsq_verbose, args=a)
 
         self.success = result.success  # True if convergence criteria is satisfied
         if not self.success:
