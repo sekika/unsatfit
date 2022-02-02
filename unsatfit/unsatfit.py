@@ -1512,6 +1512,9 @@ class Fit:
     def residual_ln_hk(self, p, x, y):
         return np.log(self.f_hk(p, x) / y)
 
+    def residual_log10_hk(self, p, x, y):
+        return np.log10(self.f_hk(p, x) / y)
+
     def f_r2_ht(self, p, x, y):
         mse_ht = np.average(self.residual_ht(p, x, y)**2)
         return 1 - mse_ht/self.var_theta
@@ -1891,7 +1894,7 @@ class Fit:
         if self.ht_only:
             residual = f.residual_ht
         else:
-            residual = f.residual_ln_hk
+            residual = f.residual_log10_hk
 
         # Make grid of (X,Y)
         x_min, x_max = self.contour_range_x
