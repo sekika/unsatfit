@@ -164,6 +164,14 @@ class Fit:
                 'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p1', 'p2', 'q'],
                 'k-only': [6, 7, 8, 9]
             },
+            'kobcchca': {
+                'function': (self.kobcch, self.kobcchca_k),
+                'bound': self.bound_kobcch,
+                'get_init': self.get_init_kobcch,
+                'get_wrf': self.get_wrf_kobcch,
+                'param': ['qs', 'qr', 'w1', 'hm', 'sigma1', 'l2', 'Ks', 'p', 'a', 'r'],
+                'k-only': [6, 7, 8, 9]
+            },
             'pk': {
                 'function': (self.pk, self.pk_k),
                 'bound': self.bound_pk,
@@ -1312,6 +1320,23 @@ class Fit:
         bunshi = se**p1 * w1a1 + se**p2 * w2a2
         bunbo = w1b1 + w2b2
         return ks * bunshi / bunbo
+
+    # KO1BC2-CH model, constant a
+
+    def kobcchca_k(self, p, x):
+        from scipy.stats import norm
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, h, sigma, l2, ks, p, a, r = par
+        q = (a - (p+r)*l2)/r
+        w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
+        w2b2 = (1 - w) / h ** q / (q / l2 + 1)
+        s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
+        s2 = np.where(x < h, 1, (x/h) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.kobcch_se(par[:6], x)**p * (bunshi / bunbo)**r
 
     # van Genuchten - Fayer Simmons model
 
