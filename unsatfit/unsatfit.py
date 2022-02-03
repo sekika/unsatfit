@@ -77,6 +77,14 @@ class Fit:
                 'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'q', 'r'],
                 'k-only': [6, 7, 8, 9]
             },
+            'bc2ca': {
+                'function': (self.bc2, self.bc2ca_k),
+                'bound': self.bound_bc2,
+                'get_init': self.get_init_bc2,
+                'get_wrf': self.get_wrf_bc2,
+                'param': ['qs', 'qr', 'hb', 'hc', 'l1', 'l2', 'Ks', 'p', 'a', 'r'],
+                'k-only': [6, 7, 8, 9]
+            },
             'bc2f': {
                 'function': (self.bc2f, self.bc2f_k),
                 'bound': self.bound_bc2f,
@@ -94,6 +102,13 @@ class Fit:
                 'bound': self.bound_vg2ch,
                 'get_init': self.get_init_vg2ch,
                 'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
+                'k-only': [6, 7, 9]
+            },
+            'vg2chca': {
+                'function': (self.vg2ch, self.vg2chca_k),
+                'bound': self.bound_vg2ch,
+                'get_init': self.get_init_vg2ch,
+                'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'a'],
                 'k-only': [6, 7, 9]
             },
             'ln2': {
@@ -803,6 +818,23 @@ class Fit:
             return (f.fitted[0], 0, *f.fitted[1:])
         return (f.ini[0], 0, *f.ini[1:])
 
+    # dual-BC-CH constant a model
+
+    def bc2ca_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, hb, hc, l1, l2, ks, p, a, r = par
+        q = (a - p*l2)/r - l2
+        w1 = 1/(1+(hc/hb)**(l2-l1))
+        w1b1 = w1 / (q / l1 + 1)
+        w2b2 = (1 - w1) / (q / l2 + 1)
+        s1 = np.where(x < hb, 1, (x/hb) ** (-l1-q))
+        s2 = np.where(x < hb, 1, (x/hb) ** (-l2-q))
+        bunshi = w1b1 * s1 + w2b2 * s2
+        bunbo = w1b1 + w2b2
+        return ks * self.bc2_se(par[:6], x)**p * (bunshi / bunbo)**r
+
     # dual-VG model
 
     def bound_vg2(self):
@@ -911,6 +943,20 @@ class Fit:
         if f.success:
             return (f.fitted[0], 0, *f.fitted[1:], 1)
         return (f.ini[0], 0, *f.ini[1:], 1)
+
+    # dual-VG-CH constant a model
+
+    def vg2chca_k(self, p, x):
+        par = list(p)
+        for c in self.const:
+            par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
+        qs, qr, w, a1, m1, m2, ks, p, q, a = par
+        n2 = q/(1-m2)
+        r = (a+p*q)/n2 - p
+        s1 = self.vg_se([a1, m1, q], x)
+        s2 = self.vg_se([a1, m2, q], x)
+        bunshi = w * (1-(1-s1**(1/m1))**m1) + (1-w) * (1-(1-s2**(1/m2))**m2)
+        return ks * self.vg2ch_se(par[:6]+[q], x)**p * bunshi**r
 
     # dual-KO model
 
@@ -1329,7 +1375,7 @@ class Fit:
         for c in self.const:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
         qs, qr, w, h, sigma, l2, ks, p, a, r = par
-        q = (a - (p+r)*l2)/r
+        q = (a - p*l2)/r - l2
         w1b1 = w * (h ** (-q)) * np.exp((q*sigma)**2 / 2)
         w2b2 = (1 - w) / h ** q / (q / l2 + 1)
         s1 = 1 - norm.cdf(np.log(x / h)/sigma + q * sigma)
