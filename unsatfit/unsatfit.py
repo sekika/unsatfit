@@ -286,7 +286,7 @@ class Fit:
         f.set_model('Kosugi', const=[f.get_wrf_ln(), 'q=1', 'r=2'])
         f.test_confirm(954)
         f.set_model('dual-BC-CH', const=[f.get_wrf_bc2(), 'q=1', 'r=2'])
-        f.test_confirm(829)
+        f.test_confirm(824)
         f.set_model('dual-VG-CH', const=[f.get_wrf_vg2ch(), 'r=2'])
         f.test_confirm(893)
         f.set_model('KO1BC2-CH', const=[f.get_wrf_kobcch(), 'q=1', 'r=2'])
