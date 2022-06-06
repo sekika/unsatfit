@@ -44,7 +44,7 @@ For figures etc.
 <dt>unsat</dt>
 <dd>(h, K) dataset (optimize only WRF when empty list [] is provided)</dd>
 <dt>ini</dt>
-<dd>Initial parameters</dd>
+<dd>Initial parameters. When it is a list (or tuple) of parameters, such as [a, b, c], the set of parameters is used as initial parameters. When it is a nested list, such as [[a1, a2, a3], [b1, b2]], all combination of the initial parameters is used.</dd>
 </dl>
 
 - For boundary conditions, see __init_bound() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
