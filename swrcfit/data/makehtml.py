@@ -133,7 +133,7 @@ Fitted parameters, coefficient of determination (R<sub>2</sub>) and <a href="htt
 
 <h2>Multimodal models</h2>
 
-<p>Multimodal water retention function is defined as a linear superposition of subfunctions S<sub>i</sub>(h) as follows (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>).
+<p>Multimodal water retention function is defined as a linear superposition of subfunctions S<sub>i</sub>(h) as follows (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>).
 \[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
 where k is the number of subfunctions, and w<sub>i</sub> are weighting factors with 0&lt;w<sub>i</sub>&lt;1 and &Sigma;w<sub>i</sub> = 1.
 Unimodal models are k=1, and bimodal models are k=2.</p>
@@ -164,11 +164,11 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 
 <div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
 
-<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Figure 1 in Seki et al., 2021</a>.</p>
+<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Figure 1 in Seki et al., 2022</a>.</p>
 
 <h2>CH variation</h2>
 
-<p>CH (common head) variation for multimodal model of BC, VG, KO subfunctions is defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2021)</a> as
+<p>CH (common head) variation for multimodal model of BC, VG, KO subfunctions is defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> as
 \[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \]
 where following models are implemented in SWRC Fit.</p>
 <table border="1"><tr><td>Model<td>Equation<td>Parameters</tr>
@@ -181,15 +181,15 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 
 <div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
 
-<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Figure 2 in Seki et al., 2021</a>.</p>
+<p>See also <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Figure 2 in Seki et al., 2022</a>.</p>
 
 <h2>Hydraulic conductivity functions</h2>
 
-<p>For water retention functions except for FX model, closed-form hydraulic conductivity equations with generalized Mualem's equation are available (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>).</p>
+<p>For water retention functions except for FX model, closed-form hydraulic conductivity equations with generalized Mualem's equation are available (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>).</p>
 
 <h2>Note for notation</h2>
 
-<p>In the old version of SWRC Fit, KO model was denoted as LN model, dual-VG model was denoted as DB model, and dual-KO was denoted as BL model. The notation was changed to match Seki et al. (2021).</p>
+<p>In the old version of SWRC Fit, KO model was denoted as LN model, dual-VG model was denoted as DB model, and dual-KO was denoted as BL model. The notation was changed to match Seki et al. (2022).</p>
 
 <h2>Reference</h2>
 ''')
@@ -251,7 +251,7 @@ Q(x)=1-&Phi;(x) とあらわされる関数であり、<a href="https://ja.wikip
 
 <h2>線型和モデル（マルチモデル）</h2>
 
-<p>線形和水分保持関数は基本モデルをサブ関数S<sub>i</sub>(h)としてその線形和で定義される (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。
+<p>線形和水分保持関数は基本モデルをサブ関数S<sub>i</sub>(h)としてその線形和で定義される (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。
 \[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
 k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt;1, &Sigma;w<sub>i</sub> = 1 である。
 ユニモーダルモデルは k=1 バイモーダルモデルは k=2 である。</p>
@@ -277,11 +277,11 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
 
-<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Seki et al. (2021) の Figure 1</a> には、熊本黒ボク土のバイモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
+<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Seki et al. (2022) の Figure 1</a> には、熊本黒ボク土のバイモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
 <h2>CHモデル</h2>
 
-<p>BC, VG, KOサブ関数に対する線形和モデルに対する CHモデルが <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2021)</a>において
+<p>BC, VG, KOサブ関数に対する線形和モデルに対する CHモデルが <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>において
 \[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \]
 と定義されている。この中で、次の関数が SWRC Fit に実装されている。</p>
 <table border="1"><tr><td>モデル<td>式<td>パラメータ</tr>
@@ -292,15 +292,15 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
 
-<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2021) の Figure 2</a> には、浜岡砂丘砂のCHモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
+<p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2022) の Figure 2</a> には、浜岡砂丘砂のCHモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
 <h2>透水性関数</h2>
 
-<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2021</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。</p>
+<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。</p>
 
 <h2>モデルの略記について</h2>
 
-<p>SWRC Fit の旧バージョンでは、KOモデルをLNモデル、dual-VGモデルをDBモデル、dual-KOモデルBLモデルと表記していたが、Seki et al. (2021) の表記にあわせて変更した。</p>
+<p>SWRC Fit の旧バージョンでは、KOモデルをLNモデル、dual-VGモデルをDBモデル、dual-KOモデルBLモデルと表記していたが、Seki et al. (2022) の表記にあわせて変更した。</p>
 
 <h2>文献</h2>
 ''')
