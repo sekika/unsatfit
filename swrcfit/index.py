@@ -163,7 +163,7 @@ def swrcfit(f):
         con_q, ini_q, par_theta = getoptiontheta(f, True)
 
     # dual-BC-CH model
-    if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel:
+    if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
         f.set_model('dual-BC-CH', const=[*con_q])
         hb, hc, l1, l2 = f.get_init()
         f.ini = (*ini_q, hb, hc, l1, l2)  # Get initial parameter
@@ -270,6 +270,48 @@ def swrcfit(f):
         dvch = copy.deepcopy(f)
         if 'DVCH' in f.selectedmodel:
             result.append(dvch)
+
+    # KO1BC2-CH model
+    if 'KOBCCH' in f.selectedmodel:
+        f.set_model('KO1BC2-CH', const=[*con_q])
+        if dbch.success:
+            s1 = 1.2*l1**(-0.8)
+            if s1 > 2:
+                s1 = 2
+            m1 = 1-1/n1
+            if m1 < 0.1:
+                m1 = 0.1
+            if m1 > 0.8:
+                m1 = 0.8
+            f.ini = (*q, w1, hb, s1, l2)
+            f.optimize()
+            if not f.success:
+                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+                f.b_qr = (0, min(f.swrc[1]) / 10)
+                f.ini = (*ini_q, w1, hb, s1, l2)
+                f.optimize()
+                if not f.success:
+                    f.ini = (*ini_q, 0.9, hb, s1, l2)
+                    f.b_lambda2 = (l2 * 0.8, l2 * 1.2)
+                    f.optimize()
+                f.b_qs = f.b_qr = f.b_lambda2 = (0, np.inf)
+                f2 = copy.deepcopy(f)
+                f.ini = f.fitted
+                f.optimize
+                if not f.success:
+                    f = copy.deepcopy(f2)
+        else:
+            w1, hm, sigma1, l2 = f.get_init_kobcch()
+            f.ini = (*ini_q, w1, hm, sigma1, l2)
+            f.optimize()
+        if f.success:
+            w1, hm, s1, l2 = f.fitted[-4:]
+            q = f.fitted[:-4]
+            f.fitted_show = (*q, w1, hm, s1, l2)
+        f.setting = model('KOBCCH')
+        f.par = (*par_theta, 'w<sub>1</sub>', 'H', '&sigma;', '&lambda;')
+        vgbcch = copy.deepcopy(f)
+        result.append(vgbcch)
 
     # dual-BC model
     if 'DB' in f.selectedmodel:

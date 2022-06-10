@@ -7,7 +7,7 @@ def model(ID):
     if ID == 'unimodal':
         return ('BC', 'VG', 'KO', 'FX')
     if ID == 'bimodal':
-        return ('DBCH', 'VGBCCH', 'DVCH', 'DB', 'DV', 'DK')
+        return ('DBCH', 'VGBCCH', 'DVCH', 'KOBCCH', 'DB', 'DV', 'DK')
     if ID == 'savekeys':
         return model('all') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'sigmax', 'input')
     if ID == 'BC':
@@ -70,6 +70,15 @@ def model(ID):
             'label': 'dual-VG-CH',
             'equation': '\\begin{eqnarray}S_e &=& w_1\\bigl[1+(\\alpha h)^{n_1}\\bigr]^{-m_1} + (1-w_1)\\bigl[1+(\\alpha h)^{n_2}\\bigr]^{-m_2}\\\\m_i&=&1-1/{n_i}\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', '&alpha;', 'n<sub>1</sub>', 'n<sub>2</sub>'),
+            'note': '',
+            'selected': False
+        }
+    if ID == 'KOBCCH':
+        return {
+            'html': 'KO<sub>1</sub>BC<sub>2</sub>-CH',
+            'label': '$\mathrm{KO}_1\mathrm{BC}_2$-CH',
+            'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& Q \\biggl[\dfrac{\ln(h/h_m)}{\sigma}\\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}',
+            'parameter': ('w<sub>1</sub>', 'H', '&sigma;1', '&lambda;'),
             'note': '',
             'selected': False
         }
