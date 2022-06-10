@@ -78,7 +78,7 @@ def model(ID):
             'html': 'KO<sub>1</sub>BC<sub>2</sub>-CH',
             'label': '$\mathrm{KO}_1\mathrm{BC}_2$-CH',
             'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& Q \\biggl[\dfrac{\ln(h/h_m)}{\sigma}\\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}',
-            'parameter': ('w<sub>1</sub>', 'H', '&sigma;1', '&lambda;'),
+            'parameter': ('w<sub>1</sub>', 'H', '&sigma;', '&lambda;'),
             'note': '',
             'selected': False
         }
