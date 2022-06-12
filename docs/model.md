@@ -167,12 +167,13 @@ HCF variation: r=1 and independent p
 - Name: kobcch2, KOBCCHIP, KO1BC2-CH-IP, KBC-IP
 - Parameters which only appears in HCF: Ks, p1, p2, q
 
-## Exponential decrease to zero water content
+## Giving pressure head of zero water content
 
 ### Peters model (Kosugi type)
 - Peters ([2013](https://doi.org/10.1002/wrcr.20548))
 - Name: pk, PK, Peters-KO, PE, Peters
 - WRF parameters: qs, qr, w1, hm, sigma1, he
+- qr=0 by definition. &theta;=0 at h=he.
 - get_init() = get_init_pk(he): w1, hm, sigma1
 - get_wrf() = get_wrf_pk(he): returns full WRF parameters with qr=0
 - HCF: Peters (2013)
@@ -182,6 +183,7 @@ HCF variation: r=1 and independent p
 - Fayer and Simmons ([1995](https://doi.org/10.1029/95WR00173))
 - Name: vgfs, VGFS, Fayer-VG
 - WRF parameters: qs, qr, qa, a, m, he, q
+- qr=0 by definition. &theta;=0 at h=he.
 - q = 1 should be provided. Otherwise not calculated.
 - Converted parameter: n = q/(1-m) i.e. m = 1-q/n
 - get_init() = not provided
