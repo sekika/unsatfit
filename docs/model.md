@@ -182,6 +182,7 @@ HCF variation: r=1 and independent p
 - Fayer and Simmons ([1995](https://doi.org/10.1029/95WR00173))
 - Name: vgfs, VGFS, Fayer-VG
 - WRF parameters: qs, qr, qa, a, m, he, q
+- q = 1 should be provided. Otherwise not calculated.
 - Converted parameter: n = q/(1-m) i.e. m = 1-q/n
 - get_init() = not provided
 - get_wrf() = not provided
