@@ -18,6 +18,7 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - Name: vg, VG
 - WRF parameters: qs, qr, a, m, q
 - Converted parameter: n = q/(1-m) i.e. m = 1-q/n
+- Note that in unsatfit, m is used as a variable instead of n, because the bound of m, 0&lt;m&lt;1 is easier to handle than the bound of n, n&gt;q, as unsatfit can make q as a variable.
 - get_init() = get_init_vg(): returns a, m where q=1
 - get_wrf() = get_wrf_vg(): returns full WRF parameters where q=1
 - HCF: [General HCF](hcmodel.md)
