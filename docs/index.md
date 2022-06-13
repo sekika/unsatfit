@@ -27,3 +27,4 @@ It supports various hydraulic models such as
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit
 - 2022-06-08: [unsatfit 4.5](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 
+[Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
