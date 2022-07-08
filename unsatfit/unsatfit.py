@@ -587,7 +587,7 @@ class Fit:
         return self.ln_se([hm, s], x) * (qs-qr) + qr
 
     def ln_se(self, p, x):
-        from scipy.stats import norm
+        from scipy.stats import norm  # type: ignore
         # Ignore runtime warning, because divide by zero is warned when x=0
         import warnings
         warnings.simplefilter('ignore', category=RuntimeWarning)
@@ -1612,7 +1612,7 @@ class Fit:
     def optimize(self):
         import copy
         import math
-        from scipy import optimize
+        from scipy import optimize  # type: ignore
 
         self.success = False
 
@@ -1841,8 +1841,8 @@ class Fit:
         return (x, y)
 
     def plot(self):
-        import matplotlib.pyplot as plt
-        import matplotlib.ticker as ticker
+        import matplotlib.pyplot as plt  # type: ignore
+        import matplotlib.ticker as ticker  # type: ignore
 
         if self.data_only:
             self.set_scale()
