@@ -4,7 +4,7 @@ unsatfit is a Python library for optimizing parameters of functions of soil hydr
 
 Seki, K., Toride, N., & Th. van Genuchten, M. (2022) [Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties.](https://doi.org/10.1002/vzj2.20168) Vadose Zone J. 21; e20168.
 
-![VG-Mualem](sample/VG-Mualem.png "VG-Mualem")
+![KBC](sample/KBC.png "KBC")
 
 It supports various hydraulic models such as
 
