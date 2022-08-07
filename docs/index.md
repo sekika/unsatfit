@@ -6,17 +6,6 @@ Seki, K., Toride, N., & Th. van Genuchten, M. (2022) [Closed-form hydraulic cond
 
 ![KBC](sample/KBC.png "KBC")
 
-It supports various hydraulic models such as
-
-- Brooks and Corey model
-- van Genuchten model
-- Modified van Genuchten and other models
-- Kosugi model
-- Fredlund and Xing model (water retention only)
-- Many types of bimodal models with CH variation
-- Peters model
-- Fayer and Simmons model
-
 ## History
 
 - 2006-07-28: SWRC Fit 1.0 ([JJSSP](https://js-soilphysics.com/downloads/pdf/105067.pdf) version) was released 
