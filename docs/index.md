@@ -25,6 +25,6 @@ It supports various hydraulic models such as
 - 2021-08-13: SWRC Fit was recommended at [JJSSP](https://doi.org/10.34467/jssoilphysics.148.0_45)
 - 2021-11-24: [Paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit
-- 2022-06-08: [unsatfit 4.5](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
+- 2022-08-07: [unsatfit 4.6](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
