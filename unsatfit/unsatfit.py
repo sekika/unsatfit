@@ -1756,6 +1756,7 @@ class Fit:
         self.bottom_margin = 0.12
         self.left_margin = 0.17  # Space for label is needed
         self.right_margin = 0.05
+        self.hspace = 0.07
         self.show_r2 = True
         self.log_x = True
         self.min_x_log = 1
@@ -1854,7 +1855,7 @@ class Fit:
             fig, (ax1, ax2) = plt.subplots(2, figsize=[
                 self.fig_width, self.fig_height_double])
         fig.subplots_adjust(top=1-self.top_margin, bottom=self.bottom_margin, right=1 -
-                            self.right_margin, left=self.left_margin, hspace=0)
+                            self.right_margin, left=self.left_margin, hspace=self.hspace)
 
         # Draw plots, curves and legends
         ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker=self.marker,
