@@ -6,6 +6,8 @@ Seki, K., Toride, N., & Th. van Genuchten, M. (2022) [Closed-form hydraulic cond
 
 ![KBC](sample/KBC.png "KBC")
 
+See [install](install.md) and [sample code](code.md) for instruction.
+
 ## History
 
 - 2006-07-28: SWRC Fit 1.0 ([JJSSP](https://js-soilphysics.com/downloads/pdf/105067.pdf) version) was released 
