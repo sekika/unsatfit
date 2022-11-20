@@ -4,6 +4,8 @@ import pandas as pd
 import unsatfit
 
 MODEL = 'PE'
+HB = 2  # hb value of the modified model
+H0 = 6.3e6  # Se=0 at h=H0
 
 # Read data from csv file
 ht = pd.read_csv('swrc.csv')
@@ -16,16 +18,14 @@ k = np.array(ht['K'])
 f = unsatfit.Fit()
 f.swrc = (h_t, theta)
 f.unsat = (h_k, k)
-he = 6.3e6  # Constant value of h_0
-qs, qr, w1, hm, sigma1, he = wrf = f.get_wrf_pk(he)
+qs, qr, w1, hm, sigma1, he = wrf = f.get_wrf_pk(H0)
 # Set HCF model
 model = MODEL
 f.set_model(model, const=[wrf])
 # Set modified model when sigma1 > 2
 if sigma1 > 2:
     model = 'M' + MODEL
-    hb = 2  # hb value of the modified model
-    f.modified_model(hb)  # Change to modified model
+    f.modified_model(HB)  # Change to modified model
 # Show model description to optimize HCF function
 print(f.model_description)
 # Set initial parameters

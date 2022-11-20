@@ -23,7 +23,7 @@ $$
 - Download a [sample code for VGM model](https://github.com/sekika/unsatfit/blob/main/docs/sample/VGM.py).
 - Read the sample code and edit initial parameters, bound of parameters and figure setting as written in the comment of the sample code if necessary. For more figure options, see  __init_fig() function in the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
 - Run the sample code at the same directory with data files (swrc.csv and hcc.csv). For running the code on Mac or unix-like system, edit the first line ([shebang](https://en.wikipedia.org/wiki/Shebang_(Unix))) and mark the file executable by <code>chmod +x VGM.py</code>. For running on Windows, please refer to [Python on Windows FAQ](https://docs.python.org/3/faq/windows.html).
-- It first optimizes WRF parameters (&theta;<sub>s</sub>, &theta;<sub>r</sub>, a, n) of VG model, and then optimizes HCF parameters (K<sub>s</sub>, p) of VG Mualem model, or modified VG model (h<sub>b</sub>=2) [Vogel et al. (2000)](https://doi.org/10.1016/S0309-1708(00)00037-3) when n &gt; 1.1.
+- It first optimizes WRF parameters (&theta;<sub>s</sub>, &theta;<sub>r</sub>, a, n) of VG model, and then optimizes HCF parameters (K<sub>s</sub>, p) of VG Mualem model, or modified VG model (h<sub>b</sub>=2) [Vogel et al. (2000)](https://doi.org/10.1016/S0309-1708(00)00037-3) when n &gt; 1.1. h<sub>b</sub> value can be changed as HB value in the sample code.
 - Fitted parameters are shown at the standard output, where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively, and R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve.
 - Note that the program is unit independent, meaning that the unit of the parameters depends on the unit of the input data. Unit of pressure head is assumed as cm for a (cm<sup>-1</sup>) and h<sub>b</sub>.
 - Figure file is produced as VG.png. For use in papers, pdf file can be produced as instructed in the sample code.
@@ -132,7 +132,7 @@ K_2(h) &=& \begin{cases}(h/H)^{-a}  & (h>H)\\
 $$
 {% endraw %}
 - Use [sample code for Peters model](https://github.com/sekika/unsatfit/blob/main/docs/sample/PE.py). See instruction in the VGM model above.
-- h<sub>0</sub> is constant and can be edited at line 19 in the sample code.
+- h<sub>0</sub> is constant and can be edited as H0 value in the sample code.
 - It optimizes WRF parameters (&theta;<sub>s</sub>, w, H, &sigma;), and then optimizes general HCF parameters (K<sub>s</sub>, p, a, &omega;) of Peters model or modified Peters model (h<sub>b</sub>=2) when &sigma; &gt; 2.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 

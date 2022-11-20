@@ -4,6 +4,7 @@ import pandas as pd
 import unsatfit
 
 MODEL = 'DVC'
+HB = 2  # hb value of the modified model
 
 # Read data from csv file
 ht = pd.read_csv('swrc.csv')
@@ -25,8 +26,7 @@ f.set_model(model, const=[wrf])
 # Set modified model when sigma1 > 2
 if min(n1, n2) < 1.1:
     model = 'M' + MODEL
-    hb = 2  # hb value of the modified model
-    f.modified_model(hb)  # Change to modified model
+    f.modified_model(HB)  # Change to modified model
 # Show model description to optimize HCF function
 print(f.model_description)
 print('Therefore n1 = {0:.3f} n2 = {1:.3f}'.format(n1, n2))
