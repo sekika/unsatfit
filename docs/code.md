@@ -56,7 +56,7 @@ Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/
 {% raw %}
 $$\begin{cases}
 \theta &=& \theta_s S_e\\
-K &=& K_s {S_e}^p \dfrac{b_1 Q \biggl[\dfrac{\ln(h/H)}{\sigma_1} + q\sigma_1\biggr]+ b_2 (h/H)^{-\lambda_2 - q}}{b_1+b_2}
+K &=& K_s {S_e}^p \gamma^{-1} \Biggl[ b_1 Q \biggl[\dfrac{\ln(h/H)}{\sigma_1} + q\sigma_1\biggr]+ b_2 (h/H)^{-\lambda_2 - q} \Biggr]
 \end{cases}$$
 
 where
@@ -67,7 +67,8 @@ w S_1(h) + 1-w & (h \le H)\end{cases}\\
 S_1(h) &=& Q \biggl[\dfrac{\ln(h/H)}{\sigma_1}\biggr]\\
 Q(x) &=& \frac{1-\mathrm{erf}(x/\sqrt{2})}{2}\\
 b_1 &=& w \exp\biggl(\frac{q^2 \sigma_1^2}{2}\biggr)\\
-b_2 &=& (1-w)\biggl(\frac{q}{\lambda_2} + 1\biggr)^{-1}
+b_2 &=& (1-w)\biggl(\frac{q}{\lambda_2} + 1\biggr)^{-1}\\
+\gamma &=& b_1+b_2
 \end{eqnarray}
 $$
 {% endraw %}
@@ -103,7 +104,7 @@ $$
 {% raw %}
 $$\begin{eqnarray}
 \theta &=& \theta_s S_e\\
-K &=& \begin{cases}K_s {S_e}^p \dfrac{wB_1 \Gamma_1(h) + (1-w)B_2 \Gamma_2(h)}{wB_1+(1-w)B_2} & (h>H)\\ K_s & (h \le H)\end{cases}\\
+K &=& \begin{cases}K_s {S_e}^p \gamma^{-1} \bigl[ wB_1 \Gamma_1(h) + (1-w)B_2 \Gamma_2(h) \bigr] & (h>H)\\ K_s & (h \le H)\end{cases}\\
 \end{eqnarray}$$
 
 where
@@ -111,6 +112,7 @@ where
 $$\begin{eqnarray}
 S_e &=& \begin{cases}w \left(h / H\right)^{-\lambda_1} + (1-w)\left(h / H\right)^{-\lambda_2}  & (h>H)\\ 1 & (h \le H)\end{cases}\\
 B_i &=& \biggl(\frac{q}{\lambda_i} + 1\biggr)^{-1}\\
+\gamma &=& wB_1+(1-w)B_2\\
 \Gamma_i(h) &=& \left(h / H\right)^{-\lambda_i-q}
 \end{eqnarray}
 $$
