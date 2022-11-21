@@ -1,6 +1,6 @@
 # Sample code of unsatfit
 
-Easiest way to start learning how to use unsatfit is to run sample codes as instructed in this page. You can optimize parameters of WRF (water retention function) and HCF (hydraulic conductivity function) of [various available models](model.md) to measured data set. You can test with sample data provided. If you study Python and read the sample code, you will be able to use unsatfit flexibly according to your demand. For optimizing only WRF parameters, please use [SWRC Fit](swrcfit.md).
+Easiest way to start learning how to use unsatfit is to run sample codes as instructed in this page. You can optimize parameters of WRF (water retention function) and HCF (hydraulic conductivity function) of [various available models](model.md) to measured data set. You can test with sample data provided in this page. For optimizing only WRF parameters, please use [SWRC Fit](swrcfit.md).
 
 * Models
     * [VGM (van Genuchten - Mualem) model](#vgm-van-genuchten---mualem-model) with full instruction
