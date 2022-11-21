@@ -2,7 +2,17 @@
 
 Easiest way to start learning how to use unsatfit is to run sample codes as instructed in this page. You can optimize parameters of WRF (water retention function) and HCF (hydraulic conductivity function) of [various available models](model.md) to measured data set. You can test with sample data provided. If you study Python and read the sample code, you will be able to use unsatfit flexibly according to your demand. For optimizing only WRF parameters, please use [SWRC Fit](swrcfit.md).
 
-## <strong>VGM</strong> (van Genuchten - Mualem) model
+* Models
+    * [VGM (van Genuchten - Mualem) model](#vgm-van-genuchten---mualem-model) with full instruction
+    * [Bimodal model with general HCF](#bimodal-model-with-general-hcf)
+        * [KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model](#kbc-ko1bc2-ch-model-θr0-r1)
+        * [DVC (dual-VG-CH) model](#dvc-dual-vg-ch-model-θr0-q1)
+        * [DBC (dual-BC-CH) model](#dbc-dual-bc-ch-model-θr0-r1)
+    * [Peters model](#peters-model-θr0)
+* [Multiple curves](#multiple-curves)
+* [Contour plot](#contour-plot)
+
+## VGM (van Genuchten - Mualem) model
 {% raw %}
 $$\begin{cases}
 \theta &=& (\theta_s - \theta_r)S_e + \theta_r\\
@@ -40,7 +50,7 @@ Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/
 
 [Bimodal model](https://seki.webmasters.gr.jp/swrc/model.html) with [general HCF](hcmodel.md) (Seki et al., [2022](https://doi.org/10.1002/vzj2.20168)) can represent water retention and hydraulic  conductivity of various types of soil in a wide range of pressure head, as verified in our paper which is in review process. You can conduct the same fitting as written in the paper by using the following sample codes.
 
-## <strong>KBC</strong> (<strong>KO<sub>1</sub>BC<sub>2</sub>-CH</strong>) model (&theta;<sub>r</sub>=0, r=1)
+## KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
 $$\begin{cases}
 \theta &=& \theta_s S_e\\
@@ -65,7 +75,7 @@ $$
 
 <img src="sample/KBC.png" width="300" />
 
-## <strong>DVC</strong> (<strong>dual-VG-CH</strong>) model (&theta;<sub>r</sub>=0, q=1)
+## DVC (dual-VG-CH) model (&theta;<sub>r</sub>=0, q=1)
 {% raw %}
 $$\begin{cases}
 \theta &=& \theta_s S_e\\
@@ -87,7 +97,7 @@ $$
 
 <img src="sample/DVC.png" width="300" />
 
-## <strong>DBC</strong> (<strong>dual-BC-CH</strong>) model (&theta;<sub>r</sub>=0, r=1)
+## DBC (dual-BC-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
 $$\begin{eqnarray}
 \theta &=& \theta_s S_e\\
@@ -109,7 +119,7 @@ $$
 
 <img src="sample/DBC.png" width="300" />
 
-## <strong>Peters</strong> model (&theta;<sub>r</sub>=0, h<sub>0</sub>=6.3&times;10<sup>6</sup>)
+# Peters model (&theta;<sub>r</sub>=0)
 {% raw %}
 $$\begin{cases}
 \theta &=& \theta_s S_e\\
@@ -132,7 +142,7 @@ K_2(h) &=& \begin{cases}(h/H)^{-a}  & (h>H)\\
 $$
 {% endraw %}
 - Use [sample code for Peters model](https://github.com/sekika/unsatfit/blob/main/docs/sample/PE.py). See instruction in the VGM model above.
-- h<sub>0</sub> is constant and can be edited as H0 value in the sample code.
+- h<sub>0</sub>=6.3&times;10<sup>6</sup> is constant and can be edited as H0 value in the sample code.
 - It optimizes WRF parameters (&theta;<sub>s</sub>, w, H, &sigma;), and then optimizes general HCF parameters (K<sub>s</sub>, p, a, &omega;) of Peters model or modified Peters model (h<sub>b</sub>=2) when &sigma; &gt; 2.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
