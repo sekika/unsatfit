@@ -53,7 +53,7 @@ def model(ID):
             'equation': 'S_e = \\begin{cases}w_1 \left(h / h_b\\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\\right)^{-\lambda_2}  & (h>h_b)\\\\ 1 & (h \le h_b)\end{cases}',
             'parameter': ('w<sub>1</sub>', 'h<sub>b</sub>', '&lambda;<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
-            'selected': True
+            'selected': False
         }
     if ID == 'VGBCCH':
         return {
@@ -62,7 +62,7 @@ def model(ID):
             'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& \\bigl[1+(h/H)^n\\bigr]^{-m} ~~ (m=1-1/n)\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'H', 'n', '&lambda;'),
             'note': '',
-            'selected': True
+            'selected': False
         }
     if ID == 'DVCH':
         return {
@@ -71,7 +71,7 @@ def model(ID):
             'equation': '\\begin{eqnarray}S_e &=& w_1\\bigl[1+(\\alpha h)^{n_1}\\bigr]^{-m_1} + (1-w_1)\\bigl[1+(\\alpha h)^{n_2}\\bigr]^{-m_2}\\\\m_i&=&1-1/{n_i}\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', '&alpha;', 'n<sub>1</sub>', 'n<sub>2</sub>'),
             'note': '',
-            'selected': False
+            'selected': True
         }
     if ID == 'KOBCCH':
         return {
@@ -80,7 +80,7 @@ def model(ID):
             'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& Q \\biggl[\dfrac{\ln(h/h_m)}{\sigma}\\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'H', '&sigma;', '&lambda;'),
             'note': '',
-            'selected': False
+            'selected': True
         }
     if ID == 'DB':
         return {
