@@ -17,14 +17,14 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 ## VGM (van Genuchten - Mualem) model
 {% raw %}
 $$\begin{cases}
-\theta &=& (\theta_s - \theta_r)S_e + \theta_r\\
-K &=& K_s {S_e}^p \bigl[1-(1-S_e^{1/m})^m\bigr]^2\\
+\theta(h) &=& (\theta_s - \theta_r)S_e(h) + \theta_r\\
+K(h) &=& K_s {S_e(h)}^p \bigl[1-(1-S_e(h)^{1/m})^m\bigr]^2\\
 \end{cases}$$
 
 where
 
 $$\begin{eqnarray}
-S_e &=& \biggl[\dfrac{1}{1+(ah)^n}\biggr]^m\\
+S_e(h) &=& \biggl[\dfrac{1}{1+(ah)^n}\biggr]^m\\
 m &=& 1-1/n
 \end{eqnarray}
 $$
@@ -55,14 +55,14 @@ Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/
 ## KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
 $$\begin{cases}
-\theta &=& \theta_s S_e\\
-K &=& K_s {S_e}^p \gamma^{-1} \Biggl[ b_1 Q \biggl[\dfrac{\ln(h/H)}{\sigma_1} + q\sigma_1\biggr]+ b_2 (h/H)^{-\lambda_2 - q} \Biggr]
+\theta(h) &=& \theta_s S_e(h)\\
+K(h) &=& K_s {S_e(h)}^p \gamma^{-1} \Biggl[ b_1 Q \biggl[\dfrac{\ln(h/H)}{\sigma_1} + q\sigma_1\biggr]+ b_2 (h/H)^{-\lambda_2 - q} \Biggr]
 \end{cases}$$
 
 where
 
 $$\begin{eqnarray}
-S_e &=& \begin{cases}w S_1 + (1-w)\left(h/H\right)^{-\lambda_2}  & (h>H)\\
+S_e(h) &=& \begin{cases}w S_1(h) + (1-w)\left(h/H\right)^{-\lambda_2}  & (h>H)\\
 w S_1(h) + 1-w & (h \le H)\end{cases}\\
 S_1(h) &=& Q \biggl[\dfrac{\ln(h/H)}{\sigma_1}\biggr]\\
 Q(x) &=& \frac{1-\mathrm{erf}(x/\sqrt{2})}{2}\\
@@ -81,14 +81,14 @@ $$
 ## DVC (dual-VG-CH) model (&theta;<sub>r</sub>=0, q=1)
 {% raw %}
 $$\begin{cases}
-\theta &=& \theta_s S_e\\
-K &=& K_s {S_e}^p \bigl[w\Gamma_1(h) + (1-w)\Gamma_2(h)\bigr]^r\\
+\theta(h) &=& \theta_s S_e(h)\\
+K(h) &=& K_s {S_e(h)}^p \bigl[w\Gamma_1(h) + (1-w)\Gamma_2(h)\bigr]^r\\
 \end{cases}$$
 
 where
 
 $$\begin{eqnarray}
-S_e &=& w\bigl[1+(ah)^{n_1}\bigr]^{-m_1} + (1-w)\bigl[1+(ah)^{n_2}\bigr]^{-m_2}\\
+S_e(h) &=& w\bigl[1+(ah)^{n_1}\bigr]^{-m_1} + (1-w)\bigl[1+(ah)^{n_2}\bigr]^{-m_2}\\
 m_i&=&1-1/{n_i}\\
 \Gamma_i(h) &=& 1-\biggl[1-\big[1+(ah)^{n_i}\bigr]^{-1}\biggr]^{m_i}
 \end{eqnarray}
@@ -103,14 +103,14 @@ $$
 ## DBC (dual-BC-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
 $$\begin{eqnarray}
-\theta &=& \theta_s S_e\\
-K &=& \begin{cases}K_s {S_e}^p \gamma^{-1} \bigl[ wB_1 \Gamma_1(h) + (1-w)B_2 \Gamma_2(h) \bigr] & (h>H)\\ K_s & (h \le H)\end{cases}\\
+\theta(h) &=& \theta_s S_e(h)\\
+K(h) &=& \begin{cases}K_s {S_e(h)}^p \gamma^{-1} \bigl[ wB_1 \Gamma_1(h) + (1-w)B_2 \Gamma_2(h) \bigr] & (h>H)\\ K_s & (h \le H)\end{cases}\\
 \end{eqnarray}$$
 
 where
 
 $$\begin{eqnarray}
-S_e &=& \begin{cases}w \left(h / H\right)^{-\lambda_1} + (1-w)\left(h / H\right)^{-\lambda_2}  & (h>H)\\ 1 & (h \le H)\end{cases}\\
+S_e(h) &=& \begin{cases}w \left(h / H\right)^{-\lambda_1} + (1-w)\left(h / H\right)^{-\lambda_2}  & (h>H)\\ 1 & (h \le H)\end{cases}\\
 B_i &=& \biggl(\frac{q}{\lambda_i} + 1\biggr)^{-1}\\
 \gamma &=& wB_1+(1-w)B_2\\
 \Gamma_i(h) &=& \left(h / H\right)^{-\lambda_i-q}
@@ -126,14 +126,14 @@ $$
 # Peters model (&theta;<sub>r</sub>=0)
 {% raw %}
 $$\begin{cases}
-\theta &=& \theta_s S_e\\
-K &=& K_s \bigl[ (1-\omega)K_1(h)+\omega K_2(h) \bigr]\\
+\theta(h) &=& \theta_s S_e(h)\\
+K(h) &=& K_s \bigl[ (1-\omega)K_1(h)+\omega K_2(h) \bigr]\\
 \end{cases}$$
 
 where
 
 $$\begin{eqnarray}
-S_e &=& w S_1(h) + (1-w)S_2(h)\\
+S_e(h) &=& w S_1(h) + (1-w)S_2(h)\\
 S_1(h) &=& Q \biggl[\dfrac{\ln(h/H)}{\sigma}\biggr]\\
 Q(x) &=& \frac{1-\mathrm{erf}(x/\sqrt{2})}{2}\\
 S_2(h) &=& \begin{cases}\dfrac{L(h_0)-L(h)}{L(h_0)-L(H)}  & (h>H)\\
