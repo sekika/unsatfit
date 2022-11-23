@@ -22,7 +22,7 @@ n = q/(1-m)  # n is calculated from optimized m
 # Set HCF model
 model = MODEL
 f.set_model(model, const=[wrf, 'r=2'])
-# Set modified model when sigma1 > 2
+# Set modified model when n < 1.1
 if n < 1.1:
     model = 'M' + MODEL
     f.modified_model(HB)  # Change to modified model
