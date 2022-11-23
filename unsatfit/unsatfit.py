@@ -17,9 +17,9 @@ class Fit:
 
     Reference
 
-    Seki, K., Toride, N., & Th. van Genuchten, M. (2021) Closed-form hydraulic
+    Seki, K., Toride, N., & Th. van Genuchten, M. (2022) Closed-form hydraulic
         conductivity equations for multimodal unsaturated soil hydraulic properties.
-        Vadose Zone J. 2021; e20168. https://doi.org/10.1002/vzj2.20168
+        Vadose Zone J. 21, e20168. https://doi.org/10.1002/vzj2.20168
     """
 
 # Definition of hydraulic models
@@ -431,7 +431,7 @@ class Fit:
         warnings.simplefilter('ignore', category=RuntimeWarning)
         return np.where(x < p[2], 1, (x/p[2]) ** (-p[3]))
 
-    def bc_k(self, p, x):  # Not defined yet
+    def bc_k(self, p, x):
         par = list(p)
         for c in self.const:
             par = par[:c[0]-1] + [c[1]] + par[c[0]-1:]
