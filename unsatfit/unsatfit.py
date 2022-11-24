@@ -1760,6 +1760,7 @@ class Fit:
         self.min_x_log = 1
         # self.max_x = 10**4
         # self.min_y2 = 10**(-12)
+        # self.max_y1 = 0.5
         self.max_y2_log = 5
         self.curve_smooth = 200
         self.contour_level = 8
@@ -1798,7 +1799,8 @@ class Fit:
             except AttributeError:
                 self.max_x = max(x1) * 1.05
         self.min_y1 = 0
-        self.max_y1 = max(y1) * 1.15
+        if not hasattr(self, 'max_y1'):
+            self.max_y1 = max(y1) * 1.15
         if not self.ht_only:
             x2, y2 = self.unsat
             if hasattr(self, 'min_y2'):
