@@ -47,9 +47,9 @@ For figures etc.
 <dd>Initial parameters. When it is a list (or tuple) of parameters, such as [a, b, c], the set of parameters is used as initial parameters. When it is a nested list, such as [[a1, a2, a3], [b1, b2]], all combination of the initial parameters is used.</dd>
 </dl>
 
-- For boundary conditions, see __init_bound() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
-- For least square optimization, see __init_lsq() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
-- For figure options, see  __init_fig() in the [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/unsatfit.py).
+- For boundary conditions, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_bound.py).
+- For least square optimization, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_lsq.py).
+- For figure options, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
 
 ## Properties for return values of optimize()
 
