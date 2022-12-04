@@ -20,7 +20,7 @@ This is an example output of this program; water retention curve (top) and hydra
 - 2021-08-13: SWRC Fit was recommended at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.148.0_45)
 - 2021-11-24: [Paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit
-- 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://researchmap.jp/sekik/presentations/40340923)
+- 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html)
 - 2022-11-24: [unsatfit 4.7](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
