@@ -50,7 +50,7 @@ Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/
 
 ## Bimodal model with general HCF
 
-[Bimodal model](https://seki.webmasters.gr.jp/swrc/model.html) with [general HCF](hcmodel.md) (Seki et al., [2022](https://doi.org/10.1002/vzj2.20168)) can represent water retention and hydraulic  conductivity of various types of soil in a wide range of pressure head, as verified in our paper which is in review process. You can conduct the same fitting as written in the paper by using the following sample codes.
+[Bimodal model](https://seki.webmasters.gr.jp/swrc/model.html) with [general HCF](hcmodel.md) (Seki et al., [2022](https://doi.org/10.1002/vzj2.20168)) can represent water retention and hydraulic  conductivity of various types of soil in a wide range of pressure head, as verified in [our paper](https://arxiv.org/abs/2212.02965) to be published in Journal of Hydrology and Hydromechanics. You can conduct the same fitting as written in the paper by using the following sample codes.
 
 ## KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
