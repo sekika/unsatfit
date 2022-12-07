@@ -4,6 +4,10 @@ unsatfit is a Python library for optimizing parameters of functions of soil hydr
 
 * Seki, K., Toride, N., & Th. van Genuchten, M. (2022) [Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties.](https://doi.org/10.1002/vzj2.20168) Vadose Zone J. 21; e20168.
 
+The model is evaluated and unsatfit is introduced in this paper.
+
+* Seki, K., Toride, N., & Th. van Genuchten, M. (2023) Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. in press. ([preprint](https://arxiv.org/abs/2212.02965))
+
 See [install](install.md) and [sample code](code.md) for instruction.
 
 ## Example output
@@ -11,6 +15,8 @@ See [install](install.md) and [sample code](code.md) for instruction.
 This is an example output of this program; water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam fitted with KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.
 
 ![KBC](sample/KBC.png "KBC")
+
+For more examples, see Fig. 6 and Appendix in [this paper](https://arxiv.org/abs/2212.02965).
 
 ## History
 
