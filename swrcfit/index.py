@@ -278,11 +278,6 @@ def swrcfit(f):
             s1 = 1.2*l1**(-0.8)
             if s1 > 2:
                 s1 = 2
-            m1 = 1-1/n1
-            if m1 < 0.1:
-                m1 = 0.1
-            if m1 > 0.8:
-                m1 = 0.8
             f.ini = (*q, w1, hb, s1, l2)
             f.optimize()
             if not f.success:
