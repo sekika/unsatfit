@@ -102,7 +102,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_m, b_ks, b_p, b_q, b_r
 
 ### dual-KO model
-- Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
+- Seki ([2007](http://dx.doi.org/10.5194/hessd-4-407-2007)), Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
 - Name: ln2, DK, dual-KO
 - WRF parameters: qs, qr, w1, hm1, sigma1, hm2, sigma2
 - get_init() = not provided
