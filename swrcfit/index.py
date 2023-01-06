@@ -531,6 +531,21 @@ def maincgi():
     f.lang = lang
     f.getlang = getlang
 
+    # Get UNSODA data
+    code = field.getfirst('unsoda', '')
+    f.given_data = ''
+    if code != '':
+        import json
+        place = field.getfirst('place', '')
+        process = field.getfirst('process', '')
+        table = place + '_' + process + '_h-t'
+        unsoda_json = json.load(open('data/unsoda.json', 'r'))
+        if table in unsoda_json and code in unsoda_json[table]:
+            s = unsoda_json[table][code]
+            f.given_data = 'UNSODA = ' + str(code)
+            f.given_data += '\nTexture = ' + unsoda_json['general'][code]['texture'] + '\n\n'
+            for i in [list(x) for x in zip(*s)]:
+                f.given_data += str(i[0]) + ' ' + str(i[1]) + '\n'
     # Get model selection
     f.selectedmodel = []
     for m in model('all'):
@@ -845,7 +860,7 @@ def printform(lang, getlang, f):
         print('    <option value="{0}">{1}'.format(unsoda, texture))
     print('  <option value="clear">*** Clear input ***')
     print('''  </select>
-<div><textarea name="input" id="input" rows="15" cols="27" wrap="off"></textarea></div>
+<div><textarea name="input" id="input" rows="15" cols="27" wrap="off">{3}</textarea></div>
 </td></tr>
 <tr>
 <td colspan="2">
@@ -869,7 +884,7 @@ def printform(lang, getlang, f):
 </td>
 </tr>
 </tr>
-</table></div>'''.format(message(lang, 'showmore'), getlang, message(lang, 'calculate')), flush=True)
+</table></div>'''.format(message(lang, 'showmore'), getlang, message(lang, 'calculate'), f.given_data), flush=True)
     # Read setting from local storage
     for i in model('all'):
         loadchecked(i)
@@ -878,7 +893,8 @@ def printform(lang, getlang, f):
     loadradio('cqs', 'fit')
     for i in ('qrin'):
         loadnum(i)
-    loadtext('input')
+    if f.given_data == '':
+        loadtext('input')
 
 
 def loadchecked(id):
