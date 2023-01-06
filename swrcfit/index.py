@@ -655,6 +655,8 @@ def calc(f):
             if i == 'doi':
                 print(
                     '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
+            elif i == 'UNSODA':
+                print('<li>{0} = <a href="https://sekika.github.io/unsoda/?{1}">{1}</a>'.format(escape(i), escape(d[i])))
             else:
                 print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
     for i in getoptiontheta(f, True)[0]:

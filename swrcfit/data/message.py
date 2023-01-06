@@ -44,8 +44,8 @@ def message(lang, ID, URL='./'):
     # When translation is not defined, English message is returned.
     if ID == 'news':
         if lang == 'ja':
-            return '<strong>[ニュース]</strong> <a href="https://doi.org/10.1002/vzj2.20168">この論文</a>の線型結合モデルに対応した新しいバージョンになりました。'
-        return '<strong>[News]</strong> This is a completely new version of SWRC Fit with bimodal models in <a href="https://doi.org/10.1002/vzj2.20168">this publication</a>.'
+            return '<strong>[ニュース]</strong><ul><li><a href="https://doi.org/10.1002/vzj2.20168">この論文</a>の線型結合モデルに対応した新しいバージョンになりました。</li><li><a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> と <a href="https://sekika.github.io/unsatfit/">unsatfit</a> もどうぞ。</li></ul>'
+        return '<strong>[News]</strong><ul><li>This is a completely new version of SWRC Fit with bimodal models in <a href="https://doi.org/10.1002/vzj2.20168">this publication</a>.</li><li>Please also check <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> and <a href="https://sekika.github.io/unsatfit/">unsatfit</a>.</li></ul>'
     if ID == 'description':
         if lang == 'ja':
             return 'SWRC Fit は、<a href="https://github.com/sekika/paper/raw/master/JTUNS/Seki-2017-JTUNS.pdf">土壌水分特性（水分保持曲線）</a>のデータを、<a href="model-ja.html">いくつかのモデル</a>によって近似し、土壌水分特性パラメータを決定することができます。' \
@@ -110,20 +110,20 @@ def message(lang, ID, URL='./'):
             + '<h2>Program</h2><p>SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.'
     if ID == 'ack':
         if lang == 'ja':
-            return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="' + message(lang, 'unsoda') + '">UNSODA データベース</a>から取得しました。<li>「土壌の物理性」で<a href="https://www.jstage.jst.go.jp/article/jssoilphysics/148/0/148_45/_article/-char/ja/">お薦めして</a>いただきました。</ul>'
+            return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="' + message(lang, 'unsoda') + '">UNSODA データベース</a>から取得しました。<a href="https://sekika.github.io/unsoda/ja/">UNSODA ビューア</a>でさらにデータを閲覧可能です。<li>「土壌の物理性」で<a href="https://www.jstage.jst.go.jp/article/jssoilphysics/148/0/148_45/_article/-char/ja/">お薦めして</a>いただきました。</ul>'
         if lang == 'es':
-            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
+            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
                 + '<li><a href="https://scholar.google.co.jp/citations?user=a842WTkAAAAJ">Dr. David Moret-Fernandez</a> corrected Spanish.</li></ul>'
         if lang == 'fr':
-            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
+            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
                 + '<li><a href="https://lhyges.unistra.fr/ACKERER-Philippe?lang=fr">Dr. Philippe Ackerer</a> corrected French.</li></ul>'
         if lang == 'de':
-            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
+            return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
                 + '<li><a href="https://www.ufz.de/index.php?en=39081">Dr. Martin Thullner</a> corrected German.</li></ul>'
         if lang == 'zh':
-            return '<h2>感谢</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
+            return '<h2>感谢</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
                 + '<li><a href="http://www.iswc.cas.cn/sourcedb_iswc_cas/zw/zjrc/200910/t20091020_2584555.html">Dr. Li Wang</a> corrected Chinese.</li></ul>'
-        return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory.</li>' \
+        return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
             + '<li>Acknowledgement for translation is shown in each language page. I speak only English and Japanese. Help in language is always welcome.</li></ul>'
     if ID == 'question':
         if lang == 'ja':
@@ -150,7 +150,7 @@ def message(lang, ID, URL='./'):
         return 'Fredlund, D.G. and Xing, A. (1994): Equations for the soil-water characteristic curve. Can. Geotech. J., 31: 521-532. ' \
             + '<a href="http://dx.doi.org/10.1139/t94-061">doi:10.1139/t94-061</a>'
     if ID == 'unsoda':
-        return 'https://data.nal.usda.gov/dataset/unsoda-20-unsaturated-soil-hydraulic-database-database-and-program-indirect-methods-estimating-unsaturated-hydraulic-properties'
+        return 'https://doi.org/10.15482/USDA.ADC/1173246'
     if ID == 'modelselect':
         if lang == 'ja':
             return 'モデルの選択'
