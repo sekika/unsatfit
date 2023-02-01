@@ -1,12 +1,12 @@
 # unsatfit
 
-unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties (water retention function and hydraulic conductivity function). Model formulation is explained in this paper.
+unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties (water retention function and hydraulic conductivity function) where equations are explained in the following paper.
 
 * Seki, K., Toride, N., & Th. van Genuchten, M. (2022) [Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties.](https://doi.org/10.1002/vzj2.20168) Vadose Zone J. 21; e20168.
 
-The model is evaluated and unsatfit is introduced in this paper.
+The proposed equations are useful for practical applications as shown in the following paper.
 
-* Seki, K., Toride, N., & Th. van Genuchten, M. (2023) Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. in press. ([preprint](https://arxiv.org/abs/2212.02965))
+* Seki, K., Toride, N., & Th. van Genuchten, M. (2023) [Evaluation of a general model for multimodal unsaturated soil hydraulic properties.](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf) J. Hydrol. Hydromech. 71(1): 22-34.
 
 See [install](install.md) and [sample code](code.md) for instruction.
 
@@ -16,7 +16,7 @@ This is an example output of this program; water retention curve (top) and hydra
 
 ![KBC](sample/KBC.png "KBC")
 
-For more examples, see Fig. 6 and Appendix in [this paper](https://arxiv.org/abs/2212.02965).
+For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf)).
 
 ## History
 
@@ -28,6 +28,6 @@ For more examples, see Fig. 6 and Appendix in [this paper](https://arxiv.org/abs
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit
 - 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html)
 - 2022-11-24: [unsatfit 4.7](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
-- 2022-12-06: [Paper](https://arxiv.org/abs/2212.02965) introducing unsatfit was accepted for publication in JHH
+- 2022-12-06: [Paper](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf) introducing unsatfit was accepted for publication in JHH
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
