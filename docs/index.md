@@ -8,7 +8,11 @@ The proposed equations are useful for practical applications as shown in the fol
 
 * Seki, K., Toride, N., & Th. van Genuchten, M. (2023) [Evaluation of a general model for multimodal unsaturated soil hydraulic properties.](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf) J. Hydrol. Hydromech. 71(1): 22-34.
 
-See [install](install.md) and [sample code](code.md) for instruction.
+## User manual
+
+A [user manual](https://arxiv.org/abs/2302.00472) is available.
+
+See [install](install.md) and [sample code](code.md) for a quick start.
 
 ## Example output
 
@@ -29,5 +33,6 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html)
 - 2022-11-24: [unsatfit 4.7](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 - 2022-12-06: [Paper](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf) introducing unsatfit was accepted for publication in JHH
+- 2023-02-02: [User manual](https://arxiv.org/abs/2302.00472) was published on arXiv.
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
