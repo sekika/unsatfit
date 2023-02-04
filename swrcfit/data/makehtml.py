@@ -81,6 +81,7 @@ def ref1():
 <li>Kosugi, K. (1996): Lognormal distribution model for unsaturated soil hydraulic properties. <i>Water Resour. Res.</i> 32: 2697-2703. <a href="http://dx.doi.org/10.1029/96WR01776">doi:10.1029/96WR01776</a></li>
 <li>Seki, K. (2007): SWRC fit - a nonlinear fitting program with a water retention curve for soils having unimodal and bimodal pore structure. <i>Hydrol. Earth Syst. Sci. Discuss.</i>, 4: 407-437. <a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a></li>
 <li>Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21, e20168. <a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a></li>
+<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2023). Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. <a href="https://doi.org/10.2478/johh-2022-0039?>doi:10.2478/johh-2022-0039</a></a>
 '''
 
 
@@ -185,7 +186,7 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 
 <h2>Hydraulic conductivity functions</h2>
 
-<p>For water retention functions except for FX model, closed-form hydraulic conductivity equations with generalized Mualem's equation are available (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>).</p>
+<p>For water retention functions except for FX model, closed-form hydraulic conductivity equations with generalized Mualem's equation are available (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>). The equations are useful for practical applications as shown in <a href="https://doi.org/10.2478/johh-2022-0039">Seki et al. (2023)</a>. Use <a href="https://sekika.github.io/unsatfit/">unsatfit</a> for fitting with those functions.</p>
 
 <h2>Note for notation</h2>
 
@@ -296,7 +297,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <h2>透水性関数</h2>
 
-<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。</p>
+<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。それが実用的な式であることは<a href="https://doi.org/10.2478/johh-2022-0039">Seki et al. (2023)</a>が示している。<a href="https://sekika.github.io/unsatfit/">unsatfit</a>によって透水性関数のフィッティングが可能である。</p>
 
 <h2>モデルの略記について</h2>
 
