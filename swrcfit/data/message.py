@@ -100,14 +100,10 @@ def message(lang, ID, URL='./'):
         return 'Sample output'
     if ID == 'help':
         if lang == 'ja':
-            return '<h2>引用</h2>\n<p>SWRC Fit を使った研究成果を公表するときには、この論文を引用して下さい。\n' \
-                + '<a href="https://scholar.google.com/citations?view_op=view_citation&hl=ja&user=Gs_ABawAAAAJ&citation_for_view=Gs_ABawAAAAJ:9yKSN-GCB0IC">多くの研究で使われています。</a></p>' \
-                + '<ul><li>' + message(lang, 'seki2007') + '</li></ul>' \
-                + '<h2>プログラム</h2><p>SWRC Fit は <a href="https://sekika.github.io/unsatfit/">unsatfit</a> のライブラリを使って計算をしています。'
-        return '<h2>Citation</h2>\n<p><p>Please cite this paper when you publish your work using this program, SWRC Fit.\n' \
-            + '<a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Gs_ABawAAAAJ&citation_for_view=Gs_ABawAAAAJ:9yKSN-GCB0IC">Researches conducted with SWRC Fit</a>.</p>'  \
-            + '<ul><li>' + message(lang, 'seki2007') + '</li></ul>' \
-            + '<h2>Program</h2><p>SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.'
+            return '<h2>引用</h2>\n<p>SWRC Fit または unsatfit を使った研究成果を公表するときには、この論文を引用して下さい。SWRC Fit は <a href="https://sekika.github.io/unsatfit/">unsatfit</a> のライブラリを使って計算をしています。\n' \
+                + '<ul><li>' + message(lang, 'seki2023') + '</li></ul>'
+        return '<h2>Citation</h2>\n<p><p>Please cite this paper when you publish your work using this program, SWRC Fit or unsatfit. SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.\n' \
+            + '<ul><li>' + message(lang, 'seki2023') + '</li></ul>'
     if ID == 'ack':
         if lang == 'ja':
             return '<h2>謝辞</h2><ul><li>サンプルデータはアメリカ農務省塩類研究所が開発した不飽和土壌水分特性の<a href="' + message(lang, 'unsoda') + '">UNSODA データベース</a>から取得しました。<a href="https://sekika.github.io/unsoda/ja/">UNSODA ビューア</a>でさらにデータを閲覧可能です。<li>「土壌の物理性」で<a href="https://www.jstage.jst.go.jp/article/jssoilphysics/148/0/148_45/_article/-char/ja/">お薦めして</a>いただきました。</ul>'
@@ -145,10 +141,13 @@ def message(lang, ID, URL='./'):
             + '<a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a>'
     if ID == 'seki2022':
         return 'Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21, e20168. ' \
-            + '<a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a>'
+            + '<a href="https://doi.org/10.1002/vzj2.20168">https://doi.org/10.1002/vzj2.20168</a>'
+    if ID == 'seki2023':
+        return 'Seki, K., Toride, N., & Th. van Genuchten, M. (2023) Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. ' \
+            + '<a href="https://doi.org/10.2478/johh-2022-0039">https://doi.org/10.2478/johh-2022-0039</a>'
     if ID == 'fredlund1994':
         return 'Fredlund, D.G. and Xing, A. (1994): Equations for the soil-water characteristic curve. Can. Geotech. J., 31: 521-532. ' \
-            + '<a href="http://dx.doi.org/10.1139/t94-061">doi:10.1139/t94-061</a>'
+            + '<a href="http://dx.doi.org/10.1139/t94-061">http://dx.doi.org/10.1139/t94-061</a>'
     if ID == 'unsoda':
         return 'https://doi.org/10.15482/USDA.ADC/1173246'
     if ID == 'modelselect':
@@ -233,6 +232,6 @@ def message(lang, ID, URL='./'):
         return '<a href="?lang=' + lang + '">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER created by AUTHOR running with Python PYV on ARCH.'
     if ID == 'author':
         if lang == 'ja':
-            return '<a href="http://www2.toyo.ac.jp/~seki_k/">関勝寿</a>'
+            return '<a href="https://sekika.github.io/toyo/">関勝寿</a>'
         return '<a href="https://scholar.google.com/citations?user=Gs_ABawAAAAJ">Katsutoshi Seki</a>'
     return '<strong>Message ID error!</strong>'
