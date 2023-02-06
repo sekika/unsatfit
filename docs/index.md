@@ -31,8 +31,8 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2021-11-24: [Paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit
 - 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html)
-- 2022-11-24: [unsatfit 4.7](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 - 2023-02-02: [User manual](https://arxiv.org/abs/2302.00472) was published on arXiv.
 - 2023-02-04: [Paper](https://doi.org/10.2478/johh-2022-0039) introducing unsatfit was published at JHH
+- 2023-02-06: [unsatfit 4.8](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit))
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)

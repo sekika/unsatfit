@@ -5,8 +5,7 @@ cd `echo $0 | sed -e 's/[^/]*$//'`
 # Make package
 echo "Making packages."
 cd ..
-python3 setup.py sdist
-python3 setup.py bdist_wheel
+python3 -m build
 
 # Upload
 echo "Preparing PyPI password with passme"
