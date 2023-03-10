@@ -97,7 +97,10 @@ def plot(self):
             for curve in self.curves_hk:
                 ax2.plot(*curve['data'], color=curve['color'],
                          linestyle=curve['style'], label='_nolegend_')
-        fig.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
+        if hasattr(self, 'fp'):
+            fig.legend(loc=self.legend_loc, prop=self.fp)
+        else:
+            fig.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
         # plt.legend()
 
     # Draw scale
