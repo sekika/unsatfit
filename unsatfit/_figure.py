@@ -130,3 +130,4 @@ def plot(self):
         plt.savefig(self.filename)
     if self.show_fig:
         plt.show()
+    plt.close()
