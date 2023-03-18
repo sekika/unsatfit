@@ -85,7 +85,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - WRF parameters: qs, qr, w1, a1, m1, a2, m2, q
 - Converted parameter: n1 = q/(1-m1), n2 = q/(1-m2)
 - get_init() = get_init_vg2(): returns w1, a1, m1, a2, m2 where q=1
-- get_wrf() = not provided
+- get_wrf() = get_wrf_vg2(): returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r

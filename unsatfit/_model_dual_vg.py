@@ -7,6 +7,7 @@ def init_model_vg2(self):
         'function': (self.vg2, self.vg2_k),
         'bound': self.bound_vg2,
         'get_init': self.get_init_vg2,
+        'get_wrf': self.get_wrf_vg2,
         'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'a2', 'm2', 'Ks', 'p', 'q', 'r'],
         'k-only': [7, 8, 10]
     }
@@ -14,6 +15,7 @@ def init_model_vg2(self):
         'function': (self.vg2ch, self.vg2ch_k),
         'bound': self.bound_vg2ch,
         'get_init': self.get_init_vg2ch,
+        'get_wrf': self.get_wrf_vg2ch,
         'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'm2', 'Ks', 'p', 'q', 'r'],
         'k-only': [6, 7, 9]
     }
@@ -117,6 +119,23 @@ def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
     if ch_r2 > f.r2_ht:
         return ch
     return f.fitted
+
+
+def get_wrf_vg2(self):
+    from .unsatfit import Fit
+    n_max = 8
+    f = Fit()
+    f.swrc = self.swrc
+    f.debug = self.debug
+    w, a1, m1, a2, m2 = f.get_init_vg2()
+    f.set_model('vg2', const=['qr=0', 'q=1'])
+    f.ini = (max(f.swrc[1]), w, a1, m1, a2, m2)
+    m_max = 1-1/n_max
+    f.b_m = (0, m_max)
+    f.optimize()
+    if f.success:
+        return (f.fitted[0], 0, *f.fitted[1:], 1)
+    return (f.ini[0], 0, *f.ini[1:], 1)
 
 # dual-VG-CH model
 
