@@ -27,13 +27,14 @@ def init_fig(self):
 
     # Marker
     self.marker = 'o'  # Select from https://matplotlib.org/stable/api/markers_api.html
-    self.color_marker = 'black'  # See https://matplotlib.org/stable/gallery/color/named_colors.html
+    # See https://matplotlib.org/stable/gallery/color/named_colors.html
+    self.color_marker = 'black'
 
     # Curves
     # Order of colors and styles
     self.color = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
     # See https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-    self.style = ['dashed', 'dashdot', 'solid', 'dotted']  
+    self.style = ['dashed', 'dashdot', 'solid', 'dotted']
     self.curve_smooth = 200  # Numbers of calculation points in a curve
     self.line_num = 0
     self.curves_ht = []

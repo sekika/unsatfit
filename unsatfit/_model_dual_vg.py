@@ -6,6 +6,7 @@ def init_model_vg2(self):
     self.model['DV'] = self.model['dual-VG'] = self.model['vg2'] = {
         'function': (self.vg2, self.vg2_k),
         'bound': self.bound_vg2,
+        'get_init': self.get_init_vg2,
         'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'a2', 'm2', 'Ks', 'p', 'q', 'r'],
         'k-only': [7, 8, 10]
     }
@@ -57,6 +58,66 @@ def vg2_k(self, p, x):
     bunbo = w1a1q + w2a2q
     return ks * self.vg2_se(par[:7] + [q], x)**p * (bunshi / bunbo)**r
 
+
+def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
+    from .unsatfit import Fit
+    n_max = 8
+    x, t = self.swrc
+    y = t / max(t)
+    f = Fit()
+    f.debug = self.debug
+    f.swrc = (x, y)
+    w, a, m1, m2 = f.get_init_vg2ch()
+    f.set_model('vg2', const=[[1, 1], [2, 0], [10, 1]])
+    f.ini = (w, a, m1, a, m2)
+    m_max = 1-1/n_max
+    f.b_m = (0, m_max)
+    f.optimize()
+    if f.success:
+        ch = f.fitted
+        ch_r2 = f.r2_ht
+    else:
+        ch = f.ini
+        ch_r2 = f.f_r2_ht(f.ini, x, y)
+    if len(x) < 6:
+        return ch
+    swrc = list(zip(*f.swrc))
+    swrc_sort = sorted(swrc, key=lambda x: x[0])
+    swrc = list(zip(*swrc_sort))
+    h = np.array(swrc[0])
+    t = np.array(swrc[1])
+    t_med = (max(t) + min(t)) / 2
+    for i in range(len(h)):
+        if t[i] < t_med:
+            break
+    if i < 3:
+        i = 3
+    if i > len(h) - 3:
+        i = len(h) - 3
+    f.swrc = (h[:i], t[:i] - t[i])
+    try:
+        a1, m1 = f.get_init_vg()
+    except:
+        return ch
+    if m1 > m_max:
+        m1 = m_max
+    f.swrc = (h[i:], t[i:])
+    try:
+        a2, m2 = f.get_init_vg()
+    except:
+        return ch
+    if m2 > m_max:
+        m2 = m_max
+    f.set_model('DV', const=['qs=1', 'qr=0', 'q=1'])
+    f.swrc = (h, t)
+    f.ini = (1-t[i], a1, m1, a2, m2)
+    f.optimize()
+    if not f.success:
+        return ch
+    if ch_r2 > f.r2_ht:
+        return ch
+    return f.fitted
+
 # dual-VG-CH model
 
 
@@ -93,12 +154,17 @@ def vg2ch_k(self, p, x):
 
 def get_init_vg2ch(self):  # w, alpha, m1, m2
     from .unsatfit import Fit
+    n_max = 8
     x, t = self.swrc
     y = t / max(t)
     f = Fit()
     f.debug = self.debug
     f.swrc = (x, y)
+    m_max = 1-1/n_max
+    f.b_m = (0, m_max)
     a, m1 = f.get_init_vg()
+    if m1 > m_max:
+        m1 = m_max - 0.01
     hb, l = f.get_init_bc()
     hc, max_hc = hb * (0.3, 0.1) ** (-1 / l)
     w = 1 / (1 + (hc / hb)**(-l))
@@ -113,6 +179,8 @@ def get_init_vg2ch(self):  # w, alpha, m1, m2
         l2 = 0
     n2 = l2 + 1
     m2 = 1 - 1 / n2
+    if m2 > m_max:
+        m2 = m_max - 0.01
     f.set_model('vg2ch', const=[[1, 1], [2, 0], [
                 3, w], [4, a], [6, m2], [9, 1]])
     f.ini = (m1)
