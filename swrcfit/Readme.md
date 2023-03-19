@@ -2,6 +2,9 @@
 
 This is a source code of SWRC Fit running at https://seki.webmasters.gr.jp/swrc/
 
+## Running by Docker
+- You can run SWRC Fit locally on your machine by using Docker, which might be useful when the server is down or you have unstable network connection. Follow the instructions at [this directory](../docker).
+
 ## Requirements for setting up
 
 - Apache is installed with [mod_cgi](https://httpd.apache.org/docs/current/en/mod/mod_cgi.html) enabled.
