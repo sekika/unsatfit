@@ -1,4 +1,4 @@
-# Docker for SWRC Fit
+# SWRC Fit with Docker
 
 This directory contains files for running [SWRC Fit](https://seki.webmasters.gr.jp/swrc/) locally on your machine using Docker. Here is the instruction.
 
