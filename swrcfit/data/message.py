@@ -228,8 +228,8 @@ def message(lang, ID, URL='./'):
         return 'Please wait ...'
     if ID == 'footer':
         if lang == 'ja':
-            return '<a href="?lang=ja">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER （作成者：AUTHOR）が ARCH の Python PYV で動いています。'
-        return '<a href="?lang=' + lang + '">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER created by AUTHOR running with Python PYV on ARCH.'
+            return '<a href="?lang=ja">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER （作成者：AUTHOR）が ARCH の Python PYV で動いています。<a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">ローカルサーバーで動かす</a>。'
+        return '<a href="?lang=' + lang + '">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER created by AUTHOR running with Python PYV on ARCH. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">Run local server</a>.'
     if ID == 'author':
         if lang == 'ja':
             return '<a href="https://sekika.github.io/toyo/">関勝寿</a>'
