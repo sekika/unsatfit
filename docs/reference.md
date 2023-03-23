@@ -63,9 +63,11 @@ For figures etc.
 <dt>mse_ht, mse_ln_hk</dt>
 <dd>Mean squared error for &theta; and ln(K), respectively</dd>
 <dt>se_ht, se_ln_hk</dt>
-<dd>Standard error for &theta; and ln(K), respectively</dd>
+<dd>Standard error &sigma; for &theta; and ln(K), respectively</dd>
 <dt>r2_ht, r2_ln_hk</dt>
 <dd>Coefficient of determination (R<sup>2</sup>) for &theta; and ln(K), respectively</dd>
 <dt>aic_ht, aic_ln_hk</dt>
-<dd>AIC for &theta; and ln(K), respectively</dd>
+<dd>AIC = 2n ln(&sigma;) + 2k for &theta; and ln(K), respectively</dd>
+<dt>aicc_ht, aicc_ln_hk</dt>
+<dd>Corrected AIC = AIC + 2k(k+1)/(n-k-1) for &theta; and ln(K), respectively</dd>
 </dl>
