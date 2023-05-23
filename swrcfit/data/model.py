@@ -8,8 +8,10 @@ def model(ID):
         return ('BC', 'VG', 'KO', 'FX')
     if ID == 'bimodal':
         return ('DBCH', 'VGBCCH', 'DVCH', 'KOBCCH', 'DB', 'DV', 'DK')
+    if ID == 'limit':
+        return ('max_qs', 'max_lambda_i', 'max_n_i', 'min_sigma_i')
     if ID == 'savekeys':
-        return model('all') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'sigmax', 'input')
+        return model('all') + model('limit') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'input')
     if ID == 'BC':
         return {
             'html': 'Brooks and Corey',
@@ -59,8 +61,8 @@ def model(ID):
         return {
             'html': 'VG<sub>1</sub>BC<sub>2</sub>-CH',
             'label': '$\mathrm{VG}_1\mathrm{BC}_2$-CH',
-            'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& \\bigl[1+(h/H)^n\\bigr]^{-m} ~~ (m=1-1/n)\end{eqnarray}',
-            'parameter': ('w<sub>1</sub>', 'H', 'n', '&lambda;'),
+            'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda_2}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& \\bigl[1+(h/H)^{n_1}\\bigr]^{-{m_1}} ~~ (m_1=1-1/{n_1})\end{eqnarray}',
+            'parameter': ('w<sub>1</sub>', 'H', 'n<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
             'selected': False
         }
@@ -77,8 +79,8 @@ def model(ID):
         return {
             'html': 'KO<sub>1</sub>BC<sub>2</sub>-CH',
             'label': '$\mathrm{KO}_1\mathrm{BC}_2$-CH',
-            'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& Q \\biggl[\dfrac{\ln(h/h_m)}{\sigma}\\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}',
-            'parameter': ('w<sub>1</sub>', 'H', '&sigma;', '&lambda;'),
+            'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda_2}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& Q \\biggl[\dfrac{\ln(h/h_m)}{\sigma_1}\\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}',
+            'parameter': ('w<sub>1</sub>', 'H', '&sigma;<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
             'selected': True
         }

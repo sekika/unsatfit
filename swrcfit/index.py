@@ -14,7 +14,13 @@ DEBUG = config.get('Settings', 'debug')
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
 STORAGEPREFIX = 'swrc_'
-TEST_R2 = 0.94
+TEST_R2 = 0.945
+
+# Default limit of parameters
+MAX_QS = 1.5
+MAX_LAMBDA_I = 10
+MAX_N_I = 8
+MIN_SIGMA_I = 0.2
 
 os.environ['MPLCONFIGDIR'] = WORKDIR
 
@@ -29,6 +35,10 @@ def test(minR2, strict=False):
     f.cqr = 'fit'
     f.qsin = ''
     f.qrin = '0'
+    f.max_qs = MAX_QS
+    f.max_lambda_i = MAX_LAMBDA_I
+    f.max_n_i = MAX_N_I
+    f.min_sigma_i = MIN_SIGMA_I
     f.debug = False
     for id in sampledata:
         f.selectedmodel = model('all')
@@ -59,15 +69,20 @@ def swrcfit(f):
     con_q, ini_q, par_theta = getoptiontheta(f, False)
 
     # BC (Brooks and Corey) model
+    f.b_qs = b_qs = (0, max(f.swrc[1]) * f.max_qs)
+    f.b_lambda1 = f.b_lambda2 = b_lambda_i = (0, f.max_lambda_i)
+    f.b_m = f.b_sigma = (0, np.inf)
+    max_m_i = 1 - 1/f.max_n_i
+
     if 'BC' in f.selectedmodel:
         f.set_model('BC', const=[*con_q])
         hb, l = f.get_init()  # Get initial parameter
         f.ini = (*ini_q, hb, l)
         f.optimize()
         if not f.success:
-            f.b_qs = (0, max(f.swrc[1])*1.5)
+            f.b_qs = (0, max(f.swrc[1])*min(1.05, f.max_qs))
             f.optimize()
-            f.b_qs = (0, np.inf)
+            f.b_qs = b_qs
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -75,7 +90,7 @@ def swrcfit(f):
                 f = copy.deepcopy(f2)
         f.fitted_show = f.fitted
         f.setting = model('BC')
-        f.par = (*par_theta, 'h<sub>b</sub>', '&lambda;')
+        f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         result.append(f2)
 
@@ -92,7 +107,7 @@ def swrcfit(f):
     vg_r2 = f.r2_ht
     f.fitted_show = [*f.fitted[:-1], n]  # Convert from m to n
     f.setting = model('VG')
-    f.par = (*par_theta, '&alpha;', 'n')
+    f.par = (*par_theta, *f.setting['parameter'])
     if 'VG' in f.selectedmodel:
         f2 = copy.deepcopy(f)
         result.append(f2)
@@ -103,15 +118,16 @@ def swrcfit(f):
         sigma = 1.2*(n-1)**(-0.8)
         f.ini = (*q, 1/a, sigma)
         f.optimize()
-        if not f.success:
+        if not f.success or f.r2_ht < vg_r2 - 0.1:
+            print(f.r2_ht, vg_r2)
             hb, l = f.get_init_bc()
             sigma = 1.2*l**(-0.8)
             if sigma > 2.5:
                 sigma = 2.5
             f.ini = (*ini_q, hb, sigma)
-            f.b_qs = (0, max(f.swrc[1])*1.5)
+            f.b_qs = (0, max(f.swrc[1])*min(1.05, f.max_qs))
             f.optimize()
-            f.b_qs = (0, np.inf)
+            f.b_qs = b_qs
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -126,7 +142,7 @@ def swrcfit(f):
         if 'KO' in f.selectedmodel:
             f.setting = model('KO')
             f.fitted_show = f.fitted
-            f.par = (*par_theta, 'h<sub>m</sub>', '&sigma;')
+            f.par = (*par_theta, *f.setting['parameter'])
             f2 = copy.deepcopy(f)
             result.append(f2)
 
@@ -146,7 +162,8 @@ def swrcfit(f):
             f.b_qr = (0, min(f.swrc[1])/2)
             f.ini = (*ini_q, a, m, n)
             f.optimize()
-            f.b_qs = f.b_qr = (0, np.inf)
+            f.b_qs = b_qs
+            f.b_qr = (0, np.inf)
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -154,23 +171,33 @@ def swrcfit(f):
                 f = copy.deepcopy(f2)
         f.setting = model('FX')
         f.fitted_show = f.fitted
-        f.par = (*par_theta, 'a', 'm', 'n')
+        f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         result.append(f2)
 
     # Bimodal model
     if any(name in f.selectedmodel for name in model('bimodal')):
         con_q, ini_q, par_theta = getoptiontheta(f, True)
+    f.b_m = (0, max_m_i)
 
     # dual-BC-CH model
     if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
         f.set_model('dual-BC-CH', const=[*con_q])
         hb, hc, l1, l2 = f.get_init()
+        if l1 > f.max_lambda_i:
+            l1 = f.max_lambda_i - 0.00001
+        if l2 > f.max_lambda_i:
+            l2 = f.max_lambda_i - 0.00001
         f.ini = (*ini_q, hb, hc, l1, l2)  # Get initial parameter
         f.optimize()
-        if not f.success:
-            hb2, l = f.get_init_bc()
-            f.ini = (*ini_q, hb, hb*2, l, l/5)
+        if not f.success or f.r2_ht < vg_r2 - 0.05:
+            hb2, l1 = f.get_init_bc()
+            l2 = l/5
+            if l1 > f.max_lambda_i:
+                l1 = f.max_lambda_i - 0.00001
+            if l2 > f.max_lambda_i:
+                l2 = f.max_lambda_i - 0.00001
+            f.ini = (*ini_q, hb, hb*2, l1, l2)
             f.optimize()
             if not f.success:
                 f.b_qs = (max(f.swrc[1]) * 0.9, max(f.swrc[1]))
@@ -178,8 +205,9 @@ def swrcfit(f):
                 f.b_lambda1 = f.b_lambda2 = (0, l*1.5)
                 f.ini = (*ini_q, hb, hb, l, l)
                 f.optimize()
-                f.b_qs = f.b_qr = (0, np.inf)
-                f.b_lambda1 = f.b_lambda2 = (0, np.inf)
+                f.b_qs = b_qs
+                f.b_qr = (0, np.inf)
+                f.b_lambda1 = f.b_lambda2 = b_lambda_i
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -191,8 +219,7 @@ def swrcfit(f):
             q = f.fitted[:-4]
             f.fitted_show = (*q, w1, hb, l1, l2)
         f.setting = model('DBCH')
-        f.par = (*par_theta, 'w<sub>1</sub>', 'h<sub>b</sub>',
-                 '&lambda;<sub>1</sub>', '&lambda;<sub>2</sub>')
+        f.par = (*par_theta, *f.setting['parameter'])
         dbch = copy.deepcopy(f)
         if 'DBCH' in f.selectedmodel:
             result.append(dbch)
@@ -210,7 +237,8 @@ def swrcfit(f):
             f.ini = (*q, w1, 1/hb, m1, l2)
             f.optimize()
             if not f.success:
-                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+                f.b_qs = (max(f.swrc[1]) * 0.95,
+                          max(f.swrc[1]) * min(1.05, f.max_qs))
                 f.b_qr = (0, min(f.swrc[1]) / 10)
                 f.ini = (*ini_q, w1, 1/hb, m, l2)
                 f.optimize()
@@ -218,7 +246,9 @@ def swrcfit(f):
                     f.ini = (*ini_q, 0.9, 1/hb, m, l2)
                     f.b_lambda2 = (l2 * 0.8, l2 * 1.2)
                     f.optimize()
-                f.b_qs = f.b_qr = f.b_lambda2 = (0, np.inf)
+                f.b_qs = b_qs
+                f.b_qr = (0, np.inf)
+                f.b_lambda2 = b_lambda_i
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
                 f.optimize
@@ -233,26 +263,31 @@ def swrcfit(f):
             q = f.fitted[:-4]
             f.fitted_show = (*q, w1, 1/a1, n1, l2)
         f.setting = model('VGBCCH')
-        f.par = (*par_theta, 'w<sub>1</sub>', 'H', 'n', '&lambda;')
+        f.par = (*par_theta, *f.setting['parameter'])
         vgbcch = copy.deepcopy(f)
         result.append(vgbcch)
 
     # dual-VG-CH model
-    if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
+    if 'DVCH' in f.selectedmodel:
         f.set_model('dual-VG-CH', const=[*con_q, 'q=1'])
         w1, a, m1, m2 = f.get_init()  # Get initial parameter
+        if m1 > max_m_i:
+            m1 = max_m_i - 0.0001
+        if m2 > max_m_i:
+            m2 = max_m_i - 0.0001
         f.ini = (*ini_q, w1, a, m1, m2)
         f.optimize()
         if not f.success:
-            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+            f.b_qs = (max(f.swrc[1]) * 0.95,
+                      max(f.swrc[1]) * min(1.05, f.max_qs))
             f.b_m = (0, 0.9)
             a, m = f.get_init_vg()
             if m > 0.9:
                 m = 0.9
             f.ini = (*ini_q, 0.5, a, m, m)
             f.optimize()
-            f.b_qs = (0, np.inf)
-            f.b_m = (0, 1)
+            f.b_qs = b_qs
+            f.b_m = (0, max_m_i)
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -265,8 +300,7 @@ def swrcfit(f):
             n2 = 1/(1-m2)
             f.fitted_show = (*q, w1, a1, n1, n2)
         f.setting = model('DVCH')
-        f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;',
-                 'n<sub>1</sub>', 'n<sub>2</sub>')
+        f.par = (*par_theta, *f.setting['parameter'])
         dvch = copy.deepcopy(f)
         if 'DVCH' in f.selectedmodel:
             result.append(dvch)
@@ -274,22 +308,34 @@ def swrcfit(f):
     # KO1BC2-CH model
     if 'KOBCCH' in f.selectedmodel:
         f.set_model('KO1BC2-CH', const=[*con_q])
+        f.b_sigma = (f.min_sigma_i, np.inf)
         if dbch.success:
             s1 = 1.2*l1**(-0.8)
             if s1 > 2:
                 s1 = 2
+            if s1 < f.min_sigma_i:
+                s1 = f.min_sigma_i + 0.00001
+            if l2 > f.max_lambda_i:
+                l2 = f.max_lambda_i - 0.00001
             f.ini = (*q, w1, hb, s1, l2)
             f.optimize()
             if not f.success:
-                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+                f.b_qs = (max(f.swrc[1]) * 0.95,
+                          max(f.swrc[1]) * min(1.05, f.max_qs))
                 f.b_qr = (0, min(f.swrc[1]) / 10)
                 f.ini = (*ini_q, w1, hb, s1, l2)
+                if s1 < f.min_sigma_i:
+                    s1 = f.min_sigma_i + 0.00001
+                if l2 > f.max_lambda_i:
+                    l2 = f.max_lambda_i - 0.00001
                 f.optimize()
                 if not f.success:
                     f.ini = (*ini_q, 0.9, hb, s1, l2)
-                    f.b_lambda2 = (l2 * 0.8, l2 * 1.2)
+                    f.b_lambda2 = (l2 * 0.8, min(l2 * 1.2, f.max_lambda_i))
                     f.optimize()
-                f.b_qs = f.b_qr = f.b_lambda2 = (0, np.inf)
+                f.b_qs = b_qs
+                f.b_qr = (0, np.inf)
+                f.b_lambda2 = b_lambda_i
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
                 f.optimize
@@ -297,6 +343,8 @@ def swrcfit(f):
                     f = copy.deepcopy(f2)
         else:
             w1, hm, sigma1, l2 = f.get_init_kobcch()
+            if l2 > f.max_lambda_i:
+                l2 = f.max_lambda_i - 0.00001
             f.ini = (*ini_q, w1, hm, sigma1, l2)
             f.optimize()
         if f.success:
@@ -304,7 +352,7 @@ def swrcfit(f):
             q = f.fitted[:-4]
             f.fitted_show = (*q, w1, hm, s1, l2)
         f.setting = model('KOBCCH')
-        f.par = (*par_theta, 'w<sub>1</sub>', 'H', '&sigma;', '&lambda;')
+        f.par = (*par_theta, *f.setting['parameter'])
         vgbcch = copy.deepcopy(f)
         result.append(vgbcch)
 
@@ -316,7 +364,8 @@ def swrcfit(f):
             w1 = 1/(1+(hc/hb)**(l2-l1))
             q = dbch.fitted[:-4]
             f.ini = (*ini_q, w1, hb*0.9, l1, (hb*max(f.swrc[0]))**0.5, l2)
-            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+            f.b_qs = (max(f.swrc[1]) * 0.95,
+                      max(f.swrc[1]) * min(1.05, f.max_qs))
             f.optimize()
             if not f.success:
                 f.b_qr = (0, min(f.swrc[1]) / 10)
@@ -324,16 +373,19 @@ def swrcfit(f):
                 f.optimize()
                 if not f.success:
                     hb, l = f.get_init_bc()
-                    f.b_lambda1 = f.b_lambda2 = (0, l*1.1)
+                    if l > f.max_lambda_i:
+                        l = f.max_lambda_i - 0.00001
+                    f.b_lambda1 = f.b_lambda2 = (0, min(l * 1.1, max_lambda_i))
                     f.ini = (*ini_q, 0.7, hb, l, hb, l)
                     f.optimize()
-                f.b_qr = f.b_lambda1 = f.b_lambda2 = (0, np.inf)
+                f.b_qr = (0, np.inf)
+                f.b_lambda1 = f.b_lambda2 = b_lambda_i
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
                 f.optimize
                 if not f.success or f.r2_ht < f2.r2_ht:
                     f = copy.deepcopy(f2)
-            f.b_qs = (0, np.inf)
+            f.b_qs = b_qs
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize
@@ -341,6 +393,8 @@ def swrcfit(f):
                 f = copy.deepcopy(f2)
         else:
             hb, l = f.get_init_bc()
+            if l > f.max_lambda_i:
+                l = f.max_lambda_i - 0.00001
             f.ini = (*ini_q, 0.7, hb, l, hb, l)
             f.optimize()
         if f.success:
@@ -353,42 +407,23 @@ def swrcfit(f):
                 f.fitted = (*q, w1, hb1, l1, hb2, l2)
             f.fitted_show = f.fitted
         f.setting = model('DB')
-        f.par = (*par_theta, 'w<sub>1</sub>', 'hb<sub>1</sub>',
-                 '&lambda;<sub>1</sub>', 'hb<sub>2</sub>', '&lambda;<sub>2</sub>')
+        f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         result.append(f2)
 
     # dual-VG model
     if 'DV' in f.selectedmodel or 'DK' in f.selectedmodel:
         f.set_model('dual-VG', const=[*con_q, 'q=1'])
-        if dvch.success:
-            w1, a1, m1, m2 = dvch.fitted[-4:]
-            q = dvch.fitted[:-4]
-            f.ini = (*q, w1, a, m1, a, m2)
-        else:
-            a, m = f.get_init_vg()
-            f.ini = (*ini_q, 0.5, a, m, a, m)
+        w1, a1, m1, a2, m2 = init_vg2 = f.get_init_vg2()
+        if m1 > max_m_i:
+            m1 = max_m_i - 0.0001
+        if m2 > max_m_i:
+            m2 = max_m_i - 0.0001
+        f.ini = (*ini_q, w1, a1, m1, a2, m2)
         f.optimize()
-        if not f.success:
-            f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
-            f.b_qr = (0, min(f.swrc[1]) / 10)
-            f.b_m = (0, 0.8)
-            a, m = f.get_init_vg()
-            if m > 0.8:
-                m = 0.8
-            f.ini = (*ini_q, 0.5, a, m, a, m)
-            f.optimize()
-            if not f.success:
-                f.b_qr = (0, min(f.swrc[1]) / 2)
-                f.optimize()
-            f.b_qs = f.b_qr = (0, np.inf)
-            f.b_m = (0, 1)
-            f2 = copy.deepcopy(f)
-            f.ini = f.fitted
-            f.optimize
-            if not f.success:
-                f = copy.deepcopy(f2)
+        vg2_r2 = 0
         if f.success:
+            vg2_r2 = f.r2_ht
             w1, a1, m1, a2, m2 = f.fitted[-5:]
             q = f.fitted[:-5]
             if a1 < a2:
@@ -400,29 +435,40 @@ def swrcfit(f):
             n2 = 1/(1-m2)
             f.fitted_show = (*q, w1, a1, n1, a2, n2)
         f.setting = model('DV')
-        f.par = (*par_theta, 'w<sub>1</sub>', '&alpha;<sub>1</sub>',
-                 'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>')
+        f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         if 'DV' in f.selectedmodel:
             result.append(f2)
 
     # dual-KO model
     if 'DK' in f.selectedmodel:
-        f.set_model('dual-KO', const=[*con_q])
         if f.success:
             if n1 < 1.4:
                 n1 = 1.4
             s1 = 1.2*(n1-1)**(-0.8)
+            if s1 < f.min_sigma_i:
+                s1 = f.min_sigma_i + 0.00001
             if n2 < 1.4:
                 n2 = 1.4
             s2 = 1.2*(n2-1)**(-0.8)
+            if s2 < f.min_sigma_i:
+                s2 = f.min_sigma_i + 0.00001
             if s2 > 2:
                 s2 = 2
-            f.ini = (*q, w1, 1/a1, s1, 1/a2, s2)
-            f.b_sigma = (0, 2.5)
+            hm1 = 1/a1
+            hm2 = 1/a2
+            f.set_model('dual-KO', const=[*con_q])
+            f.b_w1 = (max(w1 * 0.5, w1-0.15), min(w1+0.15, 1-(1-w1)*0.5))
+            f.b_hm1 = (hm1 / 8, hm1 * 8)
+            f.b_hm2 = (min(max(f.swrc[0])*0.5, hm2 / 8), hm2 * 8)
+            f.b_sigma = (f.min_sigma_i, 2.5)
+            f.ini = (*q, w1, hm1, s1, hm2, s2)
             f.optimize()
-            if not f.success:
-                f.b_qs = (max(f.swrc[1]) * 0.95, max(f.swrc[1]) * 1.05)
+            f.b_w1 = (0, 1)
+            f.b_hm1 = f.b_hm2 = (0, np.inf)
+            if not f.success or f.r2_ht < vg2_r2 - 0.05:
+                f.b_qs = (max(f.swrc[1]) * 0.95,
+                          max(f.swrc[1]) * min(1.05, f.max_qs))
                 f.b_qr = (0, min(f.swrc[1]) / 10)
                 f.ini = (*ini_q, w1, 1/a1, s1, 1/a2, s2)
                 f.optimize()
@@ -434,13 +480,14 @@ def swrcfit(f):
                     s = 1.2*(n-1)**(-0.8)
                     f.ini = (*ini_q, 0.5, 1/a, s, 1/a, s)
                     f.optimize()
-                f.b_qs = f.b_qr = (0, np.inf)
+                f.b_qs = b_qs
+                f.b_qr = (0, np.inf)
                 f2 = copy.deepcopy(f)
                 f.ini = f.fitted
                 f.optimize()
                 if not f.success:
                     f = copy.deepcopy(f2)
-            f.b_sigma = (0, np.inf)
+            f.b_sigma = (f.min_sigma_i, np.inf)
             f2 = copy.deepcopy(f)
             f.ini = f.fitted
             f.optimize()
@@ -456,8 +503,7 @@ def swrcfit(f):
                     f.fitted = (*q, w1, hm1, s1, hm2, s2)
                 f.fitted_show = f.fitted
         f.setting = model('DK')
-        f.par = (*par_theta, 'w<sub>1</sub>', 'hm<sub>1</sub>',
-                 '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>')
+        f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         result.append(f2)
     return result
@@ -543,7 +589,8 @@ def maincgi():
         if table in unsoda_json and code in unsoda_json[table]:
             s = unsoda_json[table][code]
             f.given_data = 'UNSODA = ' + str(code)
-            f.given_data += '\nTexture = ' + unsoda_json['general'][code]['texture'] + '\n\n'
+            f.given_data += '\nTexture = ' + \
+                unsoda_json['general'][code]['texture'] + '\n\n'
             for i in [list(x) for x in zip(*s)]:
                 f.given_data += str(i[0]) + ' ' + str(i[1]) + '\n'
     # Get model selection
@@ -604,22 +651,48 @@ def maincgi():
             f.cqr = field.getfirst('cqr', '')
             f.qsin = field.getfirst('qsin', str(max(theta)))
             f.qrin = field.getfirst('qrin', '')
+            f.max_qs = getfloat(field, 'max_qs', MAX_QS, 1.00001)
+            f.max_lambda_i = getfloat(field, 'max_lambda_i', MAX_LAMBDA_I, 0.5)
+            f.max_n_i = getfloat(field, 'max_n_i', MAX_N_I, 1.5)
+            f.min_sigma_i = getfloat(field, 'min_sigma_i', MIN_SIGMA_I, 0)
+            if f.min_sigma_i > 1:
+                f.min_sigma_i = 1
             # Save field storage to local storage
             for i in model('savekeys'):
                 value = '//'.join(field.getfirst(i, 'off').splitlines())
-                if i in ['qsin', 'qrin']:
+                if i in ('qsin', 'qrin') + model('limit'):
                     try:
                         value = float(value)
                     except ValueError:
-                        value = 'off'
-                    if value == 'off':
+                        value = -99
+                    if value == int(value):
+                        value = int(value)
+                    if value == -99:
                         if i == 'qsin':
                             value = ''
                         if i == 'qrin':
                             value = 0
+                        if i == 'max_qs':
+                            value = MAX_QS
+                        if i == 'max_lambda_i':
+                            value = MAX_LAMBDA_I
+                        if i == 'max_n_i':
+                            value = MAX_N_I
+                        if i == 'min_sigma_i':
+                            value = MIN_SIGMA_I
                     else:
                         if value <= 0:
                             value = 0
+                    if i == 'max_qs' and value < 1:
+                        value = 1
+                    if i == 'max_lambda_i' and value < 0.5:
+                        value = 0.5
+                    if i == 'max_n_i' and value < 1.5:
+                        value = 1.5
+                    if i == 'min_sigma_i' and value < 0:
+                        value = 0
+                    if i == 'min_sigma_i' and value > 1:
+                        value = 1
                     value = str(value)
                 key = STORAGEPREFIX + i
                 print(
@@ -635,6 +708,19 @@ def maincgi():
     footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
     print('<hr>\n<p>{0}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>'.format(footer), flush=True)
     return
+
+
+def getfloat(field, id, default, min):
+    value = field.getfirst(id, 'a')
+    try:
+        value = float(value)
+    except ValueError:
+        value = default
+    if value < min:
+        value = min
+    if value == int(value):
+        value = int(value)
+    return value
 
 
 def calc(f):
@@ -656,7 +742,8 @@ def calc(f):
                 print(
                     '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
             elif i == 'UNSODA':
-                print('<li>{0} = <a href="https://sekika.github.io/unsoda/?{1}">{1}</a>'.format(escape(i), escape(d[i])))
+                print('<li>{0} = <a href="https://sekika.github.io/unsoda/?{1}">{1}</a>'.format(
+                    escape(i), escape(d[i])))
             else:
                 print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
     for i in getoptiontheta(f, True)[0]:
@@ -665,6 +752,24 @@ def calc(f):
             bi = ' for bimodal models'
         par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0]-1]
         print('<li>Constant: {0} = {1}{2}'.format(par, i[1], bi))
+    limit = []
+    if f.cqs == 'fit':
+        limit.append(
+            '&theta;<sub>s</sub> &lt; {0:.3f}'.format(f.max_qs * max(d['data'][1])))
+    if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel:
+        limit.append('&lambda;<sub>1</sub> &lt; {0}'.format(f.max_lambda_i))
+    if 'VGBCCH' in f.selectedmodel or 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
+        limit.append('n<sub>1</sub> &lt; {0}'.format(f.max_n_i))
+    if 'KOBCCH' in f.selectedmodel or 'DK' in f.selectedmodel:
+        limit.append('&sigma;<sub>1</sub> &gt; {0}'.format(f.min_sigma_i))
+    if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
+        limit.append('&lambda;<sub>2</sub> &lt; {0}'.format(f.max_lambda_i))
+    if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
+        limit.append('n<sub>2</sub> &lt; {0}'.format(f.max_n_i))
+    if 'DK' in f.selectedmodel:
+        limit.append('&sigma;<sub>2</sub> &gt; {0}'.format(f.min_sigma_i))
+    if len(limit) > 0:
+        print('<li>Limit: ' + ', '.join(limit))
     print('</ul>')
     print(
         '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
@@ -878,6 +983,10 @@ def printform(lang, getlang, f):
 <li><input type="radio" name="cqs" value="fit" checked="checked">Fit &theta;<sub>s</sub>
 <input type="radio" name="cqs" value="max">&theta;<sub>s</sub> = &theta;<sub>max</sub>
 <input type="radio" name="cqs" value="fix">&theta;<sub>s</sub> = <input type="text" name="qsin" id="qsin" size="5" maxlength="10" value="">
+<li>Upper limit of &theta;<sub>s</sub> / &theta;<sub>max</sub> = <input type="text" name="max_qs" id="max_qs" size="5" maxlength="10" value="{4}">
+<li>Upper limit of &lambda;<sub>1</sub>, &lambda;<sub>2</sub> = <input type="text" name="max_lambda_i" id="max_lambda_i" size="5" maxlength="10" value="{5}">
+<li>Upper limit of n<sub>1</sub>, n<sub>2</sub> = <input type="text" name="max_n_i" id="max_n_i" size="5" maxlength="10" value="{6}">
+<li>Lower limit of &sigma;<sub>1</sub>, &sigma;<sub>2</sub> = <input type="text" name="min_sigma_i" id="min_sigma_i" size="5" maxlength="10" value="{7}">
 </ul>
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
@@ -886,14 +995,14 @@ def printform(lang, getlang, f):
 </td>
 </tr>
 </tr>
-</table></div>'''.format(message(lang, 'showmore'), getlang, message(lang, 'calculate'), f.given_data), flush=True)
+</table></div>'''.format(message(lang, 'showmore'), getlang, message(lang, 'calculate'), f.given_data, MAX_QS, MAX_LAMBDA_I, MAX_N_I, MIN_SIGMA_I), flush=True)
     # Read setting from local storage
     for i in model('all'):
         loadchecked(i)
     loadchecked('onemodel')
     loadradio('cqr', 'both')
     loadradio('cqs', 'fit')
-    for i in ('qrin'):
+    for i in ('qrin',) + model('limit'):
         loadnum(i)
     if f.given_data == '':
         loadtext('input')
