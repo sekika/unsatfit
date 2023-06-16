@@ -1,7 +1,7 @@
-# Docker image of Python 3 with Debian 11 bullseye (slim version).
+# Docker image of Python 3 with Debian 12 bookworm (slim version).
 # See Debian release information at https://wiki.debian.org/DebianReleases
 # See if newer image is available at https://hub.docker.com/_/python
-FROM python:3-slim-bullseye
+FROM python:3-slim-bookworm
 
 # Basic system
 USER root
