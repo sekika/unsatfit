@@ -5,6 +5,7 @@ install:
 	docker build -t swrcfit:1.0 .
 	docker run --name swrcfit -d --mount type=bind,source=$(PWD)/../swrcfit,destination=/var/www/html -p 80:80 swrcfit:1.0
 	docker exec -t swrcfit /bin/bash -c "chmod 777 /var/www/html/img"
+	docker exec -t swrcfit /bin/bash -c "rm -f /var/www/html/img/swrc.png"
 	docker stop swrcfit
 
 start:
