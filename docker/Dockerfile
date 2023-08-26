@@ -1,6 +1,7 @@
 # Docker image of Python 3 with Debian 12 bookworm (slim version).
-# See Debian release information at https://wiki.debian.org/DebianReleases
-# See if newer image is available at https://hub.docker.com/_/python
+# Bookworm was released at 2023-06-10.
+# For release information, see https://wiki.debian.org/DebianReleases
+# See a list of Docker image at https://hub.docker.com/_/python
 FROM python:3-slim-bookworm
 
 # Basic system
