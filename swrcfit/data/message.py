@@ -44,7 +44,7 @@ def message(lang, ID, URL='./'):
     # When translation is not defined, English message is returned.
     if ID == 'news':
         if lang == 'ja':
-            return '<strong>[ニュース]</strong><ul><li><a href="https://doi.org/10.1002/vzj2.20168">この論文</a>の線型結合モデルに対応した新しいバージョンになりました。</li><li><a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> と <a href="https://sekika.github.io/unsatfit/">unsatfit</a> もどうぞ。</li></ul>'
+            return '<strong>[ニュース]</strong><ul><li><a href="https://doi.org/10.1002/vzj2.20168">この論文</a>の線型結合モデルに対応した新しいバージョンになりました。</li><li>団粒土に対するdual-VGの精度が向上しました。論文投稿中、<a href="https://researchmap.jp/sekik/presentations/43218823/attachment_file.pdf">学会発表スライド</a>。</li><li><a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> と <a href="https://sekika.github.io/unsatfit/">unsatfit</a> もどうぞ。</li></ul>'
         return '<strong>[News]</strong><ul><li>This is a completely new version of SWRC Fit with bimodal models in <a href="https://doi.org/10.1002/vzj2.20168">this publication</a>.</li><li>Please also check <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> and <a href="https://sekika.github.io/unsatfit/">unsatfit</a>.</li></ul>'
     if ID == 'description':
         if lang == 'ja':
