@@ -50,6 +50,8 @@ def init_fig(self):
     self.show_r2 = True
     self.legend_fontsize = 10
     self.legend_loc = 'center right'
+    self.legend_facecolor = 'white'
+    self.legend_opacity = 1  # 0 = transparent, 1 = opaque
     self.data_legend = 'Measured'
     self.line_legend = 'Fitted'
 

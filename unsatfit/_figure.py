@@ -98,10 +98,12 @@ def plot(self):
                 ax2.plot(*curve['data'], color=curve['color'],
                          linestyle=curve['style'], label='_nolegend_')
         if hasattr(self, 'fp'):
-            fig.legend(loc=self.legend_loc, prop=self.fp)
+            leg = fig.legend(loc=self.legend_loc, prop=self.fp,
+                             facecolor=self.legend_facecolor)
         else:
-            fig.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
-        # plt.legend()
+            leg = fig.legend(
+                loc=self.legend_loc, fontsize=self.legend_fontsize, facecolor=self.lengend_facecolor)
+        leg.get_frame().set_alpha(self.legend_opacity)
 
     # Draw scale
     if self.log_x:
