@@ -34,6 +34,7 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html).
 - 2023-02-02: [User manual](https://arxiv.org/abs/2302.00472) was published on arXiv.
 - 2023-02-04: [Paper](https://doi.org/10.2478/johh-2022-0039) introducing unsatfit was published at JHH.
+- 2023-08-30: Improvement of dual-VG fitting was presented at Japanese society meeting [農業農村工学会](https://researchmap.jp/sekik/presentations/43218823/attachment_file.pdf).
 - 2023-10-07: [unsatfit 5.1](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)).
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
