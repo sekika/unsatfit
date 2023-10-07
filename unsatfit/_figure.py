@@ -102,7 +102,7 @@ def plot(self):
                              facecolor=self.legend_facecolor)
         else:
             leg = fig.legend(
-                loc=self.legend_loc, fontsize=self.legend_fontsize, facecolor=self.lengend_facecolor)
+                loc=self.legend_loc, fontsize=self.legend_fontsize, facecolor=self.legend_facecolor)
         leg.get_frame().set_alpha(self.legend_opacity)
 
     # Draw scale
