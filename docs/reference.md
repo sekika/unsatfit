@@ -51,6 +51,15 @@ For figures etc.
 - For least square optimization, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_lsq.py).
 - For figure options, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
 
+For specifying font in figures, [FontProperties](https://matplotlib.org/stable/api/font_manager_api.html#matplotlib.font_manager.FontProperties) object can be set as self.fp. For example, set font_path as the absolute path to a font file and
+```
+import unsatfit
+from matplotlib.font_manager import FontProperties
+f = unsatfit.Fit()
+f.fp = FontProperties(fname=font_path, size=9)
+```
+It can be used for using [Japanese font](https://sekika.github.io/2023/03/11/pyplot-japanese/).
+
 ## Properties for return values of optimize()
 
 <dl>
