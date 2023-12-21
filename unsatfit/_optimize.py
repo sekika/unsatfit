@@ -90,8 +90,9 @@ def optimize(self):
         self.se_ht = math.sqrt(self.mse_ht)  # Standard error
         self.r2_ht = 1 - self.mse_ht / self.var_theta  # Coefficient of determination
         self.aic_ht = n * np.log(self.mse_ht) + 2 * k  # AIC
-        if n-k-1 > 0:
-            self.aicc_ht = self.aic_ht + 2*k*(k+1)/(n-k-1) # Corrected AIC
+        if n - k - 1 > 0:
+            self.aicc_ht = self.aic_ht + 2 * k * \
+                (k + 1) / (n - k - 1)  # Corrected AIC
         self.message = self.format(
             self.param_ht, False).format(*self.fitted, self.r2_ht)
     else:
@@ -103,14 +104,16 @@ def optimize(self):
         self.se_ht = math.sqrt(self.mse_ht)  # Standard error
         self.r2_ht = 1 - self.mse_ht / self.var_theta  # Coefficient of determination
         self.aic_ht = n * np.log(self.mse_ht) + 2 * k  # AIC
-        if n-k-1 > 0:
-            self.aicc_ht = self.aic_ht + 2*k*(k+1)/(n-k-1) # Corrected AIC
+        if n - k - 1 > 0:
+            self.aicc_ht = self.aic_ht + 2 * k * \
+                (k + 1) / (n - k - 1)  # Corrected AIC
         self.mse_ln_hk = np.average(
             self.residual_ln_hk(self.fitted, *self.unsat)**2)
         self.se_ln_hk = math.sqrt(self.mse_ln_hk)  # Standard error
         self.r2_ln_hk = 1 - self.mse_ln_hk / self.var_ln_k  # Coefficient of determination
         self.aic_ln_hk = n * np.log(self.mse_ln_hk) + 2 * k  # AIC
-        self.aicc_ln_h = self.aic_ln_hk + 2*k*(k+1)/(n-k-1) # Corrected AIC
+        self.aicc_ln_h = self.aic_ln_hk + 2 * k * \
+            (k + 1) / (n - k - 1)  # Corrected AIC
         self.message = self.format(
             self.param, DualFitting=True).format(*self.fitted, self.r2_ht, self.r2_ln_hk)
 

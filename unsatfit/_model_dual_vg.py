@@ -72,7 +72,7 @@ def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
     w, a, m1, m2 = f.get_init_vg2ch()
     f.set_model('vg2', const=[[1, 1], [2, 0], [10, 1]])
     f.ini = (w, a, m1, a, m2)
-    m_max = 1-1/n_max
+    m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     f.optimize()
     if f.success:
@@ -99,20 +99,20 @@ def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
     f.swrc = (h[:i], t[:i] - t[i])
     try:
         a1, m1 = f.get_init_vg()
-    except:
+    except BaseException:
         return ch
     if m1 > m_max:
         m1 = m_max
     f.swrc = (h[i:], t[i:])
     try:
         a2, m2 = f.get_init_vg()
-    except:
+    except BaseException:
         return ch
     if m2 > m_max:
         m2 = m_max
     f.set_model('DV', const=['qs=1', 'qr=0', 'q=1'])
     f.swrc = (h, t)
-    f.ini = (1-t[i], a1, m1, a2, m2)
+    f.ini = (1 - t[i], a1, m1, a2, m2)
     f.optimize()
     if not f.success:
         return ch
@@ -130,7 +130,7 @@ def get_wrf_vg2(self):
     w, a1, m1, a2, m2 = f.get_init_vg2()
     f.set_model('vg2', const=['qr=0', 'q=1'])
     f.ini = (max(f.swrc[1]), w, a1, m1, a2, m2)
-    m_max = 1-1/n_max
+    m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     f.optimize()
     if f.success:
@@ -179,7 +179,7 @@ def get_init_vg2ch(self):  # w, alpha, m1, m2
     f = Fit()
     f.debug = self.debug
     f.swrc = (x, y)
-    m_max = 1-1/n_max
+    m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     a, m1 = f.get_init_vg()
     if m1 > m_max:

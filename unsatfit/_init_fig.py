@@ -1,7 +1,8 @@
 def init_fig(self):
     """Set initial parameters for drawing figure"""
     self.show_fig = False  # Show figure by matplotlib.pyplot.show
-    # Save figure as self.filename where output format is deduced from the extension of the filename
+    # Save figure as self.filename where output format is deduced from the
+    # extension of the filename
     self.save_fig = False
     self.fig_h_0to1 = False  # Change data of h=0 to h=1 for logarithmic plot
     self.data_only = False  # Plot data only
@@ -33,7 +34,8 @@ def init_fig(self):
     # Curves
     # Order of colors and styles
     self.color = ('red', 'blue', 'green', 'magenta', 'cyan', 'black')
-    # See https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    # See
+    # https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
     self.style = ['dashed', 'dashdot', 'solid', 'dotted']
     self.curve_smooth = 200  # Numbers of calculation points in a curve
     self.line_num = 0
