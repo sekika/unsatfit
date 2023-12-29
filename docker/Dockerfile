@@ -18,6 +18,7 @@ RUN ln -s ../mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
 # SWRC Fit
 RUN pip3 install unsatfit
+RUN pip3 cache purge
 RUN ln -s /usr/local/bin/python3 /usr/bin/python3
 
 # Run Apache

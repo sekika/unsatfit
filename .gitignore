@@ -21,6 +21,9 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+# Debian package
+deb_dist/unsatfit*
+unsatfit-*.tar.gz
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
