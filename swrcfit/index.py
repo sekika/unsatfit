@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import urllib.parse
 import os
 import sys
 import configparser
@@ -10,7 +11,6 @@ from data.sample import sample
 from data.sample import dataset
 config = configparser.ConfigParser()
 config.read(os.path.dirname(__file__) + '/data/server.txt')
-DEBUG = config.get('Settings', 'debug')
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
 STORAGEPREFIX = 'swrc_'
@@ -535,16 +535,47 @@ def maincl():
     parser.print_help()
 
 
+# Since the cgi module is deprecated as of Python 3.11 (PEP 594),
+# get_field_storage() was defined as an alternative to the cgi module.
+# The line field = cgi.FieldStorage() is replaced with
+# field = get_field_storage(), and the field.getfirst method
+# functions in the same way.
+class FieldStorage:
+    def __init__(self, form_data):
+        self.form_data = form_data
+
+    def getfirst(self, key, default=''):
+        """ Get first value of the key """
+        return self.form_data.get(key, [default])[0]
+
+
+def get_field_storage():
+    if 'CONTENT_TYPE' in os.environ:
+        content_type = os.environ['CONTENT_TYPE']
+    else:
+        return FieldStorage({})
+
+    if content_type.startswith('multipart/form-data'):
+        post_env = os.environ.copy()
+        post_env['QUERY_STRING'] = ''
+        post_data = sys.stdin.read(int(post_env['CONTENT_LENGTH']))
+        form_data = urllib.parse.parse_qs(post_data)
+    elif content_type == 'application/x-www-form-urlencoded':
+        content_length = int(os.environ.get('CONTENT_LENGTH', 0))
+        post_data = sys.stdin.read(
+            content_length) if content_length > 0 else ''
+        form_data = urllib.parse.parse_qs(post_data)
+    else:
+        return FieldStorage({})
+
+    return FieldStorage(form_data)
+
+
 def maincgi():
     """SWRC Fit to run as CGI"""
-    import cgi
     from io import TextIOWrapper
     import unsatfit
     f = unsatfit.Fit()
-
-    if DEBUG:
-        import cgitb
-        cgitb.enable()
 
     # Change encoding of stdout to utf-8
     # It is required becaue CGI script runs as another user and may not
@@ -556,7 +587,8 @@ def maincgi():
     print('Cache-Control: public\n')
 
     # Get input strings
-    field = cgi.FieldStorage()
+    # field = cgi.FieldStorage() was replaced to the following line
+    field = get_field_storage()
     getlang = field.getfirst('lang', 'none')
     f.inputtext = field.getfirst('input', '')
 
