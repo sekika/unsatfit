@@ -551,23 +551,19 @@ class FieldStorage:
 
 
 def get_field_storage():
-    if 'CONTENT_TYPE' in os.environ:
-        content_type = os.environ['CONTENT_TYPE']
-    else:
-        return FieldStorage({})
+    method = os.environ.get('REQUEST_METHOD', 'GET').upper()
 
-    if content_type.startswith('multipart/form-data'):
-        post_env = os.environ.copy()
-        post_env['QUERY_STRING'] = ''
-        post_data = sys.stdin.read(int(post_env['CONTENT_LENGTH']))
-        form_data = urllib.parse.parse_qs(post_data)
-    elif content_type == 'application/x-www-form-urlencoded':
+    if method == 'POST':
+        content_type = os.environ.get('CONTENT_TYPE', '')
         content_length = int(os.environ.get('CONTENT_LENGTH', 0))
-        post_data = sys.stdin.read(
-            content_length) if content_length > 0 else ''
-        form_data = urllib.parse.parse_qs(post_data)
+        if content_length > 0 and content_type == 'application/x-www-form-urlencoded':
+            post_data = sys.stdin.read(content_length)
+            form_data = urllib.parse.parse_qs(post_data, keep_blank_values=1)
+        else:
+            form_data = {}
     else:
-        return FieldStorage({})
+        query_string = os.environ.get('QUERY_STRING', '')
+        form_data = urllib.parse.parse_qs(query_string, keep_blank_values=1)
 
     return FieldStorage(form_data)
 
