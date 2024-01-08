@@ -47,17 +47,17 @@ def test(minR2, strict=False):
         soil = d['Soil sample']
         texture = d['Texture']
         f.swrc = d['data']
-        print('{0} {1}'.format(soil, texture))
+        print(f'{soil} {texture}')
         for i in swrcfit(f):
             if not i.success:
-                print('{0} Failed.'.format(i.model_name))
+                print(f'{i.model_name} Failed.')
                 if strict:
                     exit(1)
             else:
                 if i.r2_ht < minR2:
-                    print('{0} R2 = {1}'.format(i.model_name, i.r2_ht))
+                    print(f'{i.model_name} R2 = {i.r2_ht}')
                     if strict:
-                        print('R2 less than {0}'.format(minR2))
+                        print(f'R2 less than {minR2}')
                         exit(1)
 
 
@@ -375,7 +375,8 @@ def swrcfit(f):
                     hb, l = f.get_init_bc()
                     if l > f.max_lambda_i:
                         l = f.max_lambda_i - 0.00001
-                    f.b_lambda1 = f.b_lambda2 = (0, min(l * 1.1, max_lambda_i))
+                    f.b_lambda1 = f.b_lambda2 = (
+                        0, min(l * 1.1, f.max_lambda_i))
                     f.ini = (*ini_q, 0.7, hb, l, hb, l)
                     f.optimize()
                 f.b_qr = (0, np.inf)
@@ -654,8 +655,7 @@ def maincgi():
         # Clear field storage
         for i in model('savekeys'):
             key = STORAGEPREFIX + i
-            print(
-                '<script>localStorage.removeItem("{0}");</script>'.format(key))
+            print(f'<script>localStorage.removeItem("{key}");</script>')
         printform(lang, getlang, f)
         printhelp(lang, f)
     else:
@@ -673,7 +673,7 @@ def maincgi():
             if d['message'] == 'All h values are same.':
                 error = message(lang, 'sameh')
             print(
-                '<p><strong>{0}</strong></p><p>{1}</p>'.format(error, message(lang, 'readformat')))
+                f'<p><strong>{error}</strong></p><p>{message(lang, "readformat")}</p>')
             printhelp(lang, f)
         else:
             f.swrc = h, theta = d['data']  # Data of soil water retention
@@ -728,7 +728,7 @@ def maincgi():
                     value = str(value)
                 key = STORAGEPREFIX + i
                 print(
-                    '<script>localStorage.setItem("{0}", "{1}");</script>'.format(key, value))
+                    f'<script>localStorage.setItem("{key}", "{value}");</script>')
             calc(f)   # Start main calculation
     # Print footer
     import platform
@@ -738,7 +738,7 @@ def maincgi():
     pyver = str(sys.version_info.major) + '.' + \
         str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
     footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
-    print('<hr>\n<p>{0}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>'.format(footer), flush=True)
+    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>', flush=True)
     return
 
 
@@ -766,45 +766,45 @@ def calc(f):
     else:
         url = './'
     print(
-        '<h1><a href="{0}">SWRC Fit</a> - {1}</h1>'.format(url, message(lang, 'result')))
+        f'<h1><a href="{url}">SWRC Fit</a> - {message(lang, "result")}</h1>')
     print('<ul>')
     for i in sorted(d):
         if i not in ['empty', 'valid', 'text', 'data']:
             if i == 'doi':
                 print(
-                    '<li>{0} = <a href="https://doi.org/{1}">{1}</a>'.format(escape(i), escape(d[i])))
+                    f'<li>{escape(i)} = <a href="https://doi.org/{1}">{escape(d[i])}</a>')
             elif i == 'UNSODA':
-                print('<li>{0} = <a href="https://sekika.github.io/unsoda/?{1}">{1}</a>'.format(
-                    escape(i), escape(d[i])))
+                print(
+                    f'<li>{escape(i)} = <a href="https://sekika.github.io/unsoda/?{escape(d[i])}">{escape(d[i])}</a>')
             else:
-                print('<li>{0} = {1}'.format(escape(i), escape(d[i])))
+                print(f'<li>{escape(i)} = {escape(d[i])}')
     for i in getoptiontheta(f, True)[0]:
         bi = ''
         if f.cqr == 'both' and i[0] == 2:
             bi = ' for bimodal models'
         par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0]-1]
-        print('<li>Constant: {0} = {1}{2}'.format(par, i[1], bi))
+        print(f'<li>Constant: {par} = {i[1]}{bi}')
     limit = []
     if f.cqs == 'fit':
         limit.append(
-            '&theta;<sub>s</sub> &lt; {0:.3f}'.format(f.max_qs * max(d['data'][1])))
+            f'&theta;<sub>s</sub> &lt; {f.max_qs * max(d["data"][1]):.3f}')
     if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel:
-        limit.append('&lambda;<sub>1</sub> &lt; {0}'.format(f.max_lambda_i))
+        limit.append(f'&lambda;<sub>1</sub> &lt; {f.max_lambda_i}')
     if 'VGBCCH' in f.selectedmodel or 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
-        limit.append('n<sub>1</sub> &lt; {0}'.format(f.max_n_i))
+        limit.append(f'n<sub>1</sub> &lt; {f.max_n_i}')
     if 'KOBCCH' in f.selectedmodel or 'DK' in f.selectedmodel:
-        limit.append('&sigma;<sub>1</sub> &gt; {0}'.format(f.min_sigma_i))
+        limit.append(f'&sigma;<sub>1</sub> &gt; {f.min_sigma_i}')
     if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
-        limit.append('&lambda;<sub>2</sub> &lt; {0}'.format(f.max_lambda_i))
+        limit.append(f'&lambda;<sub>2</sub> &lt; {f.max_lambda_i}')
     if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
-        limit.append('n<sub>2</sub> &lt; {0}'.format(f.max_n_i))
+        limit.append(f'n<sub>2</sub> &lt; {f.max_n_i}')
     if 'DK' in f.selectedmodel:
-        limit.append('&sigma;<sub>2</sub> &gt; {0}'.format(f.min_sigma_i))
+        limit.append(f'&sigma;<sub>2</sub> &gt; {f.min_sigma_i}')
     if len(limit) > 0:
         print('<li>Limit: ' + ', '.join(limit))
     print('</ul>')
     print(
-        '<div class="tmp" id="tmp">{0}</div>'.format(message(lang, 'wait')), flush=True)
+        f'<div class="tmp" id="tmp">{message(lang, "wait")}</div>', flush=True)
     result = swrcfit(f)  # Calculation
     if len(result) == 0:
         print(
@@ -829,7 +829,7 @@ def calc(f):
         error = True
     if error:
         print(
-            '<strong>Server setup error: Cannot write {0}. Please check permission.</strong>'.format(IMAGEFILE))
+            f'<strong>Server setup error: Cannot write {IMAGEFILE}. Please check permission.</strong>')
     error = False
     tmpfile = WORKDIR + '/dksafjsdafkpaoeiwr'
     try:
@@ -839,7 +839,7 @@ def calc(f):
         error = True
     if error:
         print(
-            '<strong>Server setup error: Cannot write in {0}. Please check permission.</strong>'.format(WORKDIR))
+            f'<strong>Server setup error: Cannot write in {WORKDIR}. Please check permission.</strong>')
     else:
         os.remove(tmpfile)
     print(
@@ -858,21 +858,20 @@ def calc(f):
         if i.success:
             par = ''
             for j in range(len(i.par)):
-                par += '{0} = {1:.5}<br>'.format(
-                    i.par[j], i.fitted_show[j])
-            r2 = '{0:.4f}'.format(i.r2_ht)
+                par += f'{i.par[j]} = {i.fitted_show[j]:.5}<br>'
+            r2 = f'{i.r2_ht:.4f}'
         else:
             par = 'Failed'
             r2 = aic = ''
         if count == aic_min:
             name = '<strong>' + i.setting['html'] + '</strong>'
-            aic = '<strong>{0:.2f}</strong>'.format(i.aic_ht)
+            aic = f'<strong>{i.aic_ht:.2f}</strong>'
         else:
             name = i.setting['html']
             if i.success:
-                aic = '{0:.2f}'.format(i.aic_ht)
-        print('<tr><td>{0}<td>\\( {1} \\)<td>{2}<td>{3}<td>{4}</tr>'.format(
-            name, i.setting['equation'], par, r2, aic))
+                aic = '{i.aic_ht:.2f}'
+        print(
+            f'<tr><td>{name}<td>\\( {i.setting["equation"]} \\)<td>{par}<td>{r2}<td>{aic}</tr>')
         if len(i.setting['note']) > 0:
             note.append(i.setting['note'])
         f.set_model(i.model_name, i.const)
@@ -890,7 +889,7 @@ def calc(f):
         count += 1
     print('</table>\n<ul>\n')
     for n in note:
-        print('<li>{0}</li>'.format(n))
+        print(f'<li>{n}</li>')
     print('</ul>\n<h2>Figure</h2>')
     if f.onemodel:
         print('<p>Showing the model with the minumim AIC value.</p>')
@@ -899,10 +898,10 @@ def calc(f):
 
 def showdata(f):
     print(
-        '<div align="center"><img src="{0}" alt="Figure"></div>'.format(IMAGEFILE))
+        f'<div align="center"><img src="{IMAGEFILE}" alt="Figure"></div>')
     print('<h2>Original data</h2><table border="1"><tr><th>h<th>&theta;')
     for i in list(zip(*f.swrc)):
-        print('<tr><td>{0}<td>{1}</tr>'.format(*i))
+        print(f'<tr><td>{i[0]}<td>{i[1]}</tr>')
     print('</table>')
 
 
@@ -935,14 +934,14 @@ def getoptiontheta(f, bimodal):
 
 def printhead(lang, f):
     mathjax = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
-    print(r'''<!DOCTYPE html>
-<html lang="{0}">
+    print(f'''<!DOCTYPE html>
+<html lang="{lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SWRC Fit</title>
-  <link rel="stylesheet" type="text/css" href="{1}">
-  <script id="MathJax-script" async src="{2}"></script>
+  <link rel="stylesheet" type="text/css" href="{message(lang, "css")}">
+  <script id="MathJax-script" async src="{mathjax}"></script>
   <script>
     function showMore(btn) {{
         var targetId = btn.getAttribute("href").slice(1);
@@ -950,18 +949,18 @@ def printhead(lang, f):
         btn.parentNode.style.display = "none";
         return false;
     }}
-  function a(){{'''.format(lang, message(lang, 'css'), mathjax))
+  function a(){{''')
     print('if(document.getElementById("sample").value == "clear"){')
     print('  document.getElementById("input").value = "";')
-    print('  localStorage.removeItem("{0}");'.format(STORAGEPREFIX + 'input'))
+    print(f"  localStorage.removeItem('{STORAGEPREFIX + 'input'}');")
     print('} else ', end="")
     for ID in f.sampledata:
         d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
         text = "\\n".join(escape(d['text']).splitlines())
         print(
-            'if(document.getElementById("sample").value == "{0}"){{'.format(unsoda))
-        print('  document.getElementById("input").value = "{0}";'.format(text))
+            f'if(document.getElementById("sample").value == "{unsoda}"){{')
+        print(f'  document.getElementById("input").value = "{text}";')
         print('} else ', end="")
     print('{   document.getElementById("input").value = ""; }')
     print('  }</script></head>', flush=True)
@@ -969,14 +968,13 @@ def printhead(lang, f):
 
 def printform(lang, getlang, f):
     url = './'
-    print('<p>{0}</p>\n<h1>SWRC Fit</h1>\n<p>{1}</p>\n<form action="{2}" method="post">'.format(
-        message(lang, 'langbar', url), message(lang, 'description'), url), flush=True)
-    print(r'''<div align="center">
+    print(f'<p>{message(lang, "langbar", url)}</p>\n<h1>SWRC Fit</h1>\n<p>{message(lang, "description")}</p>\n<form action="{url}" method="post">', flush=True)
+    print(f'''<div align="center">
 <table>
 <tr>
 <td width="240">
-  <p>{0}</p>
-'''.format(message(lang, 'modelselect')))
+  <p>{message(lang, "modelselect")}</p>
+''')
     for ID in model('all'):
         if model(ID)['selected']:
             checked = ' checked'
@@ -984,26 +982,26 @@ def printform(lang, getlang, f):
             checked = ''
         print('<INPUT TYPE="checkbox" id={0} name="{0}" value="on"{1}>{2}<br>'.format(
             ID, checked, model(ID)['html']))
-    print(r'''<p>{0}<br>
-  <input type="checkbox" name="onemodel" id="onemodel" value="on">{1}<br>
+    print(f'''<p>{message(lang, "figoption")}<br>
+  <input type="checkbox" name="onemodel" id="onemodel" value="on">{message(lang, "onemodel")}<br>
   </p>
 </td>
 <td>
-<p>{2}<br>
-<select name="sample" id="sample" onChange="a()">'''.format(message(lang, 'figoption'), message(lang, 'onemodel'), message(lang, 'swrc')))
-    print('    <option value="">{0}'.format(message(lang, 'selectsample')))
+<p>{message(lang, "swrc")}<br>
+<select name="sample" id="sample" onChange="a()">''')
+    print(f'    <option value="">{message(lang, "selectsample")}')
     for ID in f.sampledata:
         d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
         texture = escape(d['Texture'])
-        print('    <option value="{0}">{1}'.format(unsoda, texture))
+        print(f'    <option value="{unsoda}">{texture}')
     print('  <option value="clear">*** Clear input ***')
-    print('''  </select>
-<div><textarea name="input" id="input" rows="15" cols="27" wrap="off">{3}</textarea></div>
+    print(f'''  </select>
+<div><textarea name="input" id="input" rows="15" cols="27" wrap="off">{f.given_data}</textarea></div>
 </td></tr>
 <tr>
 <td colspan="2">
-<p><a href="#detail" onclick="return showMore(this);">{0}</a></p>
+<p><a href="#detail" onclick="return showMore(this);">{message(lang, 'showmore')}</a></p>
 <div id="detail" class="detailed-options">
 
 <p>Calculation options</p>
@@ -1015,19 +1013,19 @@ def printform(lang, getlang, f):
 <li><input type="radio" name="cqs" value="fit" checked="checked">Fit &theta;<sub>s</sub>
 <input type="radio" name="cqs" value="max">&theta;<sub>s</sub> = &theta;<sub>max</sub>
 <input type="radio" name="cqs" value="fix">&theta;<sub>s</sub> = <input type="text" name="qsin" id="qsin" size="5" maxlength="10" value="">
-<li>Upper limit of &theta;<sub>s</sub> / &theta;<sub>max</sub> = <input type="text" name="max_qs" id="max_qs" size="5" maxlength="10" value="{4}">
-<li>Upper limit of &lambda;<sub>1</sub>, &lambda;<sub>2</sub> = <input type="text" name="max_lambda_i" id="max_lambda_i" size="5" maxlength="10" value="{5}">
-<li>Upper limit of n<sub>1</sub>, n<sub>2</sub> = <input type="text" name="max_n_i" id="max_n_i" size="5" maxlength="10" value="{6}">
-<li>Lower limit of &sigma;<sub>1</sub>, &sigma;<sub>2</sub> = <input type="text" name="min_sigma_i" id="min_sigma_i" size="5" maxlength="10" value="{7}">
+<li>Upper limit of &theta;<sub>s</sub> / &theta;<sub>max</sub> = <input type="text" name="max_qs" id="max_qs" size="5" maxlength="10" value="{MAX_QS}">
+<li>Upper limit of &lambda;<sub>1</sub>, &lambda;<sub>2</sub> = <input type="text" name="max_lambda_i" id="max_lambda_i" size="5" maxlength="10" value="{MAX_LAMBDA_I}">
+<li>Upper limit of n<sub>1</sub>, n<sub>2</sub> = <input type="text" name="max_n_i" id="max_n_i" size="5" maxlength="10" value="{MAX_N_I}">
+<li>Lower limit of &sigma;<sub>1</sub>, &sigma;<sub>2</sub> = <input type="text" name="min_sigma_i" id="min_sigma_i" size="5" maxlength="10" value="{MIN_SIGMA_I}">
 </ul>
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
 </div>
-<p><input type="hidden" name="lang" value="{1}">\n  <div align="center"><input type="submit" name="button" value="{2}"></div>\n</form></p>
+<p><input type="hidden" name="lang" value="{getlang}">\n  <div align="center"><input type="submit" name="button" value="{message(lang, 'calculate')}"></div>\n</form></p>
 </td>
 </tr>
 </tr>
-</table></div>'''.format(message(lang, 'showmore'), getlang, message(lang, 'calculate'), f.given_data, MAX_QS, MAX_LAMBDA_I, MAX_N_I, MIN_SIGMA_I), flush=True)
+</table></div>''', flush=True)
     # Read setting from local storage
     for i in model('all'):
         loadchecked(i)
@@ -1090,11 +1088,11 @@ def printhelp(lang, f):
     import random
     print(message(lang, 'news'))
     print(message(lang, 'format'))
-    print('<h2>{0}</h2>'.format(message(lang, 'sample')))
+    print(f'<h2>{message(lang, "sample")}</h2>')
     id = list(f.sampledata)[random.randint(0, 7)]
     texture = f.sampledata[id]['Texture']
     soil = f.sampledata[id]['Soil sample']
-    print('<ul><li>{0}<li>Texture: {1}<li><a href="fig.html">List of figures</a></ul>\n<p><div align="center"><img src="img/{2}.png" alt="Sample output"></div></p>'.format(soil, texture, id))
+    print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<p><div align="center"><img src="img/{id}.png" alt="Sample output"></div></p>')
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
     print(message(lang, 'question'))
