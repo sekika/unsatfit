@@ -865,7 +865,7 @@ def calc(f):
         else:
             name = i.setting['html']
             if i.success:
-                aic = '{i.aic_ht:.2f}'
+                aic = f'{i.aic_ht:.2f}'
         print(
             f'<tr><td>{name}<td>\\( {i.setting["equation"]} \\)<td>{par}<td>{r2}<td>{aic}</tr>')
         if len(i.setting['note']) > 0:
