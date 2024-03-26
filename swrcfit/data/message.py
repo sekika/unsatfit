@@ -112,10 +112,10 @@ def message(lang, ID, URL='./'):
                 + '<li><a href="https://scholar.google.co.jp/citations?user=a842WTkAAAAJ">Dr. David Moret-Fernandez</a> corrected Spanish.</li></ul>'
         if lang == 'fr':
             return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
-                + '<li><a href="https://lhyges.unistra.fr/ACKERER-Philippe?lang=fr">Dr. Philippe Ackerer</a> corrected French.</li></ul>'
+                + '<li><a href="https://www.researchgate.net/profile/Philippe-Ackerer">Dr. Philippe Ackerer</a> corrected French.</li></ul>'
         if lang == 'de':
             return '<h2>Acknowledgement</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
-                + '<li><a href="https://www.ufz.de/index.php?en=39081">Dr. Martin Thullner</a> corrected German.</li></ul>'
+                + '<li><a href="https://www.bgr.bund.de/EN/Themen/Wasser/Mitarbeiterseiten/thullnerM_en.html?nn=1548666">Dr. Martin Thullner</a> corrected German.</li></ul>'
         if lang == 'zh':
             return '<h2>感谢</h2><ul><li>Sample data is from <a href="' + message(lang, 'unsoda') + '">UNSODA database</a> of unsaturated soil hydraulic properties developed by US Salinity Laboratory. See <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> for more data.</li>' \
                 + '<li><a href="http://www.iswc.cas.cn/sourcedb_iswc_cas/zw/zjrc/200910/t20091020_2584555.html">Dr. Li Wang</a> corrected Chinese.</li></ul>'
