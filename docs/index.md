@@ -14,6 +14,8 @@ A [user manual](https://arxiv.org/abs/2302.00472) is available.
 
 See [install](install.md) and [sample code](code.md) for a quick start.
 
+If you encounter any issues, feel free to ask [questions](feedback.md).
+
 ## Example output
 
 This is an example output of this program; water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam fitted with KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.

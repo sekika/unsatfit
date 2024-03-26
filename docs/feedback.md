@@ -1,5 +1,4 @@
 # Feedback
+Please direct any questions to the [Q&A category on the unsatfit Discussions page](https://github.com/sekika/unsatfit/discussions/categories/q-a). To do so, create a GitHub account, sign in, and click the green "New discussion" button. I will respond via comments. It is recommended to ask your questions publicly in this manner, as others with similar queries can benefit from the answers found online. If your message is not a question but rather feedback or information you wish to share with the author and users of unsatfit, please use the [General category](https://github.com/sekika/unsatfit/discussions/categories/general).
 
-Please send questions and comments to [Q&A at unsatfit Discussions](https://github.com/sekika/unsatfit/discussions/categories/q-a). Get GitHub account, sign in, and press the green "New discussion" button. I will reply by comment. It is preferable to send your question publicly this way, because other people having the same question can find answer on the web.
-
-However, if your question is confidential, for example when it includes your unpublished data, please contact me by email. You can find my email address in [this paper](https://doi.org/10.1002/vzj2.20168).
+However, if your query involves confidential information, such as unpublished data, please reach out to me via email. My email address can be found in [this paper](https://doi.org/10.1002/vzj2.20168).
