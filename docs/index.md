@@ -10,7 +10,7 @@ The proposed equations are useful for practical applications as shown in the fol
 
 ## User manual
 
-A [user manual](https://arxiv.org/abs/2302.00472) is available.
+A [user manual](https://researchmap.jp/sekik/published_papers/45610748/attachment_file.pdf) is available.
 
 See [install](install.md) and [sample code](code.md) for a quick start.
 
@@ -34,10 +34,10 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2021-11-24: [Paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ.
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit.
 - 2022-10-29: Presented at Japanese society meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html).
-- 2023-02-02: [User manual](https://arxiv.org/abs/2302.00472) was published on arXiv.
 - 2023-02-04: [Paper](https://doi.org/10.2478/johh-2022-0039) introducing unsatfit was published at JHH.
 - 2023-08-30: Improvement of dual-VG fitting was presented at Japanese society meeting [農業農村工学会](https://researchmap.jp/sekik/presentations/43218823/attachment_file.pdf).
 - 2023-10-07: [unsatfit 5.1](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)).
 - 2023-12-21: Improvement of dual-VG fitting was published at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.155.0_35) in Japanese.
+- 2024-03-13: [User manual of SWRC Fit and unsatfit](https://researchmap.jp/sekik/published_papers/45610748/attachment_file.pdf) was published at JTUNS.
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
