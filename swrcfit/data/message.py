@@ -168,8 +168,8 @@ def message(lang, ID, URL='./'):
         return 'Show only one model'
     if ID == 'showmore':
         if lang == 'ja':
-            return 'さらにオプションを見る'
-        return 'Show more options'
+            return 'さらにオプションを見る（2024-06-04更新）'
+        return 'Show more options (Update on 2024-06-04)'
     if ID == 'swrc':
         if lang == 'ja':
             return '土壌水分特性曲線'

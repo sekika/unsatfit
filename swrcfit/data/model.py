@@ -11,7 +11,7 @@ def model(ID):
     if ID == 'limit':
         return ('max_qs', 'max_lambda_i', 'max_n_i', 'min_sigma_i')
     if ID == 'savekeys':
-        return model('all') + model('limit') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'input')
+        return model('all') + model('limit') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'input', 'show_eq', 'show_perr', 'show_cor')
     if ID == 'BC':
         return {
             'html': 'Brooks and Corey',
@@ -27,6 +27,7 @@ def model(ID):
             'label': 'VG',
             'equation': 'S_e = \\biggl[\dfrac{1}{1+(\\alpha h)^n}\\biggr]^m ~~ (m=1-1/n)',
             'parameter': ('&alpha;', 'n'),
+            'parameter_org': ('&alpha;', 'm'),
             'note': '',
             'selected': True
         }
@@ -53,7 +54,9 @@ def model(ID):
             'html': 'dual-BC-CH',
             'label': 'dual-BC-CH',
             'equation': 'S_e = \\begin{cases}w_1 \left(h / h_b\\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\\right)^{-\lambda_2}  & (h>h_b)\\\\ 1 & (h \le h_b)\end{cases}',
+            'equation_conv': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 \left(h / h_b\\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\\right)^{-\lambda_2}  & (h>h_b)\\\\ 1 & (h \le h_b)\end{cases}\\\\w_1 &=& \dfrac{1}{1 + \left(h_c / h_b\\right)^{(l_2 - l_1)}}\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'h<sub>b</sub>', '&lambda;<sub>1</sub>', '&lambda;<sub>2</sub>'),
+            'parameter_org': ('h<sub>c</sub>', 'h<sub>b</sub>', '&lambda;<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
             'selected': False
         }
@@ -63,6 +66,7 @@ def model(ID):
             'label': '$\mathrm{VG}_1\mathrm{BC}_2$-CH',
             'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\left(h/H\\right)^{-\lambda_2}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\\\S_1 &=& \\bigl[1+(h/H)^{n_1}\\bigr]^{-{m_1}} ~~ (m_1=1-1/{n_1})\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'H', 'n<sub>1</sub>', '&lambda;<sub>2</sub>'),
+            'parameter_org': ('w<sub>1</sub>', 'H', 'm<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
             'selected': False
         }
@@ -72,6 +76,7 @@ def model(ID):
             'label': 'dual-VG-CH',
             'equation': '\\begin{eqnarray}S_e &=& w_1\\bigl[1+(\\alpha h)^{n_1}\\bigr]^{-m_1} + (1-w_1)\\bigl[1+(\\alpha h)^{n_2}\\bigr]^{-m_2}\\\\m_i&=&1-1/{n_i}\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', '&alpha;', 'n<sub>1</sub>', 'n<sub>2</sub>'),
+            'parameter_org': ('w<sub>1</sub>', '&alpha;', 'm<sub>1</sub>', 'm<sub>2</sub>'),
             'note': '',
             'selected': True
         }
@@ -100,6 +105,7 @@ def model(ID):
             'label': 'dual-VG',
             'equation': '\\begin{eqnarray}S_e &=& w_1\\bigl[1+(\\alpha_1 h)^{n_1}\\bigr]^{-m_1} + (1-w_1)\\bigl[1+(\\alpha_2 h)^{n_2}\\bigr]^{-m_2}\\\\m_i&=&1-1/{n_i}\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', '&alpha;<sub>1</sub>', 'n<sub>1</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>'),
+            'parameter_org': ('w<sub>1</sub>', '&alpha;<sub>1</sub>', 'm<sub>1</sub>', '&alpha;<sub>2</sub>', 'm<sub>2</sub>'),
             'note': '',
             'selected': True
         }

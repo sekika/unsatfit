@@ -40,6 +40,9 @@ def test(minR2, strict=False):
     f.max_n_i = MAX_N_I
     f.min_sigma_i = MIN_SIGMA_I
     f.debug = False
+    f.show_eq = True
+    f.show_perr = False
+    f.show_cor = False
     for id in sampledata:
         f.selectedmodel = model('all')
         f.b_sigma = (0, np.inf)
@@ -107,7 +110,10 @@ def swrcfit(f):
     vg_r2 = f.r2_ht
     f.fitted_show = [*f.fitted[:-1], n]  # Convert from m to n
     f.setting = model('VG')
-    f.par = (*par_theta, *f.setting['parameter'])
+    if f.show_perr or f.show_cor:
+        f.par = (*par_theta, *f.setting['parameter_org'])
+    else:
+        f.par = (*par_theta, *f.setting['parameter'])
     if 'VG' in f.selectedmodel:
         f2 = copy.deepcopy(f)
         result.append(f2)
@@ -219,7 +225,11 @@ def swrcfit(f):
             q = f.fitted[:-4]
             f.fitted_show = (*q, w1, hb, l1, l2)
         f.setting = model('DBCH')
-        f.par = (*par_theta, *f.setting['parameter'])
+        if f.show_perr or f.show_cor:
+            f.par = (*par_theta, *f.setting['parameter_org'])
+            f.setting['equation'] = f.setting['equation_conv']
+        else:
+            f.par = (*par_theta, *f.setting['parameter'])
         dbch = copy.deepcopy(f)
         if 'DBCH' in f.selectedmodel:
             result.append(dbch)
@@ -263,7 +273,10 @@ def swrcfit(f):
             q = f.fitted[:-4]
             f.fitted_show = (*q, w1, 1/a1, n1, l2)
         f.setting = model('VGBCCH')
-        f.par = (*par_theta, *f.setting['parameter'])
+        if f.show_perr or f.show_cor:
+            f.par = (*par_theta, *f.setting['parameter_org'])
+        else:
+            f.par = (*par_theta, *f.setting['parameter'])
         vgbcch = copy.deepcopy(f)
         result.append(vgbcch)
 
@@ -300,7 +313,10 @@ def swrcfit(f):
             n2 = 1/(1-m2)
             f.fitted_show = (*q, w1, a1, n1, n2)
         f.setting = model('DVCH')
-        f.par = (*par_theta, *f.setting['parameter'])
+        if f.show_perr or f.show_cor:
+            f.par = (*par_theta, *f.setting['parameter_org'])
+        else:
+            f.par = (*par_theta, *f.setting['parameter'])
         dvch = copy.deepcopy(f)
         if 'DVCH' in f.selectedmodel:
             result.append(dvch)
@@ -436,7 +452,10 @@ def swrcfit(f):
             n2 = 1/(1-m2)
             f.fitted_show = (*q, w1, a1, n1, a2, n2)
         f.setting = model('DV')
-        f.par = (*par_theta, *f.setting['parameter'])
+        if f.show_perr or f.show_cor:
+            f.par = (*par_theta, *f.setting['parameter_org'])
+        else:
+            f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         if 'DV' in f.selectedmodel:
             result.append(f2)
@@ -629,6 +648,11 @@ def maincgi():
             f.selectedmodel.append(m)
     f.onemodel = (field.getfirst('onemodel', '') == 'on')
 
+    # Output options
+    f.show_eq = (field.getfirst('show_eq', '') == 'on')
+    f.show_perr = (field.getfirst('show_perr', '') == 'on')
+    f.show_cor = (field.getfirst('show_cor', '') == 'on')
+
     # Figure options
     f.show_fig = False
     f.save_fig = True
@@ -817,6 +841,10 @@ def calc(f):
         'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
     note.append(
         'Effective saturation \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\). Therefore &theta; = &theta;<sub>r</sub> + (&theta;<sub>s</sub>-&theta;<sub>r</sub>)S<sub>e</sub>.')
+    if f.show_perr:
+        note.append(
+            '&pm; shows 1&sigma; uncertainty of parameters.')
+
     error = False
     try:
         with open(IMAGEFILE, 'w') as file:
@@ -847,14 +875,30 @@ def calc(f):
         else:
             aic.append(99999)
     aic_min = aic.index(min(aic))
+    if f.show_eq:
+        eq = '<th>Equation'
+    else:
+        eq = ''
+    if f.show_cor:
+        cor = '<th>Correlation matrix'
+    else:
+        cor = ''
     print(
-        '<table border="1">\n<tr><th>Model<th>Equation<th>Parameters<th>R<sup>2</sup><th>AIC</tr>')
+        f'<table border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC</tr>')
     count = 0
     for i in result:
         if i.success:
             par = ''
             for j in range(len(i.par)):
-                par += f'{i.par[j]} = {i.fitted_show[j]:.5}<br>'
+                if f.show_perr:
+                    p = f'{i.fitted[j]:.5}'
+                    if i.perr is not None:
+                        p += f' &pm; {i.perr[j]:.3}'
+                elif f.show_cor:
+                    p = f'{i.fitted[j]:.5}'
+                else:
+                    p = f'{i.fitted_show[j]:.5}'
+                par += f'{i.par[j]} = {p}<br>'
             r2 = f'{i.r2_ht:.4f}'
         else:
             par = 'Failed'
@@ -866,8 +910,20 @@ def calc(f):
             name = i.setting['html']
             if i.success:
                 aic = f'{i.aic_ht:.2f}'
+        if f.show_eq:
+            eq = f'<td>\\( {i.setting["equation"]} \\)'
+        else:
+            eq = ''
+        if f.show_cor:
+            if i.cor is None:
+                cor = 'Not available'
+            else:
+                cor = "<br>".join(" ".join(f"{num:+.3f}".replace("+", "&nbsp;") for num in row) for row in i.cor)
+            cor = f'<td>{cor}'
+        else:
+            cor = ''
         print(
-            f'<tr><td>{name}<td>\\( {i.setting["equation"]} \\)<td>{par}<td>{r2}<td>{aic}</tr>')
+            f'<tr><td>{name}{eq}<td>{par}{cor}<td>{r2}<td>{aic}</tr>')
         if len(i.setting['note']) > 0:
             note.append(i.setting['note'])
         f.set_model(i.model_name, i.const)
@@ -1014,6 +1070,11 @@ def printform(lang, getlang, f):
 <li>Upper limit of n<sub>1</sub>, n<sub>2</sub> = <input type="text" name="max_n_i" id="max_n_i" size="5" maxlength="10" value="{MAX_N_I}">
 <li>Lower limit of &sigma;<sub>1</sub>, &sigma;<sub>2</sub> = <input type="text" name="min_sigma_i" id="min_sigma_i" size="5" maxlength="10" value="{MIN_SIGMA_I}">
 </ul>
+<p><strong>[New]</strong> Output options</p>
+<input type="checkbox" name="show_eq" id="show_eq" value="on" checked>Equation<br>
+<input type="checkbox" name="show_perr" id="show_perr" value="on">1&sigma; uncertainty of parameters<br>
+<input type="checkbox" name="show_cor" id="show_cor" value="on">Correlation matrix<br>
+
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
 </div>
@@ -1026,6 +1087,9 @@ def printform(lang, getlang, f):
     for i in model('all'):
         loadchecked(i)
     loadchecked('onemodel')
+    loadchecked('show_eq')
+    loadchecked('show_perr')
+    loadchecked('show_cor')
     loadradio('cqr', 'both')
     loadradio('cqs', 'fit')
     for i in ('qrin',) + model('limit'):
