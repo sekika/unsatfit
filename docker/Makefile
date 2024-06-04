@@ -18,7 +18,7 @@ sh:
 	docker exec -i -t swrcfit /bin/bash
 
 update:
-	docker exec -t swrcfit /bin/bash -c "apt update && apt upgrade -y && apt clean"
+	docker exec -t swrcfit /bin/bash -c "apt update && apt upgrade -y && apt clean && pip3 install -U unsatfit"
 
 clean:
 	docker rm swrcfit
