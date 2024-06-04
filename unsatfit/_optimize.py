@@ -5,7 +5,7 @@ import numpy as np
 def optimize(self):
     import copy
     import math
-    from scipy import optimize, linalg # type: ignore
+    from scipy import optimize, linalg  # type: ignore
 
     self.success = False
 
