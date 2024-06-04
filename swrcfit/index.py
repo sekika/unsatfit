@@ -760,7 +760,7 @@ def maincgi():
     pyver = str(sys.version_info.major) + '.' + \
         str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
     footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
-    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p></body></html>', flush=True)
+    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><a href="https://sekika.github.io/unsatfit/#history">Running since 2007</a></p></body></html>', flush=True)
     return
 
 
