@@ -27,7 +27,7 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 ## History
 
 - 2006-07-28: SWRC Fit 1.0 ([土壌の物理性](https://js-soilphysics.com/downloads/pdf/105067.pdf) version) was created. 
-- 2007-02-27: SWRC Fit 1.1 ([HESSD](http://dx.doi.org/10.5194/hessd-4-407-2007) version) was released.
+- 2007-02-27: SWRC Fit 1.1 ([HESSD](http://dx.doi.org/10.5194/hessd-4-407-2007) version) was released and the web version started to run.
 - 2016-09-15: Presented SWRC Fit at Japanese society meeting [地盤工学研究発表会](https://researchmap.jp/sekik/presentations/14140472/attachment_file.pdf).
 - 2018-09-27: SWRC Fit 3.1 (last Octave version) was [released](https://github.com/sekika/swrcfit/releases/tag/v3.1). [History of the Octave version](https://github.com/sekika/swrcfit/blob/master/ChangeLog).
 - 2021-08-13: SWRC Fit was recommended at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.148.0_45).
@@ -39,6 +39,6 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2023-12-21: Improvement of dual-VG fitting was published at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.155.0_35) in Japanese.
 - 2024-03-13: [User manual of SWRC Fit and unsatfit](https://researchmap.jp/sekik/published_papers/45610748/attachment_file.pdf) was published at JTUNS.
 - 2024-05-14: [hystfit](https://sekika.github.io/hystfit/) for calculating hysteresis of SWRC was released.
-- 2024-06-04: [unsatfit 5.2](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)) and SWRC Fit now offers output options for parameter uncertainty at the [user's request](https://github.com/sekika/unsatfit/discussions/6).
+- 2024-06-04: [unsatfit 5.2](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)) and SWRC Fit now offered output options for parameter uncertainty at the [user's request](https://github.com/sekika/unsatfit/discussions/6).
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
