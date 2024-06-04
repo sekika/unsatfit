@@ -13,6 +13,7 @@ cd ..
 python3 setup.py sdist
 python3 setup.py bdist_wheel
 twine check dist/*
+cd -
 
 echo '=== mypy'
 mypy ../unsatfit/_*.py

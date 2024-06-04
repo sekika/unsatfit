@@ -2,15 +2,15 @@
 # Change to this directory
 cd `echo $0 | sed -e 's/[^/]*$//'`
 
+# test
+./test.sh
+
 # Make package
 echo "Making packages."
 cd ..
 python3 -m build
 
-# Upload
-echo "Preparing PyPI password with passme"
-# pip3 install passme
-passme python
+# Token required. Check ~/.pypirc
 twine upload --skip-existing dist/*
 
 # Uninstall unsatfit
