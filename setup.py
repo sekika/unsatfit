@@ -26,7 +26,7 @@ setup(
     author='Katsutoshi Seki',
     license='MIT',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'Environment :: Console',
         'Programming Language :: Python :: 3',

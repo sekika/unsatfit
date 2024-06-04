@@ -5,7 +5,7 @@ import numpy as np
 def optimize(self):
     import copy
     import math
-    from scipy import optimize  # type: ignore
+    from scipy import optimize, linalg # type: ignore
 
     self.success = False
 
@@ -87,12 +87,35 @@ def optimize(self):
     if self.ht_only:
         self.mse_ht = np.average(
             self.residual_ht(self.fitted, *self.swrc)**2)
+        self.rss = self.mse_ht * n
         self.se_ht = math.sqrt(self.mse_ht)  # Standard error
         self.r2_ht = 1 - self.mse_ht / self.var_theta  # Coefficient of determination
         self.aic_ht = n * np.log(self.mse_ht) + 2 * k  # AIC
         if n - k - 1 > 0:
             self.aicc_ht = self.aic_ht + 2 * k * \
                 (k + 1) / (n - k - 1)  # Corrected AIC
+        else:
+            self.aicc_ht = None
+        # Uncertainty on fitted parameters
+        # Section 15.4.2 of Numerical Recipes 3rd ed.
+        # https://stackoverflow.com/questions/42388139/how-to-compute-standard-deviation-errors-with-scipy-optimize-least-squares
+        self.jac = result.jac
+        self.dof = n - k  # degree of freedom
+        if self.dof <= 0:
+            self.cov = self.perr = self.cor = None
+            return
+        U, s, Vh = linalg.svd(self.jac, full_matrices=False)
+        tol = np.finfo(float).eps * s[0] * max(self.jac.shape)
+        w = s > tol
+        cov = (Vh[w].T / s[w]**2) @ Vh[w]  # robust covariance matrix
+        # self.cov = linalg.inv(result.jac.T @ result.jac)  # Simpler way of
+        # getting covariance matrix
+        # Rescale the covariance matrix with data uncertanty
+        cov *= self.rss / self.dof
+        # 1 sigma uncertainty on fitted parameters
+        self.perr = np.sqrt(np.diag(cov))
+        Dinv = np.diag(1 / self.perr)
+        self.cor = Dinv @ cov @ Dinv  # Correlation matrix
         self.message = self.format(
             self.param_ht, False).format(*self.fitted, self.r2_ht)
     else:
@@ -107,13 +130,19 @@ def optimize(self):
         if n - k - 1 > 0:
             self.aicc_ht = self.aic_ht + 2 * k * \
                 (k + 1) / (n - k - 1)  # Corrected AIC
+        else:
+            self.aicc_ht = None
         self.mse_ln_hk = np.average(
             self.residual_ln_hk(self.fitted, *self.unsat)**2)
+        n = len(self.unsat[0])
+        self.rss = self.mse_ln_hk * n
         self.se_ln_hk = math.sqrt(self.mse_ln_hk)  # Standard error
         self.r2_ln_hk = 1 - self.mse_ln_hk / self.var_ln_k  # Coefficient of determination
         self.aic_ln_hk = n * np.log(self.mse_ln_hk) + 2 * k  # AIC
         self.aicc_ln_h = self.aic_ln_hk + 2 * k * \
             (k + 1) / (n - k - 1)  # Corrected AIC
+        # Uncertainty is calculated only for SWRC
+        self.jac = self.cov = self.perr = self.cor = None
         self.message = self.format(
             self.param, DualFitting=True).format(*self.fitted, self.r2_ht, self.r2_ln_hk)
 

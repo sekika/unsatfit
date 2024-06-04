@@ -79,4 +79,10 @@ It can be used for using [Japanese font](https://sekika.github.io/2023/03/11/pyp
 <dd>AIC = 2n ln(&sigma;) + 2k for &theta; and ln(K), respectively</dd>
 <dt>aicc_ht, aicc_ln_hk</dt>
 <dd>Corrected AIC = AIC + 2k(k+1)/(n-k-1) for &theta; and ln(K), respectively</dd>
+<dt>jac</dt>
+<dd>Modified Jacobian matrix. For WRF only.</dd>
+<dt>perr</dt>
+<dd>1 &sigma; uncertainty on fitted parameters. For WRF only.</dd>
+<dt>cor</dt>
+<dd>Correlation matrix. For WRF only.</dd>
 </dl>
