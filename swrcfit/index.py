@@ -41,6 +41,7 @@ def test(minR2, strict=False):
     f.min_sigma_i = MIN_SIGMA_I
     f.debug = False
     f.show_eq = True
+    f.show_caic = False
     f.show_perr = False
     f.show_cor = False
     for id in sampledata:
@@ -650,6 +651,7 @@ def maincgi():
 
     # Output options
     f.show_eq = (field.getfirst('show_eq', '') == 'on')
+    f.show_caic = (field.getfirst('show_caic', '') == 'on')
     f.show_perr = (field.getfirst('show_perr', '') == 'on')
     f.show_cor = (field.getfirst('show_cor', '') == 'on')
 
@@ -839,6 +841,8 @@ def calc(f):
     # Note
     note = [
         'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
+    if f.show_caic:
+        note.append('AIC<sub>c</sub> = AIC + 2k(k+1)/(n-k-1) is the <a href="https://doi.org/10.1016/S0167-7152(96)00128-9">corrected AIC</a>.')
     note.append(
         'Effective saturation \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\). Therefore &theta; = &theta;<sub>r</sub> + (&theta;<sub>s</sub>-&theta;<sub>r</sub>)S<sub>e</sub>.')
     if f.show_perr:
@@ -869,12 +873,22 @@ def calc(f):
     print(
         '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
     aic = []
+    caic = []
     for i in result:
         if i.success:
             aic.append(i.aic_ht)
+            if i.aicc_ht is None:
+                caic.append(99999)
+            else:
+                caic.append(i.aicc_ht)
         else:
             aic.append(99999)
+            caic.append(99999)
     aic_min = aic.index(min(aic))
+    if min(caic) == 99999:
+        caic_min = -1
+    else:
+        caic_min = caic.index(min(caic))
     if f.show_eq:
         eq = '<th>Equation'
     else:
@@ -883,8 +897,12 @@ def calc(f):
         cor = '<th>Correlation matrix'
     else:
         cor = ''
+    if f.show_caic:
+        caic = '<th>AIC<sub>c</sub>'
+    else:
+        caic = ''
     print(
-        f'<table border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC</tr>')
+        f'<table border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC{caic}</tr>')
     count = 0
     for i in result:
         if i.success:
@@ -902,7 +920,7 @@ def calc(f):
             r2 = f'{i.r2_ht:.4f}'
         else:
             par = 'Failed'
-            r2 = aic = ''
+            r2 = aic = caic = ''
         if count == aic_min:
             name = '<strong>' + i.setting['html'] + '</strong>'
             aic = f'<strong>{i.aic_ht:.2f}</strong>'
@@ -910,6 +928,14 @@ def calc(f):
             name = i.setting['html']
             if i.success:
                 aic = f'{i.aic_ht:.2f}'
+        if f.show_caic:
+            if i.success and i.aicc_ht is not None:
+                if count == caic_min:
+                    caic = f'<td><strong>{i.aicc_ht:.2f}</strong>'
+                else:
+                    caic = f'<td>{i.aicc_ht:.2f}'
+            else:
+                caic = '<td>NA'
         if f.show_eq:
             eq = f'<td>\\( {i.setting["equation"]} \\)'
         else:
@@ -923,7 +949,7 @@ def calc(f):
         else:
             cor = ''
         print(
-            f'<tr><td>{name}{eq}<td>{par}{cor}<td>{r2}<td>{aic}</tr>')
+            f'<tr><td>{name}{eq}<td>{par}{cor}<td>{r2}<td>{aic}{caic}</tr>')
         if len(i.setting['note']) > 0:
             note.append(i.setting['note'])
         f.set_model(i.model_name, i.const)
@@ -1072,6 +1098,7 @@ def printform(lang, getlang, f):
 </ul>
 <p><strong>[New]</strong> Output options</p>
 <input type="checkbox" name="show_eq" id="show_eq" value="on" checked>Equation<br>
+<input type="checkbox" name="show_caic" id="show_caic" value="on">Corrected AIC<br>
 <input type="checkbox" name="show_perr" id="show_perr" value="on">1&sigma; uncertainty of parameters<br>
 <input type="checkbox" name="show_cor" id="show_cor" value="on">Correlation matrix<br>
 
@@ -1088,6 +1115,7 @@ def printform(lang, getlang, f):
         loadchecked(i)
     loadchecked('onemodel')
     loadchecked('show_eq')
+    loadchecked('show_caic')
     loadchecked('show_perr')
     loadchecked('show_cor')
     loadradio('cqr', 'both')

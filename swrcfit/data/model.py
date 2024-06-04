@@ -11,7 +11,7 @@ def model(ID):
     if ID == 'limit':
         return ('max_qs', 'max_lambda_i', 'max_n_i', 'min_sigma_i')
     if ID == 'savekeys':
-        return model('all') + model('limit') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'input', 'show_eq', 'show_perr', 'show_cor')
+        return model('all') + model('limit') + ('onemodel', 'cqs', 'cqr', 'qsin', 'qrin', 'input', 'show_eq', 'show_caic', 'show_perr', 'show_cor')
     if ID == 'BC':
         return {
             'html': 'Brooks and Corey',
