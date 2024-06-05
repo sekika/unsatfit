@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["numpy", "unsatfit"]
+    </py-config>
+
+    <div id="text"></div>
+    <py-script>
+        import numpy as np
+        import unsatfit
+        a = [2, 4, 6, 3, 7]
+        max_val = np.max(a)
+        f = unsatfit.Fit()
+        f.test()
+        Element("text").write(max_val)
+    </py-script>
+</body>
+</html>
