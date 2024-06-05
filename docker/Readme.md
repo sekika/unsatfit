@@ -1,6 +1,6 @@
 # SWRC Fit with Docker
 
-This directory contains files for running [SWRC Fit](https://seki.webmasters.gr.jp/swrc/) locally on your machine using Docker. Here is the instruction.
+This directory contains files for running [SWRC Fit](https://purl.org/net/swrc/) locally on your machine using Docker. It might be useful when the server is down or you have unstable network connection. Here is the instruction.
 
 - Install [Docker Desktop](https://www.docker.com/) on your machine and run.
 - Clone this repository by `git clone https://github.com/sekika/unsatfit.git`
