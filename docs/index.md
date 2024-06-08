@@ -26,10 +26,10 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 
 ## History
 
-- 2006-07-28: SWRC Fit 1.0 ([土壌の物理性](https://js-soilphysics.com/downloads/pdf/105067.pdf) version) was created.
+- 2006-07-28: SWRC Fit 1.0 ([土壌の物理性](https://js-soilphysics.com/downloads/pdf/105067.pdf) version) was created. [History](https://github.com/sekika/swrcfit/blob/master/ChangeLog) and [source code](https://github.com/sekika/swrcfit/tree/master/archive) of the Octave version.
 - 2007-02-27: SWRC Fit 1.1 ([HESSD](http://dx.doi.org/10.5194/hessd-4-407-2007) version) was released and the web version started to run.
 - 2016-09-15: Presented SWRC Fit at Japanese society meeting [地盤工学研究発表会](https://researchmap.jp/sekik/presentations/14140472/attachment_file.pdf).
-- 2018-09-27: SWRC Fit 3.1 (last Octave version) was [released](https://github.com/sekika/swrcfit/releases/tag/v3.1). [History of the Octave version](https://github.com/sekika/swrcfit/blob/master/ChangeLog).
+- 2018-09-27: SWRC Fit 3.1 (last Octave version) was [released](https://github.com/sekika/swrcfit/releases/tag/v3.1).
 - 2021-08-13: SWRC Fit was recommended at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.148.0_45).
 - 2021-11-24: [Paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ.
 - 2022-01-04: unsatfit 4.0 was released with new version of SWRC Fit.
