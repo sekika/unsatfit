@@ -11,6 +11,7 @@ from data.sample import sample
 from data.sample import dataset
 config = configparser.ConfigParser()
 config.read(os.path.dirname(__file__) + '/data/server.txt')
+UNSATFIT_MIN_VERSION = '5.2'
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
 STORAGEPREFIX = 'swrc_'
@@ -591,6 +592,7 @@ def get_field_storage():
 def maincgi():
     """SWRC Fit to run as CGI"""
     from io import TextIOWrapper
+    from packaging import version
     import unsatfit
     f = unsatfit.Fit()
 
@@ -681,7 +683,11 @@ def maincgi():
         printform(lang, getlang, f)
         printhelp(lang, f)
     else:
-        if d['empty']:
+        if version.parse(UNSATFIT_MIN_VERSION) > version.parse(f.version()):
+            print(
+                f'<h1>Version error</h1><p>Unsatfit >= <strong>{UNSATFIT_MIN_VERSION}</strong> is required, but <strong>{f.version()}</strong> is installed.</p>')
+            print('<p>Note that Python is run by the user who runs cgi program on Apache. Run "make update" when you are using the <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">Docker version</a>.</p>')
+        elif d['empty']:
             printform(lang, getlang, f)
             printhelp(lang, f)
         elif f.selectedmodel == []:
@@ -842,7 +848,8 @@ def calc(f):
     note = [
         'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
     if f.show_caic:
-        note.append('AIC<sub>c</sub> = AIC + 2k(k+1)/(n-k-1) is the <a href="https://doi.org/10.1016/S0167-7152(96)00128-9">corrected AIC</a>.')
+        note.append(
+            'AIC<sub>c</sub> = AIC + 2k(k+1)/(n-k-1) is the <a href="https://doi.org/10.1016/S0167-7152(96)00128-9">corrected AIC</a>.')
     note.append(
         'Effective saturation \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\). Therefore &theta; = &theta;<sub>r</sub> + (&theta;<sub>s</sub>-&theta;<sub>r</sub>)S<sub>e</sub>.')
     if f.show_perr:
@@ -944,7 +951,8 @@ def calc(f):
             if i.cor is None:
                 cor = 'Not available'
             else:
-                cor = "<br>".join(" ".join(f"{num:+.3f}".replace("+", "&nbsp;") for num in row) for row in i.cor)
+                cor = "<br>".join(
+                    " ".join(f"{num:+.3f}".replace("+", "&nbsp;") for num in row) for row in i.cor)
             cor = f'<td>{cor}'
         else:
             cor = ''
