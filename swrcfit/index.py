@@ -591,6 +591,7 @@ def get_field_storage():
 
 def maincgi():
     """SWRC Fit to run as CGI"""
+    import datetime
     from io import TextIOWrapper
     from packaging import version
     import unsatfit
@@ -766,7 +767,7 @@ def maincgi():
     pyver = str(sys.version_info.major) + '.' + \
         str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
     footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
-    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><a href="https://sekika.github.io/unsatfit/#history">Running since 2007</a></p></body></html>', flush=True)
+    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><a href="https://sekika.github.io/unsatfit/#history">This service is running for {datetime.datetime.now().year - 2007} years</a></p></body></html>', flush=True)
     return
 
 
