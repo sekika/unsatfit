@@ -100,9 +100,9 @@ def message(lang, ID, URL='./'):
         return 'Sample output'
     if ID == 'help':
         if lang == 'ja':
-            return '<h2>引用</h2>\n<p>SWRC Fit または unsatfit を使った研究成果を公表するときには、この論文を引用して下さい。SWRC Fit は <a href="https://sekika.github.io/unsatfit/">unsatfit</a> のライブラリを使って計算をしています。\n' \
+            return '<h2>引用</h2>\n<p>SWRC Fit または unsatfit を使った研究成果を公表するときには、この論文を引用して下さい。SWRC Fit は <a href="https://sekika.github.io/unsatfit/">unsatfit</a> のライブラリを使って計算をしています。</p>\n' \
                 + '<ul><li>' + message(lang, 'seki2023') + '</li></ul>'
-        return '<h2>Citation</h2>\n<p><p>Please cite this paper when you publish your work using this program, SWRC Fit or unsatfit. SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.\n' \
+        return '<h2>Citation</h2>\n<p>Please cite this paper when you publish your work using this program, SWRC Fit or unsatfit. SWRC Fit uses <a href="https://sekika.github.io/unsatfit/">unsatfit</a> library.</p>\n' \
             + '<ul><li>' + message(lang, 'seki2023') + '</li></ul>'
     if ID == 'ack':
         if lang == 'ja':

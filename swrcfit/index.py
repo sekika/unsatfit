@@ -985,7 +985,7 @@ def calc(f):
 
 def showdata(f):
     print(
-        f'<div align="center"><img src="{IMAGEFILE}" alt="Figure"></div>')
+        f'<div style="text-align: center;"><img src="{IMAGEFILE}" alt="Figure"></div>')
     print('<h2>Original data</h2><table border="1"><tr><th>h<th>&theta;')
     for i in list(zip(*f.swrc)):
         print(f'<tr><td>{i[0]}<td>{i[1]}</tr>')
@@ -1056,10 +1056,9 @@ def printhead(lang, f):
 def printform(lang, getlang, f):
     url = './'
     print(f'<p>{message(lang, "langbar", url)}</p>\n<h1>SWRC Fit</h1>\n<p>{message(lang, "description")}</p>\n<form action="{url}" method="post">', flush=True)
-    print(f'''<div align="center">
-<table>
+    print(f'''<table style="margin-left: auto; margin-right: auto; border-collapse: collapse;">
 <tr>
-<td width="240">
+<td style="width: 240px;">
   <p>{message(lang, "modelselect")}</p>
 ''')
     for ID in model('all'):
@@ -1084,7 +1083,7 @@ def printform(lang, getlang, f):
         print(f'    <option value="{unsoda}">{texture}')
     print('  <option value="clear">*** Clear input ***')
     print(f'''  </select>
-<div><textarea name="input" id="input" rows="15" cols="27" wrap="off">{f.given_data}</textarea></div>
+<div><textarea name="input" id="input" rows="15" cols="27" style="white-space: nowrap;">{f.given_data}</textarea></div>
 </td></tr>
 <tr>
 <td colspan="2">
@@ -1096,7 +1095,7 @@ def printform(lang, getlang, f):
 <ul>
 <li><input type="radio" name="cqr" value="fit">Fit &theta;<sub>r</sub>
 <input type="radio" name="cqr" value="fix">&theta;<sub>r</sub> = <input type="text" name="qrin" id="qrin" size="5" maxlength="10" value="0">
-<input type="radio" name="cqr" value="both" checked="checked">Fit &theta;<sub>r</sub> for unimodal and &theta;<sub>r</sub> = 0 for bimodal</sub>
+<input type="radio" name="cqr" value="both" checked="checked">Fit &theta;<sub>r</sub> for unimodal and &theta;<sub>r</sub> = 0 for bimodal
 <li><input type="radio" name="cqs" value="fit" checked="checked">Fit &theta;<sub>s</sub>
 <input type="radio" name="cqs" value="max">&theta;<sub>s</sub> = &theta;<sub>max</sub>
 <input type="radio" name="cqs" value="fix">&theta;<sub>s</sub> = <input type="text" name="qsin" id="qsin" size="5" maxlength="10" value="">
@@ -1114,11 +1113,11 @@ def printform(lang, getlang, f):
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
 </div>
-<p><input type="hidden" name="lang" value="{getlang}">\n  <div align="center"><input type="submit" name="button" value="{message(lang, 'calculate')}"></div>\n</form></p>
+<p><input type="hidden" name="lang" value="{getlang}"></p>\n  <div style="text-align: center;"><input type="submit" name="button" value="{message(lang, 'calculate')}"></div>\n
 </td>
 </tr>
-</tr>
-</table></div>''', flush=True)
+</table>
+</form>''', flush=True)
     # Read setting from local storage
     for i in model('all'):
         loadchecked(i)
@@ -1189,7 +1188,7 @@ def printhelp(lang, f):
     id = list(f.sampledata)[random.randint(0, 7)]
     texture = f.sampledata[id]['Texture']
     soil = f.sampledata[id]['Soil sample']
-    print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<p><div align="center"><img src="img/{id}.png" alt="Sample output"></div></p>')
+    print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<div style="text-align: center;"><img src="img/{id}.png" alt="Sample output"></div>')
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
     print(message(lang, 'question'))
