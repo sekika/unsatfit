@@ -2,7 +2,7 @@
 
 This directory contains files for running [SWRC Fit](https://purl.org/net/swrc/) locally on your machine using Docker. It might be useful when the server is down or you have unstable network connection. Here is the instruction.
 
-- Install [Docker Desktop](https://www.docker.com/) on your machine and run.
+- Install [Docker Desktop](https://www.docker.com/) (or [OrbStack](https://orbstack.dev/) if you are using Mac) on your machine and run.
 - Clone this repository by `git clone https://github.com/sekika/unsatfit.git`
 - Go to this directory by `cd unsatfit/docker`
 - Install a system (build an image and create a container) for SWRC Fit by `make install`.
