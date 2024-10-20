@@ -40,5 +40,6 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2024-03-13: [User manual of SWRC Fit and unsatfit](https://doi.org/10.34428/0002000817) was published at JTUNS.
 - 2024-05-14: [hystfit](https://sekika.github.io/hystfit/) for calculating hysteresis of SWRC was released.
 - 2024-06-04: [unsatfit 5.2](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)) and SWRC Fit now offered output options for parameter uncertainty at the [user's request](https://github.com/sekika/unsatfit/discussions/6).
+- 2024-10-20: Received JSSP award (土壌物理学会賞) for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35) from Japanese Society of Soil Physics.
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
