@@ -1044,7 +1044,7 @@ def printhead(lang, f):
     for ID in f.sampledata:
         d = f.sampledata[ID]
         unsoda = escape(d['UNSODA'])
-        text = "\\n".join(escape(d['text']).splitlines())
+        text = "\\r\\n".join(escape(d['text']).splitlines())
         print(
             f'if(document.getElementById("sample").value == "{unsoda}"){{')
         print(f'  document.getElementById("input").value = "{text}";')

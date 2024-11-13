@@ -66,8 +66,12 @@ strong {
 	font-weight: bold;
 }
 
+#input {
+  white-space: pre-wrap;
+}
+
 div.center {
-        text-align: center;
+  text-align: center;
 }
 
 div.right {
