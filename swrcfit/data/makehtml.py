@@ -81,7 +81,7 @@ def ref1():
 <li>Kosugi, K. (1996): Lognormal distribution model for unsaturated soil hydraulic properties. <i>Water Resour. Res.</i> 32: 2697-2703. <a href="http://dx.doi.org/10.1029/96WR01776">doi:10.1029/96WR01776</a></li>
 <li>Seki, K. (2007): SWRC fit - a nonlinear fitting program with a water retention curve for soils having unimodal and bimodal pore structure. <i>Hydrol. Earth Syst. Sci. Discuss.</i>, 4: 407-437. <a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a></li>
 <li>Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21, e20168. <a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a></li>
-<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2023). Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. <a href="https://doi.org/10.2478/johh-2022-0039?>doi:10.2478/johh-2022-0039</a></a>
+<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2023). Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. <a href="https://doi.org/10.2478/johh-2022-0039">doi:10.2478/johh-2022-0039</a>
 '''
 
 
@@ -274,6 +274,8 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
     f.write(bitable(noch))
     f.write('''
 
+<p>特に、日本の土壌では団粒が発達した土壌においてはバイモーダルモデルが有効であり、バイモーダルモデルの回帰には特段の工夫がされている(<a href="https://doi.org/10.34467/jssoilphysics.155.0_35">関ら, 2023</a>)。</p>
+
 <p>サンプルデータ silty loam (UNSODA 2760) のSWRCを示す。上記のバイモーダルモデルと、比較のためにVGモデルを示している。バイモーダルモデルではθ<sub>r</sub> = 0 と固定し、VGモデルではすべてのパラメータを自由変数としている。</p>
 
 <div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
@@ -297,7 +299,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <h2>透水性関数</h2>
 
-<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。それが実用的な式であることは<a href="https://doi.org/10.2478/johh-2022-0039">Seki et al. (2023)</a>が示している。<a href="https://sekika.github.io/unsatfit/">unsatfit</a>によって透水性関数のフィッティングが可能である。</p>
+<p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>; <a href="https://www.jstage.jst.go.jp/article/jssoilphysics/154/0/154_19/_article/-char/ja/">関・取出, 2023</a>)。それが実用的な式であることは<a href="https://doi.org/10.2478/johh-2022-0039">Seki et al. (2023)</a>が示している。<a href="https://sekika.github.io/unsatfit/">unsatfit</a>によって透水性関数のフィッティングが可能である。</p>
 
 <h2>モデルの略記について</h2>
 
@@ -309,6 +311,8 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
     f.write('''
 <li>関勝寿 (2017): <a href="https://toyo.repo.nii.ac.jp/?action=repository_uri&item_id=8838&file_id=22&file_no=1">水分特性曲線の回帰プログラム SWRC Fit (1)−水分特性モデル−</a>. 東洋大学紀要自然科学篇 61: 41-65.
 <li>関勝寿, 取出伸夫, M.Th. van Genuchten (2021): <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">線形和水分保持関数に対するMualemモデルの不飽和透水係数</a>. 2021年度土壌物理学会大会 講演要旨集 pp.30-31.
+<li>関勝寿, 取出伸夫 (2023): 一般化透水モデルによる不飽和透水係数の閉形式解. 土壌の物理性 154: 19-27. <a href="https://doi.org/10.34467/jssoilphysics.154.0_19">doi:10.34467/jssoilphysics.154.0_19</a>
+<li>関勝寿, 岩田幸良, 柳井洋介, 亀山幸司 (2023): 団粒構造が発達した土壌の水分特性曲線の回帰手法の改良 ーdual-van Genuchtenモデルのパラメータ決定の自動化に向けた取り組みー</a>. 土壌の物理性 155: 35-44. <a href="https://doi.org/10.34467/jssoilphysics.155.0_35">doi:10.34467/jssoilphysics.155.0_35</a>
 ''')
     f.write(ref2())
     f.write('''
