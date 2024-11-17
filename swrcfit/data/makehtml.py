@@ -43,9 +43,8 @@ This is a list of figures produced by <a href="./">SWRC Fit</a>. Sample data pro
 <p>Persistent URL of this page is <a href="http://purl.org/net/swrc/fig.html">http://purl.org/net/swrc/fig.html</a>.
 </p>
 <p>
-Author: <a href="http://www2.toyo.ac.jp/~seki_k/en/">Katsutoshi Seki</a>
+Author: <a href="https://sekika.github.io/toyo/en/">Katsutoshi Seki</a>
 </p>
-<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
 </body>
 </html>
 ''')
@@ -201,9 +200,8 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 <p>Persistent URL of this page is <a href="http://purl.org/net/swrc/model.html">http://purl.org/net/swrc/model.html</a>.
 </p>
 <p>
-Author: <a href="http://www2.toyo.ac.jp/~seki_k/en/">Katsutoshi Seki</a>
+Author: <a href="https://sekika.github.io/toyo/en/">Katsutoshi Seki</a>
 </p>
-<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
 </body>
 </html>
 ''')
@@ -320,9 +318,8 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 <p>このページの恒久的な URL (PURL) は <a href="http://purl.org/net/swrc/model.html">http://purl.org/net/swrc/model.html</a> です。
 </p>
 <p>
-著者: <a href="http://www2.toyo.ac.jp/~seki_k/">関 勝寿</a>
+著者: <a href="https://sekika.github.io/toyo/">関 勝寿</a>
 </p>
-<p style="text-align:right;"><img src="https://seki.webmasters.gr.jp/swrc/npc.cgi?L=http://purl.org/net/swrc/" alt="counter"></p>
 </body>
 </html>
 ''')
