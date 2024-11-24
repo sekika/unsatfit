@@ -230,6 +230,10 @@ def message(lang, ID, URL='./'):
         if lang == 'ja':
             return '<a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER （作成者：AUTHOR）が ARCH の Python PYV で動いています。<a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">ローカルサーバーで動かす</a>。'
         return '<a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a> with <a href="https://sekika.github.io/unsatfit/">unsatfit</a> version VER created by AUTHOR running with Python PYV on ARCH. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">Run local server</a>.'
+    if ID == 'history':
+        if lang == 'ja':
+            return 'このサービスは<a href="URL"><strong>YEAR年間</strong>運用を続けています</a>。'
+        return 'This service has been <a href="URL">running for <strong>YEAR years</strong></a>.'
     if ID == 'author':
         if lang == 'ja':
             return '<a href="https://sekika.github.io/toyo/">関勝寿</a>'

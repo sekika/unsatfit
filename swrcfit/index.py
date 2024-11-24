@@ -767,7 +767,10 @@ def maincgi():
     pyver = str(sys.version_info.major) + '.' + \
         str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
     footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
-    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;"><a href="https://sekika.github.io/unsatfit/#history">This service is running for {datetime.datetime.now().year - 2007} years</a></p></body></html>', flush=True)
+    history = message(lang, "history")
+    history = history.replace('YEAR', str(datetime.datetime.now().year - 2007))
+    history = history.replace('URL', 'https://sekika.github.io/unsatfit/#history')
+    print(f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;">{history}</a></p></body></html>', flush=True)
     return
 
 
