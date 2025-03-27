@@ -3,6 +3,7 @@
 cd `echo $0 | sed -e 's/[^/]*$//'`
 
 # test
+./format.sh
 ./test.sh
 
 # Make package

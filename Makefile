@@ -7,18 +7,14 @@ up:
 	w3m -dump https://seki.webmasters.gr.jp/swrc/
 
 test:
-	cd dev; ./test.py
+	cd dev; ./test.sh
 
 test-swrc:
 	swrcfit/index.py -c
 	swrcfit/index.py -t
 
 format:
-	cd unsatfit; autopep8 -i unsatfit.py
-	cd swrcfit; autopep8 -i *.py
-	cd swrcfit/data; autopep8 -i *.py
-	- flake8 unsatfit/unsatfit.py | grep -v "E501"
-	- flake8 swrcfit/index.py | grep -v "E501"
+	cd dev; ./format.sh
 
 deb:
 	python3 setup.py --command-packages=stdeb.command bdist_deb

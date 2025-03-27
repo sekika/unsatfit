@@ -11,15 +11,15 @@ import sys
 UNSODA_DATA = "https://sekika.github.io/file/unsoda/unsoda.json"
 MIN_NUM_DATA = 7
 EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
-              2374, 2672, 3205, 3341, 4241, 4253, 4273, 4281, 4283, 4291, 4442,
-              4450, 4574, 4610, 4720)
+              2374, 2672, 3205, 3341, 4241, 4253, 4272, 4273, 4281, 4283,
+              4291, 4442, 4450, 4574, 4610, 4720)
 # See definition of DF3, DF4, DF5 models at https://doi.org/10.34428/0002000817
 DF3_MODEL = ['BC', 'VG', 'KO']
 DF3_MIN_R2 = (0.71, 0.86)
-DF4_MODEL = ['DBCH', 'DVC', 'KBC', 'FX']
+DF4_MODEL = ['DBC', 'DVC', 'KBC', 'FX']
 DF4_MIN_R2 = (0.83, 0.90)
-DF5_MODEL = ['DV']
-DF5_MIN_R2 = (0.95, 0.96)
+DF5_MODEL = ['DB', 'DV']
+DF5_MIN_R2 = (0.93, 0.95)
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/
@@ -27,7 +27,7 @@ response = requests.get(UNSODA_DATA)
 response.raise_for_status()
 unsoda = response.json()
 h_t = unsoda["lab_drying_h-t"]
-ids = [x for x in h_t if int(x) not in EXCLUDE_ID]
+ids = [int(x) for x in h_t if int(x) not in EXCLUDE_ID]
 parser = argparse.ArgumentParser(description="Test unsatfit models")
 parser.add_argument('-n', '--num', type=int, default=len(ids),
                     help=f'numbers of samples to test (default {len(ids)})')
@@ -39,12 +39,10 @@ random.shuffle(ids)
 ids = ids[:args.num]
 ids.sort()
 for id in ids:
-    if int(id) in EXCLUDE_ID:
-        continue
     tested += 1
-    texture = unsoda['general'][id]['texture']
-    h = np.array(h_t[id][0])
-    theta = np.array(h_t[id][1])
+    texture = unsoda['general'][str(id)]['texture']
+    h = np.array(h_t[str(id)][0])
+    theta = np.array(h_t[str(id)][1])
     if len(h) < MIN_NUM_DATA:
         continue
     f = unsatfit.Fit()
@@ -66,7 +64,7 @@ for id in ids:
             const_ini = [[1, max(theta)], 'qr=0']
             q = [max(theta)]
             min_r2_init, min_r2 = DF4_MIN_R2
-            if model == 'DBCH':
+            if model == 'DBC':
                 min_r2 = 0.86
         if model in DF5_MODEL:
             const_ini = [[1, max(theta)], 'qr=0']
@@ -98,9 +96,11 @@ for id in ids:
                 print(
                     f'https://seki.webmasters.gr.jp/swrc/?unsoda={id}&place=lab&process=drying')
             print(f'===== {model} model =====')
-            print(f'get_init() = {get_init}')
+            formatted = f"[{', '.join(f'{x:.5g}' for x in get_init)}]"
+            print(f'get_init() = {formatted}')
             print(message_ini)
-            print(f'get_wrf() = {get_wrf}')
+            formatted = f"[{', '.join(f'{x:.5g}' for x in get_wrf)}]"
+            print(f'get_wrf() = {formatted}')
             print(message_wrf)
             if stop:
                 f.line_legend = f'{model} get_wrf'

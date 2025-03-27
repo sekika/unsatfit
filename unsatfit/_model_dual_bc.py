@@ -6,6 +6,8 @@ def init_model_bc2(self):
     self.model['DB'] = self.model['dual-BC'] = self.model['bc2f'] = {
         'function': (self.bc2f, self.bc2f_k),
         'bound': self.bound_bc2f,
+        'get_init': self.get_init_bc2f,
+        'get_wrf': self.get_wrf_bc2f,
         'param': ['qs', 'qr', 'w1', 'hb1', 'l1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
         'k-only': [7, 8, 9, 10]
     }
@@ -58,6 +60,75 @@ def bc2f_k(self, p, x):
     bunshi = w1b1 * s1 + w2b2 * s2
     bunbo = w1b1 + w2b2
     return ks * self.bc2f_se(par[:7], x)**p * (bunshi / bunbo)**r
+
+
+def get_init_bc2f(self):
+    from .unsatfit import Fit
+    x, t = self.swrc
+    y = t / max(t)
+    f = Fit()
+    f.debug = self.debug
+    f.swrc = (x, y)
+    hb, hc, l1, l2 = f.get_init_bc2()
+    f.set_model('bc2f', const=['qs=1', 'qr=0'])
+    w1 = 1 / (1 + (hc / hb)**(l2 - l1))
+    f.ini = (w1, hb, l1, hb, l2)
+    f.optimize()
+    if f.success:
+        ch = f.fitted
+        ch_r2 = f.r2_ht
+    else:
+        ch = f.ini
+        ch_r2 = f.f_r2_ht(f.ini, x, y)
+    if len(x) < 6:
+        return ch
+    swrc = list(zip(*f.swrc))
+    swrc_sort = sorted(swrc, key=lambda x: x[0])
+    swrc = list(zip(*swrc_sort))
+    h = np.array(swrc[0])
+    t = np.array(swrc[1])
+    t_med = (max(t) + min(t)) / 2
+    for i in range(len(h)):
+        if t[i] < t_med:
+            break
+    if i < 3:
+        i = 3
+    if i > len(h) - 3:
+        i = len(h) - 3
+    f.swrc = (h[:i], t[:i] - t[i])
+    try:
+        hb1, l1 = f.get_init_bc()
+    except BaseException:
+        return ch
+    f.swrc = (h[i:], t[i:])
+    try:
+        hb2, l2 = f.get_init_bc()
+    except BaseException:
+        return ch
+    f.set_model('DB', const=['qs=1', 'qr=0'])
+    f.swrc = (h, t)
+    f.ini = (1 - t[i], hb1, l1, hb2, l2)
+    f.optimize()
+    if not f.success:
+        return ch
+    if ch_r2 > f.r2_ht:
+        return ch
+    return f.fitted
+
+
+def get_wrf_bc2f(self):
+    from .unsatfit import Fit
+    f = Fit()
+    f.swrc = self.swrc
+    f.debug = self.debug
+    w1, hb1, l1, hb2, l2 = f.get_init_bc2f()
+    f.set_model('bc2f', const=['qr=0'])
+    f.ini = (max(f.swrc[1]), w1, hb1, l1, hb2, l2)
+    f.optimize()
+    if f.success:
+        return (f.fitted[0], 0, *f.fitted[1:])
+    return (f.ini[0], 0, *f.ini[1:])
+
 
 # dual-BC-CH model
 
