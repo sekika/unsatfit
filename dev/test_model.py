@@ -16,7 +16,7 @@ EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
 # See definition of DF3, DF4, DF5 models at https://doi.org/10.34428/0002000817
 DF3_MODEL = ['BC', 'VG', 'KO']
 DF3_MIN_R2 = (0.71, 0.86)
-DF4_MODEL = ['DBCH', 'DVC', 'KBC']
+DF4_MODEL = ['DBCH', 'DVC', 'KBC', 'FX']
 DF4_MIN_R2 = (0.83, 0.90)
 DF5_MODEL = ['DV']
 DF5_MIN_R2 = (0.95, 0.96)

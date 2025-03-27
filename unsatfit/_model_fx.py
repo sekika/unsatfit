@@ -7,6 +7,7 @@ def init_model_fx(self):
         'function': (self.fx, False),
         'bound': self.bound_fx,
         'get_init': self.get_init_fx,
+        'get_wrf': self.get_wrf_fx,
         'param': ['qs', 'qr', 'a', 'm', 'n'],
         'k-only': []
     }
@@ -58,3 +59,23 @@ def get_init_fx(self):  # a, m, n
     if f.success:
         return f.fitted[1:]
     return vg
+
+
+def get_wrf_fx(self):
+    from .unsatfit import Fit
+    f = Fit()
+    f.swrc = self.swrc
+    f.debug = self.debug
+    a, m, n = f.get_init_fx()
+    f.set_model('fx', const=[])
+    qs = max(f.swrc[1])
+    f.ini = (qs, 0, a, m, n)
+    f.optimize()
+    if f.success:
+        return f.fitted
+    f.b_qs = (qs * 0.95, qs * 1.5)
+    f.b_qr = (0, min(f.swrc[1]))
+    f.optimize()
+    if f.success:
+        return f.fitted
+    return f.ini

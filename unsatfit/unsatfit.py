@@ -27,7 +27,7 @@ class Fit:
     from ._model_bc import init_model_bc, bound_bc, bc, bc_se, bc_k, get_init_bc, get_wrf_bc  # type: ignore
     from ._model_vg import init_model_vg, bound_vg, vg, vg_se, vg_k, get_init_vg, get_wrf_vg, bound_mvg, mvg, mvg_se, mvg_k  # type: ignore
     from ._model_ko import init_model_ln, bound_ln, ln, ln_se, ln_k, get_init_ln, get_wrf_ln  # type: ignore
-    from ._model_fx import init_model_fx, bound_fx, fx, fx_se, get_init_fx  # type: ignore
+    from ._model_fx import init_model_fx, bound_fx, fx, fx_se, get_init_fx, get_wrf_fx  # type: ignore
     from ._model_dual_bc import init_model_bc2, bound_bc2f, bc2f, bc2f_se, bc2f_k, bound_bc2, bc2, bc2_se, bc2_k, get_init_bc2, get_wrf_bc2, bc2ca_k  # type: ignore
     from ._model_dual_vg import init_model_vg2, bound_vg2, vg2, vg2_se, vg2_k, get_init_vg2, get_wrf_vg2, bound_vg2ch, vg2ch, vg2ch_se, vg2ch_k, get_init_vg2ch, get_wrf_vg2ch, vg2chca_k  # type: ignore
     from ._model_dual_ko import init_model_ln2, bound_ln2, ln2, ln2_se, ln2_k, bound_ln2ch, ln2ch, ln2ch_se, ln2ch_k  # type: ignore
