@@ -13,7 +13,7 @@ UNSODA_DATA = "https://sekika.github.io/file/unsoda/unsoda.json"
 response = requests.get(UNSODA_DATA)
 response.raise_for_status()
 unsoda = response.json()
-h_t = unsoda["field_drying_h-t"]
+h_t = unsoda["lab_drying_h-t"]
 for id in h_t:
     texture = unsoda['general'][id]['texture']
     h = np.array(h_t[id][0])
@@ -31,6 +31,7 @@ for id in h_t:
     f.label_head = 'Pressure head'
     f.label_theta = 'Volumetric water content'
     f.legend_loc = 'upper right'  # Location of the legend
+    f.legend_opacity = 0.8
     # Save figure
     f.save_fig = True
     print(f'======== UNSODA {id} {texture} ========')
