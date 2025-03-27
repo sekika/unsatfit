@@ -59,8 +59,8 @@ def vgfs_k(self, p, x):
                 4 - m * (m - 1) * (m - 2) * w**3 / 18
 
         def g(w, m):
-            return np.where(w > 0.9, gs(0.9, m) +
-                            h(0.1, m) - h(1 - w, m), gs(w, m))
+            return np.where(w > 0.9, gs(0.9, m)
+                            + h(0.1, m) - h(1 - w, m), gs(w, m))
 
         def f(w, m):
             return (1 - w)**m * (np.log((1 - w) / w) - 1 / m)

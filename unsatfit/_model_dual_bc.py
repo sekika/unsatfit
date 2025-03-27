@@ -134,13 +134,21 @@ def get_init_bc2(self):  # hb, hc, l1, l2
     f.b_lambda2 = (0, max(l, l2))
     f.optimize()
     if f.success:
-        return f.fitted
-    f.ini = (hb, hb, l, l)
+        r2 = f.r2_ht
+        fitted = f.fitted
+    else:
+        r2 = 0
+    f.ini = (hb, hc, l, l / 5)
     f.b_lambda1 = (0, np.inf)
     f.b_lambda2 = (0, np.inf)
     f.optimize()
     if f.success:
-        return f.fitted
+        if f.r2_ht > r2:
+            return f.fitted
+        else:
+            return fitted
+    if r2 > 0:
+        return fitted
     return f.ini
 
 
@@ -154,7 +162,20 @@ def get_wrf_bc2(self):
     f.ini = (max(f.swrc[1]), hb, hc, l1, l2)
     f.optimize()
     if f.success:
-        return (f.fitted[0], 0, *f.fitted[1:])
+        r2 = f.r2_ht
+        fitted = (f.fitted[0], 0, *f.fitted[1:])
+    else:
+        r2 = 0
+    hb, l = f.get_init_bc()
+    f.ini = (max(f.swrc[1]), hb, hb, l * 5, l)
+    f.optimize()
+    if f.success:
+        if f.r2_ht > r2:
+            return (f.fitted[0], 0, *f.fitted[1:])
+        else:
+            return fitted
+    if r2 > 0:
+        return fitted
     return (f.ini[0], 0, *f.ini[1:])
 
 # dual-BC-CH constant a model

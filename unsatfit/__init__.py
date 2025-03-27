@@ -1,2 +1,2 @@
 """init.py."""
-from .unsatfit import Fit
+from .unsatfit import Fit  # noqa: F401
