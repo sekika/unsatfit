@@ -3,10 +3,14 @@ import numpy as np
 import pandas as pd
 import unsatfit
 import requests
-import json
+import sys
 
 MODELS = ['VG', 'DVC', 'DV']
 UNSODA_DATA = "https://sekika.github.io/file/unsoda/unsoda.json"
+# Bound of theta_s / max(theta)
+BOUND_THETA_S = (0.95, 1.5)
+# 
+MAX_N = 8
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/
@@ -38,19 +42,28 @@ for id in h_t:
     f.swrc = (h, theta)
     f.filename = f'unsoda{id}.pdf'
     minAIC = 99999
+    f.max_y1 = max(theta) * 1.2
+    if max(theta) * 0.6 > min(theta):
+        f.legend_loc = 'upper right'
+    else:
+        f.legend_loc = 'lower right'
     for model in MODELS:
         if model in ['VG']:
             const = ['q=1']
             q = [max(theta), 0]
+            f.b_q = (0, np.inf)
         if model in ['DVC', 'DV']:
             const = ['qr=0', 'q=1']
             q = [max(theta)]
+            f.b_q = (0, 1 - 1/MAX_N)
         f.set_model(model, const=const)
+        f.b_qs = (max(theta) * x for x in BOUND_THETA_S)
         f.ini = (*q, *f.get_init())
         f.optimize()
+        f.max_y1 = max(f.max_y1, f.fitted[0] * 1.2)
         if not f.success:
             print(f.message)
-            exit(1)
+            sys.exit()
         print(f'===== {model} model with {",".join(const)} =====')
         print(f.message)
         if f.perr is not None:

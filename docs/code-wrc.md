@@ -32,5 +32,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 
 ## UNSODA data
 - Use [sample code for multiple curves with UNSODA data](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/unsoda.py).
-- It uses [UNSODA data](https://sekika.github.io/file/unsoda/)
+- It uses laboratory drying curves of [UNSODA data](https://sekika.github.io/file/unsoda/).
+- Upper limits of &theta;<sub>s</sub> / max(&theta;) = 1.5 and n<sub>1</sub>, n<sub>2</sub> = 8 are imposed.
 - The produced PDF files are [concatenated](https://gist.github.com/sekika/1e8811868cebeca6c3443c69849929db) and shown [here](sample-wrc/unsoda.pdf).
+- With [UNSODA viewer](https://sekika.github.io/unsoda/), you can select a specific soil sample and send data directly to SWRC Fit by following the link labelled "Fit with various water retention models".
