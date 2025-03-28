@@ -1,22 +1,22 @@
 # unsatfit
 
-unsatfit is a Python library for optimizing parameters of functions of soil hydraulic properties; water retention function and unsaturated hydraulic conductivity function. The equations are explained in Seki et al. (2022) and shown to be useful for practical applications in Seki et al. (2023).
+unsatfit is a Python library for optimizing parameters of functions related to soil hydraulic properties, specifically the water retention function and the unsaturated hydraulic conductivity function. The equations are explained in Seki et al. (2022) and demonstrated to be useful for practical applications in Seki et al. (2023).
 
 ## Document
 
-See the full document at https://arxiv.org/abs/2302.00472
+For the full documentation, visit https://doi.org/10.34428/0002000817
 
-See the quick reference at https://sekika.github.io/unsatfit/
+For quick references and sample codes, visit https://sekika.github.io/unsatfit/
 
 ## Example output
 
-This is an example output of this program; water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam fitted with KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.
+This is an example output of this program: the water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam, fitted with the KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.
 
 ![KBC](https://sekika.github.io/unsatfit/sample/KBC.png "KBC")
 
 ## SWRC Fit
 
-SWRC Fit is a web interface which uses unsatfit and determines parameters for water retention function.
+SWRC Fit is a web interface which uses unsatfit to determine parameters for water retention function.
 
 - [SWRC Fit](https://seki.webmasters.gr.jp/swrc/)
 
