@@ -57,7 +57,7 @@ def get_init_pk(self, he):  # w1, hm, s1
     result = f.ini = (w1, h1, s1)
     f.set_model('Peters', const=[[1, 1], [2, 0], [6, he]])
     r2 = -1000
-    f.b_sigma = (0, 2.5)
+    f.b_sigma = (0, 3)
     for f.b_hm1 in [(h1 * 0.9, h1 * 1.1), (0, np.inf)]:
         f.optimize()
         if f.success and f.r2_ht > r2:
@@ -100,7 +100,6 @@ def get_wrf_pk(self, he):
         f2 = copy.deepcopy(f)
         f.b_sigma = (0, 3)
         f.optimize()
-        print(f.r2_ht, f2.r2_ht)
         if f.success and f.r2_ht > f2.r2_ht:
             return (f.fitted[0], 0, *f.fitted[1:], he)
         else:

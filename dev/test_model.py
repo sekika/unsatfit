@@ -24,12 +24,14 @@ EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
 # dual-KO-CH model is not included in the test, because it is not a recommended model
 DF3_MODEL = ['BC', 'VG', 'KO']
 DF3_MIN_R2 = (0.64, 0.86)
-DF4_MODEL = ['DBC', 'DVC', 'VBC', 'KBC', 'FX']
+DF4_MODEL = ['DBC', 'DVC', 'VBC', 'KBC', 'FX', 'PK']
 DF4_MIN_R2 = (0.83, 0.90)
 DBC_MIN_R2 = (0.75, 0.86)
-DF5_MODEL = ['DB', 'DV', 'DK', 'VB']
+PK_MIN_R2 = (0.67, 0.72)
+DF5_MODEL = ['DB', 'DV', 'DK', 'VB', 'KB']
 DF5_MIN_R2 = (0.92, 0.93)
-MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV', 'VB', 'KB']
+MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV', 'VB']
+PK_HE = 6.3e6 # H0 value for Peters model
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/
@@ -83,14 +85,21 @@ for id in ids:
             min_r2_init, min_r2 = DF4_MIN_R2
             if model == 'DBC':
                 min_r2_init, min_r2 = DBC_MIN_R2
+            if model == 'PK':
+                min_r2_init, min_r2 = PK_MIN_R2
         if model in DF5_MODEL:
             const_ini = [[1, max(theta)], 'qr=0']
             q = [max(theta)]
             min_r2_init, min_r2 = DF5_MIN_R2
         if model in MODEL_WITH_VG:
             const_ini.append('q=1')
+        if model == 'PK':
+            const_ini.append([6, PK_HE])
         f.set_model(model, const=const_ini)
-        get_init = f.get_init()
+        if model == 'PK':
+            get_init = f.get_init(PK_HE)
+        else:
+            get_init = f.get_init()
         f.ini = get_init
         f.optimize()
         f.data_legend = f'UNSODA {id}'
@@ -101,7 +110,10 @@ for id in ids:
         message_ini = f'get_init(): R2 = {f.r2_ht:.5} for {f.message}'
         r2_ht_ini = f.r2_ht
         f.set_model(model, const=[])
-        get_wrf = f.get_wrf()
+        if model == 'PK':
+            get_wrf = f.get_wrf(PK_HE)
+        else:
+            get_wrf = f.get_wrf()
         f.ini = get_wrf
         f.optimize()
         message_wrf = f'get_wrf(): R2 = {f.r2_ht:.5} for {f.message}'
