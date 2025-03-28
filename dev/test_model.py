@@ -29,7 +29,7 @@ DF4_MIN_R2 = (0.83, 0.90)
 DBC_MIN_R2 = (0.75, 0.86)
 DF5_MODEL = ['DB', 'DV', 'DK', 'VB']
 DF5_MIN_R2 = (0.92, 0.93)
-MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV', 'VB']
+MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV', 'VB', 'KB']
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/

@@ -6,6 +6,7 @@ def init_model_kobc(self):
     self.model['KOBC'] = self.model['KO1BC2'] = self.model['KB'] = self.model['kobc'] = {
         'function': (self.kobc, self.kobc_k),
         'bound': self.bound_kobc,
+        'get_init': self.get_init_kobc,
         'get_wrf': self.get_wrf_kobc,
         'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p', 'q', 'r'],
         'k-only': [7, 8, 9, 10]
@@ -13,6 +14,7 @@ def init_model_kobc(self):
     self.model['KOBCIP'] = self.model['KO1BC2-IP'] = self.model['KB-IP'] = self.model['kobcp2'] = {
         'function': (self.kobc, self.kobcp2_k),
         'bound': self.bound_kobcp2,
+        'get_init': self.get_init_kobc,
         'get_wrf': self.get_wrf_kobc,
         'param': ['qs', 'qr', 'w1', 'hm1', 'sigma1', 'hb2', 'l2', 'Ks', 'p1', 'p2', 'q'],
         'k-only': [7, 8, 9, 10]
@@ -77,14 +79,67 @@ def kobc_k(self, p, x):
     return ks * self.kobc_se(par[:7], x)**p * (bunshi / bunbo)**r
 
 
+def get_init_kobc(self):  # w1, hm1, sigma1, hb2, l2
+    from .unsatfit import Fit
+    x, t = self.swrc
+    y = t / max(t)
+    f = Fit()
+    f.debug = self.debug
+    f.swrc = (x, y)
+    w1, hm, sigma1, l2 = f.get_init_kobcch()
+    f.set_model('kobc', const=[[1, 1], [2, 0]])
+    f.ini = (w1, hm, sigma1, hm, l2)
+    f.optimize()
+    if f.success:
+        ch = f.fitted
+        ch_r2 = f.r2_ht
+    else:
+        ch = f.ini
+        ch_r2 = f.f_r2_ht(f.ini, x, y)
+    if len(x) < 6:
+        return ch
+    swrc = list(zip(*f.swrc))
+    swrc_sort = sorted(swrc, key=lambda x: x[0])
+    swrc = list(zip(*swrc_sort))
+    h = np.array(swrc[0])
+    t = np.array(swrc[1])
+    t_med = (max(t) + min(t)) / 2
+    for i in range(len(h)):
+        if t[i] < t_med:
+            break
+    if i < 3:
+        i = 3
+    if i > len(h) - 3:
+        i = len(h) - 3
+    f.swrc = (h[:i], t[:i] - t[i])
+    try:
+        hm1, sigma1 = f.get_init_ko()
+    except BaseException:
+        return ch
+    f.swrc = (h[i:], t[i:])
+    try:
+        hb2, l2 = f.get_init_bc()
+    except BaseException:
+        return ch
+    f.set_model('kobc', const=['qs=1', 'qr=0'])
+    f.swrc = (h, t)
+    f.ini = (1 - t[i], hm1, sigma1, hb2, l2)
+    f.optimize()
+    if not f.success:
+        return ch
+    if ch_r2 > f.r2_ht:
+        return ch
+    return f.fitted
+
+
 def get_wrf_kobc(self):
     from .unsatfit import Fit
     f = Fit()
     f.swrc = self.swrc
     f.debug = self.debug
-    w1, h1, s1, l2 = f.get_init_kobcch()
+    w1, hm1, sigma1, hb2, l2 = f.get_init_kobc()
     f.set_model('kobc', const=['qr=0'])
-    f.ini = (max(f.swrc[1]), w1, h1, s1, h1 * np.exp(2 * s1), l2)
+    f.ini = (max(f.swrc[1]), w1, hm1, sigma1, hb2, l2)
     f.optimize()
     if f.success:
         return (f.fitted[0], 0, *f.fitted[1:])

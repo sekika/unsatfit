@@ -114,7 +114,7 @@ def get_init_vgbc(self):  # w1, a1, m1, hb2, l2
         m1 = m_max
     f.swrc = (h[i:], t[i:])
     try:
-        hb2, l2 = f.get_init_vg()
+        hb2, l2 = f.get_init_bc()
     except BaseException:
         return ch
     f.set_model('vgbc', const=['qs=1', 'qr=0', 'q=1'])
