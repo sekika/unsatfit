@@ -164,21 +164,28 @@ def get_init_kobcch(self):  # w1, hm, sigma1, l2
     f.debug = self.debug
     f.swrc = (x, y)
     w1, a, m1, l2 = f.get_init_vgbcch()
+    if w1 < 0.1 or w1 > 0.9:
+        w1, a, m1, m2 = f.get_init_vg2ch()
+        n2 = 1 / (1 - m2)
+        l2 = n2 - 1
     f.set_model('kobcch', const=[[1, 1], [2, 0]])
-    if l2 < 0.1:
-        l2 = 0.1
+    if l2 < 0.01:
+        l2 = 0.01
+    if l2 > 3:
+        l2 = 2.99
     n1 = 1 / (1 - m1)
     sigma1 = 1.2 * (n1 - 1)**(-0.8)
-    if sigma1 > 2.5:
-        sigma1 = 2.5
+    if sigma1 > 2.99:
+        sigma1 = 2.99
     ini = f.ini = (w1, 1 / a, sigma1, l2)
-    f.b_sigma = (0, 2.5)
+    f.b_sigma = (0, 3)
+    f.b_lambda2 = (0.001, 3)
     f.optimize()
     if f.success:
         return f.fitted
     h, sigma = f.get_init_ln()
-    if sigma > 2.5:
-        sigma = 2.5
+    if sigma > 2.99:
+        sigma = 2.99
     f.ini = ([0.2, 0.8], [h, 1 / a], [sigma, ], [l2, ])
     f.optimize()
     if f.success:
@@ -195,7 +202,7 @@ def get_wrf_kobcch(self):
     f.set_model('kobcch', const=['qr=0'])
     qs = max(f.swrc[1])
     f.ini = (qs, w1, h1, s1, l2)
-    f.b_sigma = (0, 2.5)
+    f.b_sigma = (0, 4)
     f.optimize()
     if f.success:
         import copy
@@ -213,8 +220,8 @@ def get_wrf_kobcch(self):
     hb, hc, l1, l2 = f.get_init_bc2()
     w = 1 / (1 + (hc / hb)**(l2 - l1))
     s1 = 1.2 * l1**(-0.8)
-    if s1 > 2.5:
-        s1 = 2.5
+    if s1 > 4:
+        s1 = 4
     f.ini = (qs, w, hb, s1, l2)
     f.optimize()
     return (qs, 0, *f.ini[1:])
