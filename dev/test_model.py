@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# This script tests the get_init() and get_wrf() functions in the models of unsatfit.
+# https://sekika.github.io/unsatfit/model.html
+# Laboratory drying SWRCs in the UNSODA database with 7 or more data points
+# are used for testing. If the R^2 value falls below the predetermined threshold,
+# the test stops. To maintain a strict criterion, some data are excluded from testing.
+
 import argparse
 import numpy as np
 import pandas as pd
@@ -13,13 +19,16 @@ MIN_NUM_DATA = 7
 EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
               2374, 2672, 3205, 3341, 4241, 4253, 4272, 4273, 4281, 4283,
               4291, 4442, 4450, 4574, 4610, 4720)
+# Models for testing and the minimum R^2 values allowed.
 # See definition of DF3, DF4, DF5 models at https://doi.org/10.34428/0002000817
+# dual-KO-CH model is not included in the test, because it is not a recommended model
 DF3_MODEL = ['BC', 'VG', 'KO']
 DF3_MIN_R2 = (0.71, 0.86)
 DF4_MODEL = ['DBC', 'DVC', 'KBC', 'FX']
 DF4_MIN_R2 = (0.83, 0.90)
-DF5_MODEL = ['DB', 'DV']
-DF5_MIN_R2 = (0.93, 0.95)
+DBC_MIN_R2 = (0.83, 0.86)
+DF5_MODEL = ['DB', 'DV', 'DK']
+DF5_MIN_R2 = (0.93, 0.93)
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/
@@ -27,7 +36,8 @@ response = requests.get(UNSODA_DATA)
 response.raise_for_status()
 unsoda = response.json()
 h_t = unsoda["lab_drying_h-t"]
-ids = [int(x) for x in h_t if int(x) not in EXCLUDE_ID]
+ids = [int(x) for x in h_t if len(np.array(h_t[x][0]))
+       >= MIN_NUM_DATA and int(x) not in EXCLUDE_ID]
 parser = argparse.ArgumentParser(description="Test unsatfit models")
 parser.add_argument('-n', '--num', type=int, default=len(ids),
                     help=f'numbers of samples to test (default {len(ids)})')
@@ -43,8 +53,6 @@ for id in ids:
     texture = unsoda['general'][str(id)]['texture']
     h = np.array(h_t[str(id)][0])
     theta = np.array(h_t[str(id)][1])
-    if len(h) < MIN_NUM_DATA:
-        continue
     f = unsatfit.Fit()
     f.swrc = (h, theta)
     f.show_fig = True
@@ -65,7 +73,7 @@ for id in ids:
             q = [max(theta)]
             min_r2_init, min_r2 = DF4_MIN_R2
             if model == 'DBC':
-                min_r2 = 0.86
+                min_r2_init, min_r2 = DBC_MIN_R2
         if model in DF5_MODEL:
             const_ini = [[1, max(theta)], 'qr=0']
             q = [max(theta)]
