@@ -171,13 +171,16 @@ def get_init_ln2ch(self):  # w1, hm, sigma1, sigma2
     sigma1 = 1.2 * (n1 - 1) ** (-0.8)
     if sigma1 < sigma_min:
         sigma1 = sigma_min + 0.01
+    if sigma1 > 3:
+        sigma1 = 2.99
     n2 = 1 / (1 - m2)
     sigma2 = 1.2 * (n2 - 1) ** (-0.8)
     if sigma2 < sigma_min:
         sigma2 = sigma_min + 0.01
     if sigma2 > 3:
-        sigma2 = 3
+        sigma2 = 2.99
     f.set_model('ln2ch', const=[[1, 1], [2, 0]])
+    f.b_sigma = (sigma_min, 3)
     f.ini = (w1, hm, sigma1, sigma2)
     f.optimize()
     if f.success:
@@ -198,6 +201,7 @@ def get_wrf_ln2ch(self):
     w1, hm, sigma1, sigma2 = f.get_init_ln2ch()
     f.set_model('ln2ch', const=['qr=0'])
     f.ini = (max(f.swrc[1]), w1, hm, sigma1, sigma2)
+    f.b_sigma = (0.2, 3)
     f.optimize()
     if f.success:
         return (f.fitted[0], 0, *f.fitted[1:])

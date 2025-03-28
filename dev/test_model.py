@@ -21,12 +21,12 @@ EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
               4291, 4442, 4450, 4574, 4610, 4720)
 # Models for testing and the minimum R^2 values allowed.
 # See definition of DF3, DF4, DF5 models at https://doi.org/10.34428/0002000817
-# dual-KO-CH model is not included in the test, because it is not a recommended model
 DF3_MODEL = ['BC', 'VG', 'KO']
 DF3_MIN_R2 = (0.64, 0.86)
-DF4_MODEL = ['DBC', 'DVC', 'VBC', 'KBC', 'FX', 'PK']
+DF4_MODEL = ['DBC', 'DVC', 'DKC', 'VBC', 'KBC', 'FX', 'PK']
 DF4_MIN_R2 = (0.83, 0.90)
 DBC_MIN_R2 = (0.75, 0.86)
+DKC_MIN_R2 = (0.67, 0.88)
 PK_MIN_R2 = (0.67, 0.72)
 DF5_MODEL = ['DB', 'DV', 'DK', 'VB', 'KB']
 DF5_MIN_R2 = (0.92, 0.93)
@@ -44,6 +44,8 @@ ids = [int(x) for x in h_t if len(np.array(h_t[x][0]))
 parser = argparse.ArgumentParser(description="Test unsatfit models")
 parser.add_argument('-i', '--id', type=int,
                     help=f'test a specific sample')
+parser.add_argument('-m', '--model', type=str,
+                    help=f'test a specific model')
 parser.add_argument('-n', '--num', type=int, default=len(ids),
                     help=f'numbers of samples to test (default {len(ids)})')
 parser.add_argument('-s', '--start', type=int,
@@ -59,6 +61,9 @@ if args.start:
     ids = [x for x in ids if x >= args.start]
 if args.id:
     ids = [args.id]
+models = DF3_MODEL + DF4_MODEL + DF5_MODEL
+if args.model:
+    models = [args.model]
 for id in ids:
     tested += 1
     texture = unsoda['general'][str(id)]['texture']
@@ -72,7 +77,7 @@ for id in ids:
         print(f'======== UNSODA {id} {texture} ========')
         print(
             f'https://seki.webmasters.gr.jp/swrc/?unsoda={id}&place=lab&process=drying')
-    for model in DF3_MODEL + DF4_MODEL + DF5_MODEL:
+    for model in models:
         if args.verbose == 1:
             print(f'Testing UNSODA {id}\r', end='')
         if model in DF3_MODEL:
@@ -85,6 +90,8 @@ for id in ids:
             min_r2_init, min_r2 = DF4_MIN_R2
             if model == 'DBC':
                 min_r2_init, min_r2 = DBC_MIN_R2
+            if model == 'DKC':
+                min_r2_init, min_r2 = DKC_MIN_R2
             if model == 'PK':
                 min_r2_init, min_r2 = PK_MIN_R2
         if model in DF5_MODEL:
