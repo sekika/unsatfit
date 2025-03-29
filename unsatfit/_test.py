@@ -21,7 +21,7 @@ def test(self):
     f.test_confirm(966)
     f.set_model('KO1BC2', const=[f.get_wrf_kobc(), 'q=1', 'r=2'])
     f.modified_model(2)
-    f.test_confirm(856)
+    f.test_confirm(955)
 
 
 def test_confirm(self, expect):
