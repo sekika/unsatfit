@@ -12,6 +12,7 @@ cd ..
 python3 -m build
 
 # Token required. Check ~/.pypirc
+python3 -m pip install twine --upgrade
 twine upload --skip-existing dist/*
 
 # Uninstall unsatfit

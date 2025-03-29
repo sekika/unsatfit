@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 from codecs import open
 from os import path
 import configparser
@@ -37,7 +37,6 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
-        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows :: Windows 10',
@@ -49,8 +48,9 @@ setup(
         'Natural Language :: English',
     ],
     keywords='soil',
-    packages=['unsatfit'],
+    packages=find_namespace_packages(include=['unsatfit', 'unsatfit.*']),
     package_data={'unsatfit': ['data/*']},
     install_requires=['numpy', 'scipy', 'matplotlib', 'configparser'],
+    include_package_data=True,
     python_requires=">=3.7",
 )
