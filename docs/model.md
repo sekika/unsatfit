@@ -53,6 +53,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Name: fx, FX
 - WRF parameters: qs, qr, a, m, n
 - get_init() = get_init_fx(): returns a, m, n
+- get_wrf() = get_wrf_fx(): returns full WRF parameters
 - HCF: not provided
 - Bound: b_qs, b_qr, b_fxa, b_fxm, b_fxn
 
@@ -62,8 +63,8 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
 - Name: bc2f, DB, dual-BC
 - WRF parameters: qs, qr, w1, hb1, l1, hb2, l2
-- get_init() = not provided
-- get_wrf() = not provided
+- get_init() = get_init_bc2f(): returns w1, hb1, l1, hb2, l2
+- get_wrf() = get_wrf_bc2f(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hb, b_lambda1, b_hb2, b_lambda2, b_ks, b_p, b_q, b_r
@@ -105,8 +106,8 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Seki ([2007](http://dx.doi.org/10.5194/hessd-4-407-2007)), Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
 - Name: ln2, DK, dual-KO
 - WRF parameters: qs, qr, w1, hm1, sigma1, hm2, sigma2
-- get_init() = not provided
-- get_wrf() = not provided
+- get_init() = get_init_ln2(): returns w1, hm1, sigma1, hm2, sigma2
+- get_wrf() = get_wrf_ln2(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_hm2, b_sigma, b_ks, b_p, b_q, b_r
@@ -115,8 +116,8 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
 - Name: ln2ch, DKCH, dual-KO-CH
 - WRF parameters: qs, qr, w1, hm1, sigma1, sigma2
-- get_init() = not provided
-- get_wrf() = not provided
+- get_init() = get_init_ln2ch(): returns w1, hm1, sigma1, sigma2
+- get_wrf() = get_wrf_ln2ch(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_sigma, b_ks, b_p, b_q, b_r
@@ -126,8 +127,8 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - Name: vgbc, VGBC, VG1BC2, VB
 - WRF parameters: qs, qr, w1, a1, m1, hb2, l2, q
 - Converted parameter: n1 = q/(1-m1)
-- get_init() = not provided
-- get_wrf() = not provided
+- get_init() = get_init_vgbc: returns w1, a1, m1, hb2, l2 where q=1
+- get_wrf() = get_wrf_vgbc: returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_hb2, b_lambda2, b_ks, b_p, b_q, b_r
@@ -142,8 +143,8 @@ HCF variation: r=1 and independent p
 - Name: vgbcch, VGBCCH, VG1BC2-CH, VBC
 - WRF parameters: qs, qr, w1, a1, m1, l2, q
 - Converted parameter: n1 = q/(1-m1)
-- get_init() = get_init_vgbcch(): returns w1, a1, m1, l2 where qr=0, q=1
-- get_wrf() = not provided
+- get_init() = get_init_vgbcch(): returns w1, a1, m1, l2 where q=1
+- get_wrf() = get_wrf_vgbcch(): returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_lambda2, b_ks, b_p, b_q, b_r
@@ -157,7 +158,7 @@ HCF variation: r=1 and independent p
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
 - Name: kobc, KOBC, KO1BC2, KB
 - WRF parameters: qs, qr, w1, hm1, sigma1, hb2, l2
-- get_init() = not provided
+- get_init() = get_init_kobc(): returns w1, hm1, sigma1, hb2, l2
 - get_wrf() = get_wrf_kobc(): returns full WRF parameters with qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
@@ -190,7 +191,7 @@ HCF variation: r=1 and independent p
 - Name: pk, PK, Peters-KO, PE, Peters
 - WRF parameters: qs, qr, w1, hm, sigma1, he
 - qr=0 by definition. &theta;=0 at h=he.
-- get_init() = get_init_pk(he): w1, hm, sigma1
+- get_init() = get_init_pk(he): returns w1, hm, sigma1
 - get_wrf() = get_wrf_pk(he): returns full WRF parameters with qr=0
 - HCF: Peters (2013)
 - Parameters which only appears in HCF: Ks, p, a, omega
@@ -203,8 +204,8 @@ HCF variation: r=1 and independent p
 - qr=0 by definition. &theta;=0 at h=he.
 - q = 1 should be provided. Otherwise not calculated.
 - Converted parameter: n = q/(1-m) i.e. m = 1-q/n
-- get_init() = not provided
-- get_wrf() = not provided
+- get_init() = get_init_vgfs(he): returns qa, a, m where q=1
+- get_wrf() = get_wrf_vgfs(he): returns full WRF parameters with qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_he, b_ks, b_p, b_q, b_r
