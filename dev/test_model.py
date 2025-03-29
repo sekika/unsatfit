@@ -22,16 +22,19 @@ EXCLUDE_ID = (1112, 1114, 1161, 1162, 1163, 1165, 1166, 1211, 1300, 1460,
 # Models for testing and the minimum R^2 values allowed.
 # See definition of DF3, DF4, DF5 models at https://doi.org/10.34428/0002000817
 DF3_MODEL = ['BC', 'VG', 'KO']
-DF3_MIN_R2 = (0.64, 0.86)
-DF4_MODEL = ['DBC', 'DVC', 'DKC', 'VBC', 'KBC', 'FX', 'PK']
-DF4_MIN_R2 = (0.83, 0.90)
-DBC_MIN_R2 = (0.75, 0.86)
-DKC_MIN_R2 = (0.67, 0.88)
-PK_MIN_R2 = (0.67, 0.72)
+DF3_MIN_R2 = (0.64, 0.86)  # Criterion for DF3 models
+DF4_MODEL = ['DBC', 'DVC', 'DKC', 'VBC', 'KBC', 'FX', 'PK', 'VGFS']
+DF4_MIN_R2 = (0.83, 0.90)  # Criterion for DF4 models except the followings
+DBC_MIN_R2 = (0.75, 0.86)  # Criterion for dual-BC-CH model
+DKC_MIN_R2 = (0.67, 0.88)  # Criterion for dual-KO-CH model
+PK_MIN_R2 = (0.67, 0.72)  # Criterion for Peters model
+FS_MIN_R2 = (0.12, 0.74)  # Criterion for Fayer and Simmons model
 DF5_MODEL = ['DB', 'DV', 'DK', 'VB', 'KB']
-DF5_MIN_R2 = (0.92, 0.93)
-MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV', 'VB']
-PK_HE = 6.3e6 # H0 value for Peters model
+DF5_MIN_R2 = (0.92, 0.93)  # Criterion for DF5 models
+MODEL_WITH_VG = ['VG', 'DVC', 'VBC', 'DV',
+                 'VB', 'VGFS']  # Add q=1 as constants
+MODEL_WITH_HE = ['PK', 'VGFS']  # Require HE value
+HE = 6.3e6  # Pressure head of zero water content for Peters and Fayer models
 
 # Get UNSODA data
 # See https://sekika.github.io/file/unsoda/
@@ -49,7 +52,7 @@ parser.add_argument('-m', '--model', type=str,
 parser.add_argument('-n', '--num', type=int, default=len(ids),
                     help=f'numbers of samples to test (default {len(ids)})')
 parser.add_argument('-s', '--start', type=int,
-                    help=f'start test from this ID')
+                    help=f'start test from this sample ID')
 parser.add_argument('-v', '--verbose', type=int,
                     default=1, help='verbose level (0-2, default 1)')
 args = parser.parse_args()
@@ -94,17 +97,19 @@ for id in ids:
                 min_r2_init, min_r2 = DKC_MIN_R2
             if model == 'PK':
                 min_r2_init, min_r2 = PK_MIN_R2
+            if model == 'VGFS':
+                min_r2_init, min_r2 = FS_MIN_R2
         if model in DF5_MODEL:
             const_ini = [[1, max(theta)], 'qr=0']
             q = [max(theta)]
             min_r2_init, min_r2 = DF5_MIN_R2
         if model in MODEL_WITH_VG:
             const_ini.append('q=1')
-        if model == 'PK':
-            const_ini.append([6, PK_HE])
+        if model in MODEL_WITH_HE:
+            const_ini.append([6, HE])
         f.set_model(model, const=const_ini)
-        if model == 'PK':
-            get_init = f.get_init(PK_HE)
+        if model in MODEL_WITH_HE:
+            get_init = f.get_init(HE)
         else:
             get_init = f.get_init()
         f.ini = get_init
@@ -117,8 +122,8 @@ for id in ids:
         message_ini = f'get_init(): R2 = {f.r2_ht:.5} for {f.message}'
         r2_ht_ini = f.r2_ht
         f.set_model(model, const=[])
-        if model == 'PK':
-            get_wrf = f.get_wrf(PK_HE)
+        if model in MODEL_WITH_HE:
+            get_wrf = f.get_wrf(HE)
         else:
             get_wrf = f.get_wrf()
         f.ini = get_wrf
@@ -153,4 +158,4 @@ for id in ids:
             f.plot()
             sys.exit()
 if args.verbose > 0:
-    print(f'Test models for {tested} UNSODA samples completed without error.')
+    print(f'Testing of get_init() and get_wrf() functions for {', '.join(models)} models using {tested} UNSODA samples was completed successfully without errors.')

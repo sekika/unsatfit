@@ -6,6 +6,8 @@ def init_model_fs(self):
     self.model['VGFS'] = self.model['Fayer-VG'] = self.model['vgfs'] = {
         'function': (self.vgfs, self.vgfs_k),
         'bound': self.bound_vgfs,
+        'get_init': self.get_init_vgfs,
+        'get_wrf': self.get_wrf_vgfs,
         'param': ['qs', 'qr', 'qa', 'a', 'm', 'he', 'Ks', 'p', 'q', 'r'],
         'k-only': [6, 7, 9]
     }
@@ -26,7 +28,7 @@ def vgfs(self, p, x):
 def vgfs_se(self, p, x):
     qs, qr, qa, a, m, he, q = p
     vg = self.vg_se([a, m, q], x)
-    xi = 1 - np.log(x) / np.log(he)
+    xi = np.where(x > 1, 1 - np.log(x) / np.log(he), 1)
     xisa = xi * qa / qs
     return xisa + (1 - xisa) * vg
 
@@ -87,3 +89,34 @@ def vgfs_k(self, p, x):
     gamma_max = gamma(h0, a, m, n, hm, sa, gse) + gamma_0c
     integral = gamma(x, a, m, n, hm, sa, gse) / gamma_max
     return ks * self.vgfs_se(par[:6] + [q], x)**p * integral**r
+
+
+def get_init_vgfs(self, he):  # qa, a, m
+    from .unsatfit import Fit
+    x, t = self.swrc
+    y = t / max(t)
+    f = Fit()
+    f.debug = self.debug
+    f.swrc = (x, y)
+    w, a, m, l2 = f.get_init_vgbcch()
+    result = f.ini = (1 - w, a, m)
+    f.set_model('vgfs', const=['qs=1', 'qr=0', [6, he], 'q=1'])
+    f.optimize()
+    if f.success:
+        result = f.fitted
+    return result
+
+
+def get_wrf_vgfs(self, he):
+    from .unsatfit import Fit
+    f = Fit()
+    f.swrc = self.swrc
+    f.debug = self.debug
+    qa, a, m = f.get_init_vgfs(he)
+    f.set_model('vgfs', const=['qr=0', [6, he], 'q=1'])
+    qs = max(f.swrc[1])
+    f.ini = (qs, qa, a, m)
+    f.optimize()
+    if f.success:
+        return (f.fitted[0], 0, *f.fitted[1:], he, 1)
+    return (qs, 0, *f.ini[1:], he, 1)
