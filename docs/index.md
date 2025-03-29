@@ -44,5 +44,6 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2024-10-20: Received **JSSP award** ([土壌物理学会賞](https://js-soilphysics.com/prz)) for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35) from Japanese Society of Soil Physics.
 - 2024-11-13: [Poster presentation](https://researchmap.jp/sekik/presentations/48434771/attachment_file.pdf) about hysteresis and [hystfit](https://sekika.github.io/hystfit/) at [ASA, CSSA, SSSA meeting](https://researchmap.jp/sekik/presentations/48434771). [Photo with RVG](https://sekika.github.io/toyo/photos/RVG.html).
 - 2025-03-11: [Sample codes for drawing water retention curves](code-wrc.md) were provided after [discussion](https://github.com/sekika/unsatfit/discussions/8).
+- 2025-03-29: [unsatfit 5.3](https://pypi.org/project/unsatfit/#history) was released ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)) and initialization functions (get_init and get_wrf) are now available for all the [models](model.md) at the [user's request](https://github.com/sekika/unsatfit/discussions/9). [Sample codes for WRF](code-wrc.md) are extended.
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
