@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import unsatfit
 
-MODEL = 'DV'
+MODEL = 'DKC'
 
 # Read data from csv file
 ht = pd.read_csv('swrc.csv')
@@ -11,7 +11,7 @@ h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
 # Get optimized WRF parameters
 f = unsatfit.Fit()
-f.set_model(MODEL, const=['qr=0', 'q=1'])
+f.set_model(MODEL, const=['qr=0'])
 f.swrc = (h_t, theta)
 # Set initial parameters
 f.ini = (max(theta), *f.get_init())

@@ -15,14 +15,22 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 - [van Genuchten (VG) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VG.py)
 - [Kosugi (KO) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/KO.py)
 - [Fredlund und Xing (FX) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/FX.py)
+- [dual-BC (DB) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DB.py)
+- [dual-BC-CH (DBC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DBC.py)
 - [dual-VG (DV) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DV.py)
 - [dual-VG-CH (DVC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DVC.py)
+- [dual-KO (DK) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DK.py)
+- [dual-KO-CH (DKC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/DKC.py)
+- [VG<sub>1</sub>BC<sub>2</sub> (VB) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VB.py)
 - [VG<sub>1</sub>BC<sub>2</sub>-CH (VBC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VBC.py)
+- [KO<sub>1</sub>BC<sub>2</sub> (KB) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/KB.py)
 - [KO<sub>1</sub>BC<sub>2</sub>-CH (KBC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/KBC.py)
+- [Peters (PE) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/PE.py)
+- [Fayer and Simmons (VGFS) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VGFS.py)
 
 ## Multiple curves
 - Use [sample code for multiple curves](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/multi.py).
-- It draws VG, and DVC and DV in the same figure.
+- It draws VG, dual-VG-CH (DVC) and dual-VG (DV) models in the same figure.
 - It also shows the model with the smallest corrected AIC.
 - Results with [sample data of Gilat loam](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/gilat/swrc.csv) and [Daisen Andisol](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample-wrc/andisol/swrc.csv) (Fig. 9 in [this paper](https://www.jstage.jst.go.jp/article/jssoilphysics/155/0/155_35/_pdf/-char/en)) are shown below.
 
@@ -32,7 +40,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 
 ## UNSODA data
 - Use [sample code for multiple curves with UNSODA data](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/unsoda.py).
-- It uses laboratory drying curves of [UNSODA data](https://sekika.github.io/file/unsoda/).
+- It uses laboratory drying curves of [UNSODA data](https://sekika.github.io/file/unsoda/) and draw VG, dual-VG-CH (DVC) and dual-VG (DV) models in the same figure.
 - Upper limits of &theta;<sub>s</sub> / max(&theta;) = 1.5 and n<sub>1</sub>, n<sub>2</sub> = 8 are imposed.
 - The produced PDF files are [concatenated](https://gist.github.com/sekika/1e8811868cebeca6c3443c69849929db) and shown [here](sample-wrc/unsoda.pdf).
 - With [UNSODA viewer](https://sekika.github.io/unsoda/), you can select a specific soil sample and send data directly to SWRC Fit by following the link labelled "Fit with various water retention models".

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import unsatfit
 
-MODEL = 'DV'
+MODEL = 'VB'
 
 # Read data from csv file
 ht = pd.read_csv('swrc.csv')

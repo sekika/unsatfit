@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import unsatfit
 
-MODEL = 'DV'
+MODEL = 'PE'
+HE = 6.3e6  # pressure head of zero water content
 
 # Read data from csv file
 ht = pd.read_csv('swrc.csv')
@@ -11,20 +12,23 @@ h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
 # Get optimized WRF parameters
 f = unsatfit.Fit()
-f.set_model(MODEL, const=['qr=0', 'q=1'])
+f.set_model(MODEL, const=['qr=0', [6, HE]])
 f.swrc = (h_t, theta)
 # Set initial parameters
-f.ini = (max(theta), *f.get_init())
+f.ini = (max(theta), *f.get_init(HE))
 # Optimize
 f.optimize()
 if not f.success:
     print(f.message)  # Show error message
     exit(1)
 # Show optimized parameters
-print(f'{MODEL} model with qr = 0')
+print(f'{MODEL} model with qr=0, he={HE}')
 print(f.message)
 err = [f"{x:.3}" for x in f.perr]
 print(f'1-sigma uncertainty: {", ".join(err)}')
+qs, qr, a, m = f.fitted
+n = 1 / (1 - m)  # n is calculated from optimized m
+print('n = {0:.3f}'.format(n))
 print(f'R2 = {f.r2_ht:.5} AIC = {f.aic_ht:.5} Corrected AIC = {f.aicc_ht:.5}')
 print(f'Correlation matrix\n{f.cor}')
 # Set figure options
