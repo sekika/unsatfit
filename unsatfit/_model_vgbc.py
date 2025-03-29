@@ -14,6 +14,8 @@ def init_model_vgbc(self):
     self.model['VGBCIP'] = self.model['VG1BC2-IP'] = self.model['VB-IP'] = self.model['vgbcp2'] = {
         'function': (self.vgbc, self.vgbcp2_k),
         'bound': self.bound_vgbcp2,
+        'get_init': self.get_init_vgbc,
+        'get_wrf': self.get_wrf_vgbc,
         'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'hb2', 'l2', 'Ks', 'p1', 'p2', 'q'],
         'k-only': [7, 8, 9]
     }
@@ -29,6 +31,7 @@ def init_model_vgbc(self):
         'function': (self.vgbcchp2, self.vgbcchp2_k),
         'bound': self.bound_vgbcchp2,
         'get_init': self.get_init_vgbcch,
+        'get_wrf': self.get_wrf_vgbcch,
         'param': ['qs', 'qr', 'w1', 'a1', 'm1', 'l2', 'Ks', 'p1', 'p2', 'q'],
         'k-only': [6, 7, 8]
     }
