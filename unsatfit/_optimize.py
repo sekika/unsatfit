@@ -164,7 +164,7 @@ def multi_ini(self):
                 cost = self.r2_ht
             if cost > max_cost:
                 max_cost = cost
-                max_f = copy.deepcopy(self)
+                max_f = copy.copy(self)
     self.lsq_ftol = ftol
     if max_cost == -100000:
         return self

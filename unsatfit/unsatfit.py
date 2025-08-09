@@ -40,6 +40,7 @@ class Fit:
     from ._optimize import optimize, multi_ini, format, residual_ht, residual_ln_hk, residual_log10_hk, f_r2_ht, f_r2_ln_hk, p_ht, total_cost  # type: ignore
     from ._figure import set_scale, add_curve, clear_curves, h_0to1, plot  # type: ignore
     from ._contour import contour, label  # type: ignore
+    from ._pore_size import f_pore, f_pore_log, f_dtdh  # type: ignore
 
     from ._test import test, test_confirm  # type: ignore
 
