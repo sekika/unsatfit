@@ -4,7 +4,7 @@ It is all about Fit class of unsatfit.
 
 ## Methods
 
-For optimization.
+### For optimization.
 <dl>
 <dt>set_model(model, const=[])</dt>
 <dd>Set hydraulic model for model with constant parameters of const.</dd>
@@ -22,7 +22,7 @@ For optimization.
 <dd>Change the hydraulic model to modified model with hs value by <a href="https://doi.org/10.1016/S0309-1708(00)00037-3)">Vogel et al. (2000)</a>.</dd>
 </dl>
 
-For figures etc.
+### For figures
 <dl>
 <dt>plot()</dt>
 <dd>Plot a figure.</dd>
@@ -30,6 +30,22 @@ For figures etc.
 <dd>Add a curve for plot.</dd>
 <dt>clear_curves()</dt>
 <dd>Clear curves.</dd>
+</dl>
+
+### Pore-size distribution
+See the [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/_pore_size.py) for detail. From version 5.4.
+
+<dl>
+<dt>f_pore(p, r, C=0.149, epsilon=1e-8)</dt>
+<dd>Pore-size distribution function dθ/dr</dd>
+<dt>f_pore_log(p, r, C=0.149, epsilon=1e-8)</dt>
+<dd>Pore-size distribution function dθ/d(ln r)</dd>
+<dt>f_dtdh(p, h, epsilon=1e-8)</dt>
+<dd>dθ/dh</dd>
+</dl>
+
+### Others
+<dl>
 <dt>contour(x,y)</dt>
 <dd>Draw contour of RMSE for x and y in parameter name.</dd>
 <dt>test()</dt>

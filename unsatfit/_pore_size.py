@@ -28,6 +28,7 @@ def f_pore(self, p, r, C=0.149, epsilon=1e-8):
     h = C / r
     return -C / (r**2) * self.f_dtdh(p, h, epsilon=epsilon)
 
+
 def f_pore_log(self, p, r, C=0.149, epsilon=1e-8):
     """
     Pore-size distribution function dθ/d(ln r)
@@ -52,6 +53,7 @@ def f_pore_log(self, p, r, C=0.149, epsilon=1e-8):
     h = C / r
     return -h * self.f_dtdh(p, h, epsilon=epsilon)
 
+
 def f_dtdh(self, p, h, epsilon=1e-8):
     """
     dθ/dh calculated with numerical differentiation,
@@ -73,4 +75,4 @@ def f_dtdh(self, p, h, epsilon=1e-8):
     """
     theta_values = [self.f_ht(p, h + k * epsilon) for k in [-2, -1, 1, 2]]
     return sum(
-        k * theta for k, theta in zip([1, -8, 8, -1], theta_values)) / (12*epsilon)
+        k * theta for k, theta in zip([1, -8, 8, -1], theta_values)) / (12 * epsilon)
