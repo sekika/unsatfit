@@ -46,6 +46,7 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2025-03-11: Provided [sample code for drawing water retention curves](code-wrc.md) after [discussion](https://github.com/sekika/unsatfit/discussions/8).
 - 2025-03-29: Released unsatfit 5.3; at [user's request](https://github.com/sekika/unsatfit/discussions/9), initialization functions (get_init and get_wrf) are now available for all [models](model.md). Expanded [WRF Sample codes](code-wrc.md).
 - 2025-05-08: [Presented](https://researchmap.jp/sekik/presentations/50028303) on multimodal soil hydraulic models and unsatfit at Rien van Genuchten conference.
-- 2025-08-12: Released [unsatfit 5.4](https://pypi.org/project/unsatfit/#history) ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)); added functions for [pore-size distribution](reference.md#pore-size-distribution) analysis.
+- 2025-08-13: Released [unsatfit 5.4](https://pypi.org/project/unsatfit/#history) ([update](https://github.com/sekika/unsatfit/commits/main/unsatfit)); added functions for [pore-size distribution](reference.md#pore-size-distribution) analysis.
+- 2025-08-13: Released [pdfgridcat](https://pypi.org/project/pdfgridcat/), a tool for arranging multiple figures like [this](https://sekika.github.io/unsatfit/sample-wrc/pdf/unsoda-dual.pdf).
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)

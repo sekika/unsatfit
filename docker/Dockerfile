@@ -1,8 +1,8 @@
-# Docker image of Python 3 with Debian 12 bookworm (slim version).
-# Bookworm was released at 2023-06-10.
+# Docker image of Python 3 with Debian 13 trixie (slim version).
+# Trixie was released at 2025-08-09.
 # For release information, see https://wiki.debian.org/DebianReleases
 # See a list of Docker image at https://hub.docker.com/_/python
-FROM python:3-slim-bookworm
+FROM python:3-slim-trixie
 
 # Basic system
 USER root

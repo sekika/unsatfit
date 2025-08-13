@@ -39,7 +39,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 <img src="sample-wrc/multi-andisol.png" width="300" />
 
 ## UNSODA data
-Here are sample codes to draw multiple fitting curves for the [UNSODA](https://agdatacommons.nal.usda.gov/articles/dataset/UNSODA_2_0_Unsaturated_Soil_Hydraulic_Database_Database_and_program_for_indirect_methods_of_estimating_unsaturated_hydraulic_properties/24851832) database and figures which were produced with the code.
+Here are sample codes to draw multiple fitting curves for the [UNSODA](https://agdatacommons.nal.usda.gov/articles/dataset/UNSODA_2_0_Unsaturated_Soil_Hydraulic_Database_Database_and_program_for_indirect_methods_of_estimating_unsaturated_hydraulic_properties/24851832) database and figures which were produced with the code. [pdfgridcat](https://pypi.org/project/pdfgridcat/) was used for arranging the figures.
 
 - VG series: [VG, dual-VG-CH (DVC) and dual-VG (DV) models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/unsoda-vgs.py) and [figures](sample-wrc/pdf/unsoda-vgs.pdf).
 - KO series: [KO, KO<sub>1</sub>BC<sub>2</sub>-CH (KBC) and dual-KO (DK) models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/unsoda-kos.py) and [figures](sample-wrc/pdf/unsoda-kos.pdf).
