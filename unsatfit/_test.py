@@ -1,7 +1,9 @@
 def test(self):
     import numpy as np
     from .unsatfit import Fit
+    self.test_k_only()
     f = Fit()
+    f.debug = self.debug
     # Test data from UNSODA 3393
     f.swrc = (np.array([10, 28, 74, 160, 288, 640, 1250, 2950, 6300, 10600, 15800]), np.array(
         [0.36, 0.35, 0.34, 0.33, 0.32, 0.3, 0.28, 0.26, 0.24, 0.22, 0.2]))

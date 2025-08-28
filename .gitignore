@@ -23,7 +23,8 @@ wheels/
 MANIFEST
 # Debian package
 deb_dist/
-unsatfit-*.tar.gz
+unsatfit*.tar.gz
+unsatfit*.deb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

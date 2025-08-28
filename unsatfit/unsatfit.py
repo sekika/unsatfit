@@ -19,7 +19,7 @@ class Fit:
         Vadose Zone J. 21, e20168. https://doi.org/10.1002/vzj2.20168
     """
 
-    from ._init_model import init_model, set_model, get_init_not_defined, get_wrf_not_defined  # type: ignore
+    from ._init_model import init_model, set_model, organize_parameters, set_get_init_wrf, reconstruct_const, k_only, test_k_only, test_k_only_unit  # type: ignore
     from ._init_bound import init_bound  # type: ignore
     from ._init_lsq import init_lsq  # type: ignore
     from ._init_fig import init_fig  # type: ignore
@@ -53,13 +53,9 @@ class Fit:
         self.init_fig()   # Parameters for figure
 
     def version(self):
-        """get version"""
-        import configparser
-        import os
-        inifile = configparser.ConfigParser()
-        here = os.path.abspath(os.path.dirname(__file__))
-        inifile.read(os.path.join(here, 'data/system.ini'))
-        return inifile.get('system', 'version')
+        """Return the current version of the package."""
+        from . import __version__
+        return __version__
 
     def linear_regress(self, x, y):
         """Linear regression y = ax"""

@@ -35,20 +35,109 @@ def set_model(self, model, const=[]):
                [wrf, 'r=1'] where wrf is a tuple of all WRF parameters, sets the WRF parameters and r as 1
     """
     self.model_name = model
-    self.f_ht, self.f_hk = self.model[model]['function']
-    self.b_func = self.model[model]['bound']
-    self.param = self.model[model]['param']
-    self.model_k_only = self.model[model]['k-only']
-    # get_init and get_wrf functions
-    if 'get_init' in self.model[model]:
-        self.get_init = self.model[model]['get_init']
+    model = self.model[model]
+    self.f_ht, self.f_hk = model['function']
+    self.b_func = model['bound']
+    self.param = model['param']
+    self.model_k_only = model['k-only']
+    # Set get_init() and get_wrf() functions
+    self.set_get_init_wrf()
+    # Organize parameters
+    self.organize_parameters(const)
+
+
+def set_get_init_wrf(self):
+    """Set get_init() and get_wrf() functions"""
+    model = self.model[self.model_name]
+
+    def get_init_not_defined():
+        print('get_init function not defined for {0} model'.format(
+            self.model_name))
+        exit(1)
+    if 'get_init' in model:
+        self.get_init = model['get_init']
     else:
-        self.get_init = self.get_init_not_defined
-    if 'get_wrf' in self.model[model]:
-        self.get_wrf = self.model[model]['get_wrf']
+        self.get_init = get_init_not_defined
+
+    def get_wrf_not_defined():
+        print('get_wrf function not defined for {0} model'.format(
+            self.model_name))
+        exit(1)
+    if 'get_wrf' in model:
+        self.get_wrf = model['get_wrf']
     else:
-        self.get_wrf = self.get_wrf_not_defined
+        self.get_wrf = get_wrf_not_defined
+
+
+def organize_parameters(self, const):
+    """Organize parameters"""
     # Recostruct const to allow alternative expressions
+    model = self.model[self.model_name]
+    self.reconstruct_const(const)
+    # Calculate self.p_k_only
+    self.k_only()
+    # Calculate self.const_ht by eliminating K-only parameters
+    self.const_ht = []
+    for c in self.const:
+        if c[0] - 1 not in self.model_k_only:
+            self.const_ht.append(
+                [c[0] - sum(1 for x in self.model_k_only if x < c[0] - 1), c[1]])
+    # Calculate self.param and self.param_ht
+    self.param_ht = self.param
+    for i in sorted(self.model_k_only, reverse=True):
+        self.param_ht = self.param_ht[:i] + self.param_ht[i + 1:]
+    for c in sorted(self.const_ht, reverse=True):
+        self.param_ht = self.param_ht[:c[0] - 1] + self.param_ht[c[0]:]
+    for c in sorted(self.const, reverse=True):
+        self.param = self.param[:c[0] - 1] + self.param[c[0]:]
+    # Model description
+    self.param_const = []
+    self.value_const = []
+    for i in self.const:
+        self.param_const.append(model['param'][i[0] - 1])
+        self.value_const.append(float(i[1]))
+    self.const_description = self.format(
+        self.param_const, ShowR2=False).format(*self.value_const)
+    self.model_description = self.model_name + \
+        ' model with ' + self.const_description
+
+
+def reconstruct_const(self, const):
+    """Reconstruct the list of parameter constraints for the model.
+
+    The method interprets the input `const` (a list of constraints) in 
+    three possible formats and converts them into a standardized list 
+    of `[parameter_index, value]` pairs:
+
+    1. String assignments (e.g., "q=1"):
+       - Splits into parameter name and value.
+       - Checks that the parameter exists in `self.param`.
+       - Converts to `[index, float(value)]`.
+
+    2. Full parameter list/tuple (longer than 2 elements):
+       - Assumes the list provides values for all water retention 
+         parameters except those in `self.model_k_only`.
+       - Matches given values to the correct parameter indices.
+       - Errors out if the number of values does not match expectations.
+
+    3. Explicit index/value pairs (e.g., `[2, 0]`):
+       - Directly added to the reconstructed constraints.
+
+    Finally, the reconstructed constraints are sorted and stored in
+    `self.const`.
+
+    Parameters
+    ----------
+    const : list
+        A list of constraints expressed either as strings, full parameter 
+        lists, or explicit index/value pairs.
+
+    Raises
+    ------
+    SystemExit
+        If a parameter is not found in `self.param` or the number of 
+        provided values does not match the required number of parameters.
+    """
     reconst = []
     for i in const:
         if '=' in str(i):  # expression like 'q=1'
@@ -73,53 +162,79 @@ def set_model(self, model, const=[]):
         else:  # expression like [2, 0]
             reconst.append(i)
     self.const = sorted(reconst)
-    # print(self.model_description)
-    # Calculate self.p_k_only from self.model_k_only by eliminating constant
-    # Note: when it is (0,1,3) where 2 is constant, it should be arranged to
-    # (0,1,2)
-    k_only = set(self.model_k_only)
-    for c in sorted(self.const, reverse=True):
-        if c[0] - 1 in sorted(k_only):
-            k_only.remove(c[0] - 1)
-        else:
-            for i in sorted(k_only):
-                if i > c[0] - 1:
-                    k_only.remove(i)
-                    k_only.add(i - 1)
-    self.p_k_only = sorted(list(k_only), reverse=True)
-    # Calculate self.const_ht by eliminating K-only parameters
-    self.const_ht = []
-    for c in self.const:
-        if c[0] - 1 not in self.model_k_only:
-            self.const_ht.append(
-                [c[0] - sum(1 for x in self.model_k_only if x < c[0] - 1), c[1]])
-    # Calculate self.param and self.param_ht
-    self.param_ht = self.param
-    for i in sorted(self.model_k_only, reverse=True):
-        self.param_ht = self.param_ht[:i] + self.param_ht[i + 1:]
-    for c in sorted(self.const_ht, reverse=True):
-        self.param_ht = self.param_ht[:c[0] - 1] + self.param_ht[c[0]:]
-    for c in sorted(self.const, reverse=True):
-        self.param = self.param[:c[0] - 1] + self.param[c[0]:]
-    # Model description
-    self.param_const = []
-    self.value_const = []
-    for i in self.const:
-        self.param_const.append(self.model[model]['param'][i[0] - 1])
-        self.value_const.append(float(i[1]))
-    self.const_description = self.format(
-        self.param_const, ShowR2=False).format(*self.value_const)
-    self.model_description = self.model_name + \
-        ' model with ' + self.const_description
 
 
-def get_init_not_defined(self):
-    print('get_init function not defined for {0} model'.format(
-        self.model_name))
-    exit(1)
+def k_only(self):
+    """Compute the reindexed positions of k-only parameters after removing constants.
+
+    Reads:
+        - self.model_k_only (list[int]):
+            0-based indices of parameters that belong to the k-only group in the
+            full parameter vector.
+        - self.const (list[list]):
+            Each element is [i, _] where i is a 1-based index of a parameter
+            that is fixed (constant).
+
+    Procedure:
+        1) Drop any indices from self.model_k_only that are listed as constants.
+        2) For each remaining index k, subtract the number of constant indices
+            that are strictly less than k (counting duplicates if present).
+            This yields the index k would have after removing all constant
+            positions from the full parameter vector.
+        3) Store the resulting indices in descending order in self.p_k_only.
+
+    Produces:
+        - self.p_k_only (list[int]):
+            Reindexed positions of k-only parameters in the reduced (constants-removed)
+            parameter vector, sorted in descending order.
+    """
+    # Convert 1-based constant indices to 0-based and sort ascending
+    const0 = sorted([c[0] - 1 for c in self.const])
+    # Remove entries that are constants from model_k_only
+    remain = [k for k in self.model_k_only if k not in const0]
+    # Re-map each remaining index to its position after removing all constants
+    res = []
+    for k in remain:
+        # Count how many constant positions occur strictly before k
+        shift = 0
+        for c in const0:
+            if c < k:
+                shift += 1
+        # New index after removing the preceding constants
+        res.append(k - shift)
+    # Store in descending order as required
+    self.p_k_only = sorted(res, reverse=True)
 
 
-def get_wrf_not_defined(self):
-    print('get_wrf function not defined for {0} model'.format(
-        self.model_name))
-    exit(1)
+def test_k_only(self):
+    self.test_k_only_unit('VG', (1, 2), [5, 3, 2])
+    self.test_k_only_unit('VG', (1, 2, 3), [4, 2, 1])
+    self.test_k_only_unit('VG', (1, 2, 3, 7), [3, 2, 1])
+    self.test_k_only_unit('VG', (1, 2, 3, 4), [3, 1, 0])
+    self.test_k_only_unit('VG', (7,), [6, 5, 4])
+    self.test_k_only_unit('VG', (1, 2, 8), [3, 2])
+    self.test_k_only_unit('VG', (1, 2, 3, 4, 6), [2, 0])
+    self.test_k_only_unit('VG', (1, 3, 4, 6), [3, 1])
+    self.test_k_only_unit('VG', (1, 3, 4, 5), [3, 1])
+
+
+def test_k_only_unit(self, model, const, result):
+    import json
+    import sys
+    from .unsatfit import Fit
+    const_par = []
+    for c in const:
+        const_par.append([c, 0])
+    f = Fit()
+    f.swrc = (1, 2, 3)
+    f.unsat = (2, 3, 4)
+    f.set_model(model, const=const_par)
+    f.k_only()
+    if json.dumps(f.p_k_only) == json.dumps(result):
+        if self.debug:
+            print(
+                f'success: model_k_only = {f.model_k_only} const = {const} p_k_only = {f.p_k_only}')
+    else:
+        print(
+            f'Test failed with test_k_only_unit().\nk_only = {f.model_k_only} const = {const} p_k_only = {f.p_k_only} expected {result}')
+        sys.exit()
