@@ -54,6 +54,7 @@ def get_init_vg(self):  # alpha and m
     f = Fit()
     f.set_model('vg', const=[[1, 1], [2, 0], [7, 1]])
     f.swrc = (x, y)
+    f.b_a = self.b_a
     hb, l = f.get_init_bc()
     n = l + 1
     f.ini = (1 / hb, 1 - 1 / n)
