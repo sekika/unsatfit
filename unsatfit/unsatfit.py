@@ -36,6 +36,7 @@ class Fit:
     from ._model_fs import init_model_fs, bound_vgfs, vgfs, vgfs_se, vgfs_k, get_init_vgfs, get_wrf_vgfs  # type: ignore
     from ._model_pe import init_model_pe, bound_pk, pk, pk_se, pk_k, get_init_pk, get_wrf_pk  # type: ignore
     from ._model_modified import modified_model, modified_ht, modified_hk  # type: ignore
+    from ._model_k_vapor import init_model_k_vapor, model_k_vapor  # type: ignore
 
     from ._optimize import optimize, multi_ini, format, residual_ht, residual_ln_hk, residual_log10_hk, f_r2_ht, f_r2_ln_hk, p_ht, total_cost  # type: ignore
     from ._figure import set_scale, add_curve, clear_curves, h_0to1, plot  # type: ignore

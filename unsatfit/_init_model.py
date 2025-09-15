@@ -13,6 +13,7 @@ def init_model(self):
     self.init_model_kobc()
     self.init_model_fs()
     self.init_model_pe()
+    self.init_model_k_vapor()
     self.output_format = {
         'qs': '.3f', 'qr': '.3f', 'qa': '.3f', 'w1': '.3f', 'a': '.3', 'a1': '.3', 'a2': '.3',
         'm': '.3f', 'n': '.3f', 'm1': '.3f', 'm2': '.3f', 'hm': '.2f', 'hm1': '.2f', 'hm2': '.2f',
@@ -23,23 +24,38 @@ def init_model(self):
     self.r2_format = '.3f'
 
 
-def set_model(self, model, const=[]):
+def set_model(self, model, const=[], k_vapor=False):
     """Set model
 
     Parameters:
 
         model: name of the model
         const: constant parameters of the model. For example
-               [[1,0.5], [2,0], [3,0.2]] sets 1st parameter as 0.5, 2nd parameter as 0 and 3rd parameter as 0.2
-               [[1,0.5], 'qr=0']] sets 1st parameter as 0.5 and qr as 0
-               [wrf, 'r=1'] where wrf is a tuple of all WRF parameters, sets the WRF parameters and r as 1
+            [[1,0.5], [2,0], [3,0.2]] sets 1st parameter as 0.5, 2nd parameter as 0 and 3rd parameter as 0.2
+            [[1,0.5], 'qr=0']] sets 1st parameter as 0.5 and qr as 0
+            [wrf, 'r=1'] where wrf is a tuple of all WRF parameters, sets the WRF parameters and r as 1
+        k_vapor: if using isothermal vapor hydraulic conductivity
+            When True, self.k_vapor() is added to hydraulic conductivity.
+            Several parameters need to be set when using this feature.
+            See comment in k_vapor() function.
     """
     self.model_name = model
     model = self.model[model]
     self.f_ht, self.f_hk = model['function']
+    if k_vapor:
+        def k_vapor(p, h):
+            theta = self.f_ht(p, h)
+            theta_s = self.f_ht(p, 0)
+            k = model['function'][1](p, h)
+            return k + self.model_k_vapor(h, theta, theta_s)
+        self.f_hk = k_vapor
     self.b_func = model['bound']
     self.param = model['param']
     self.model_k_only = model['k-only']
+    if 'sort_param' in model:
+        self.sort_param = model['sort_param']
+    else:
+        self.sort_param = None
     # Set get_init() and get_wrf() functions
     self.set_get_init_wrf()
     # Organize parameters
@@ -105,8 +121,8 @@ def organize_parameters(self, const):
 def reconstruct_const(self, const):
     """Reconstruct the list of parameter constraints for the model.
 
-    The method interprets the input `const` (a list of constraints) in 
-    three possible formats and converts them into a standardized list 
+    The method interprets the input `const` (a list of constraints) in
+    three possible formats and converts them into a standardized list
     of `[parameter_index, value]` pairs:
 
     1. String assignments (e.g., "q=1"):
@@ -115,7 +131,7 @@ def reconstruct_const(self, const):
        - Converts to `[index, float(value)]`.
 
     2. Full parameter list/tuple (longer than 2 elements):
-       - Assumes the list provides values for all water retention 
+       - Assumes the list provides values for all water retention
          parameters except those in `self.model_k_only`.
        - Matches given values to the correct parameter indices.
        - Errors out if the number of values does not match expectations.
@@ -129,13 +145,13 @@ def reconstruct_const(self, const):
     Parameters
     ----------
     const : list
-        A list of constraints expressed either as strings, full parameter 
+        A list of constraints expressed either as strings, full parameter
         lists, or explicit index/value pairs.
 
     Raises
     ------
     SystemExit
-        If a parameter is not found in `self.param` or the number of 
+        If a parameter is not found in `self.param` or the number of
         provided values does not match the required number of parameters.
     """
     reconst = []
