@@ -11,7 +11,9 @@
 - 2022-10-29: Presented at the Japanese society of Soil Physics meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html).
 - 2023-01-06: Released the [UNSODA viewer](https://sekika.github.io/unsoda/), a web app that displays data from [UNSODA 2.0](https://doi.org/10.15482/USDA.ADC/1173246). For each dataset, water retention data is linked directly to SWRC Fit for model fitting.
 - 2023-02-04: A [paper](https://doi.org/10.2478/johh-2022-0039) introducing unsatfit was published in JHH.
+- 2023-03-19: Released unsatfit 4.9 with improved dual-VG fitting and an option to change the figure legend font to better support Japanese text.
 - 2023-08-30: Presented improvements to dual-VG fitting at the JSIDRE meeting [農業農村工学会](https://researchmap.jp/sekik/presentations/43218823/attachment_file.pdf).
+- 2023-10-07: Released unsatfit 5.0 with support for the corrected AIC.
 - 2023-12-21: Improvements to dual-VG fitting were published on [土壌の物理性](https://doi.org/10.34467/jssoilphysics.155.0_35) in Japanese.
 - 2024-03-13: The [user manual for SWRC Fit and unsatfit](https://doi.org/10.34428/0002000817) was published in JTUNS.
 - 2024-05-14: [hystfit](https://sekika.github.io/hystfit/), a tool for calculating SWRC hysteresis, was released.

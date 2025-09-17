@@ -4,7 +4,7 @@ unsatfit is a Python library for optimizing parameters of functions related to s
 
 ## Document
 
-For the full documentation, visit https://doi.org/10.34428/0002000817
+For the full documentation, visit https://arxiv.org/pdf/2302.00472
 
 For quick references and sample codes, visit https://sekika.github.io/unsatfit/
 
