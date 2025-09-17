@@ -1,4 +1,4 @@
-# SWRC Fit and hystfit
+# SWRC Fit and related software
 
 ## SWRC Fit
 SWRC Fit is a web interface which uses `unsatfit` and determines parameters for water retention function. As it is easy to use, it has been [used in many papers](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Gs_ABawAAAAJ&citation_for_view=Gs_ABawAAAAJ:9yKSN-GCB0IC).
@@ -12,3 +12,6 @@ You can run SWRC Fit locally on your machine by using [Docker](https://www.docke
 
 ## hystfit
 [hystfit](https://sekika.github.io/hystfit/) is a Python library for calculating hysteresis in water retention curve. It is implemented as a subclass of `unsatfit`.
+
+## UNSODA viewer
+The [UNSODA viewer](https://sekika.github.io/unsoda/) displays data from [UNSODA 2.0](https://doi.org/10.15482/USDA.ADC/1173246), the Unsaturated Soil Hydraulic Database by the U.S. Salinity Laboratory. For each dataset, you can fit water retention data with SWRC Fit via links labeled “Fit with various water retention models.” This is particularly useful for educational purposes.

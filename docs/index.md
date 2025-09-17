@@ -35,13 +35,14 @@ For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.
 - 2021-11-24: A [paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ.
 - 2022-01-04: Relased unsatfit 4.0, including a new version of SWRC Fit.
 - 2022-10-29: Presented at the Japanese society of Soil Physics meeting [土壌物理学会](https://sekika.github.io/toyo/abs/jssp2022.html).
+- 2023-01-06: Released the [UNSODA viewer](https://sekika.github.io/unsoda/), a web app that displays data from [UNSODA 2.0](https://doi.org/10.15482/USDA.ADC/1173246). For each dataset, water retention data is linked directly to SWRC Fit for model fitting.
 - 2023-02-04: A [paper](https://doi.org/10.2478/johh-2022-0039) introducing unsatfit was published in JHH.
 - 2023-08-30: Presented improvements to dual-VG fitting at the JSIDRE meeting [農業農村工学会](https://researchmap.jp/sekik/presentations/43218823/attachment_file.pdf).
 - 2023-12-21: Improvements to dual-VG fitting were published on [土壌の物理性](https://doi.org/10.34467/jssoilphysics.155.0_35) in Japanese.
 - 2024-03-13: The [user manual for SWRC Fit and unsatfit](https://doi.org/10.34428/0002000817) was published in JTUNS.
 - 2024-05-14: [hystfit](https://sekika.github.io/hystfit/), a tool for calculating SWRC hysteresis, was released.
 - 2024-06-04: Released unsatfit 5.2; SWRC Fit now includes output options for parameter uncertainty, added at the [user's request](https://github.com/sekika/unsatfit/discussions/6).
-- 2024-10-20: Received the **JSSP award** ([土壌物理学会賞](https://js-soilphysics.com/prz)) from the Japanese Society of Soil Physics for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35).
+- 2024-10-20: Received the **JSSP award** ([土壌物理学会賞](https://js-soilphysics.com/prz)) from the Japanese Society of Soil Physics for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35). A [summary report](https://doi.org/10.34467/jssoilphysics.159.0_103) was subsequently published in Japanese.
 - 2024-11-13: Presented a [poster](https://researchmap.jp/sekik/presentations/48434771/attachment_file.pdf) on hysteresis and [hystfit](https://sekika.github.io/hystfit/) at [ASA, CSSA, SSSA meeting](https://researchmap.jp/sekik/presentations/48434771); took a [photo with Rien van Genuchten](https://sekika.github.io/toyo/photos/RVG.html).
 - 2025-03-11: Provided [sample code for drawing water retention curves](code-wrc.md) after [discussion](https://github.com/sekika/unsatfit/discussions/8).
 - 2025-03-29: Released unsatfit 5.3; at [user's request](https://github.com/sekika/unsatfit/discussions/9), initialization functions (get_init and get_wrf) are now available for all [models](model.md). Expanded [WRF Sample codes](code-wrc.md).
