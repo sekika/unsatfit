@@ -24,7 +24,7 @@ This is an example output of this program; water retention curve (top) and hydra
 
 For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf)).
 
-## History ([Detailed version](history.md))
+## History ([Detailed version](history.md)) {#history}
 
 - 2007-02-27: [SWRC Fit](https://seki.webmasters.gr.jp/swrc/) started to run on the web.
 - 2021-08-13: SWRC Fit was recommended at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.148.0_45).
