@@ -4,6 +4,7 @@
 - 2007-02-27: Released SWRC Fit 1.1 ([HESSD](http://dx.doi.org/10.5194/hessd-4-407-2007) version) and the launched the [web version](https://seki.webmasters.gr.jp/swrc/).
 - 2016-09-10: Released [SWRC Fit 3.0](https://github.com/sekika/swrcfit/releases/tag/v3.0); implemented the FX model was at the request of a geotechnical engineer.
 - 2016-09-15: Presented SWRC Fit at the Japanese society meeting [地盤工学研究発表会](https://researchmap.jp/sekik/presentations/14140472/attachment_file.pdf).
+- 2017-03-15: A Japanese-language paper describing SWRC Fit was published. It is the first in a series of papers: (1) [model](https://toyo.repo.nii.ac.jp/records/8838), (2) [running](https://toyo.repo.nii.ac.jp/records/9890), and (3) [algorithm](https://toyo.repo.nii.ac.jp/records/10798).
 - 2018-09-27: Released [SWRC Fit 3.1](https://github.com/sekika/swrcfit/releases/tag/v3.1) (final Octave version).
 - 2021-08-13: SWRC Fit was recommended at [土壌の物理性](https://doi.org/10.34467/jssoilphysics.148.0_45).
 - 2021-11-24: A [paper](https://doi.org/10.1002/vzj2.20168) written with unsatfit was published at VZJ.
