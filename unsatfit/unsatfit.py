@@ -35,13 +35,16 @@ class Fit:
     from ._model_kobc import init_model_kobc, bound_kobc, kobc, kobc_se, kobc_k, get_init_kobc, get_wrf_kobc, bound_kobcp2, kobcp2_k, bound_kobcch, kobcch, kobcch_se, kobcch_k, get_init_kobcch, get_wrf_kobcch, bound_kobcchp2, kobcchp2_k, kobcchca_k  # type: ignore
     from ._model_fs import init_model_fs, bound_vgfs, vgfs, vgfs_se, vgfs_k, get_init_vgfs, get_wrf_vgfs  # type: ignore
     from ._model_pe import init_model_pe, bound_pk, pk, pk_se, pk_k, get_init_pk, get_wrf_pk  # type: ignore
+    from ._model_tri_vg import init_model_tri_vg, bound_vg3, vg3, vg3_se, vg3_k, get_init_vg3, get_init_vg3_fix_a1, sort_param_vg3  # type: ignore
+    from ._model_bvv import init_model_bvv, bound_bvv, bvv, bvv_se, bvv_k, get_init_bvv, get_init_bvv_fix_hb1  # type: ignore
+    from ._model_vvp import init_model_vvp, bound_vvp, vvp, vvp_se, vvp_k, get_init_vvp, bound_vvps, vvps, vvps_se, vvps_k, get_init_vvps  # type: ignore
     from ._model_modified import modified_model, modified_ht, modified_hk  # type: ignore
     from ._model_k_vapor import init_model_k_vapor, model_k_vapor  # type: ignore
 
     from ._optimize import optimize, multi_ini, format, residual_ht, residual_ln_hk, residual_log10_hk, f_r2_ht, f_r2_ln_hk, p_ht, total_cost  # type: ignore
     from ._figure import set_scale, add_curve, clear_curves, h_0to1, plot  # type: ignore
     from ._contour import contour, label  # type: ignore
-    from ._pore_size import f_pore, f_pore_log, f_dtdh  # type: ignore
+    from ._pore_size import f_pore, f_pore_log, f_dtdh, find_pore_extreme  # type: ignore
 
     from ._test import test, test_confirm  # type: ignore
 

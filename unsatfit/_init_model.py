@@ -13,11 +13,14 @@ def init_model(self):
     self.init_model_kobc()
     self.init_model_fs()
     self.init_model_pe()
+    self.init_model_tri_vg()
+    self.init_model_bvv()
+    self.init_model_vvp()
     self.init_model_k_vapor()
     self.output_format = {
-        'qs': '.3f', 'qr': '.3f', 'qa': '.3f', 'w1': '.3f', 'a': '.3', 'a1': '.3', 'a2': '.3',
-        'm': '.3f', 'n': '.3f', 'm1': '.3f', 'm2': '.3f', 'hm': '.2f', 'hm1': '.2f', 'hm2': '.2f',
-        'sigma': '.3f', 'sigma1': '.3f', 'sigma2': '.3f', 'hb': '.2f', 'hb1': '.2f', 'hb2': '.2f',
+        'qs': '.3f', 'qr': '.3f', 'qa': '.3f', 'w1': '.3f', 'ww2': '.3f', 'a': '.3', 'a1': '.3', 'a2': '.3', 'a3': '.3',
+        'm': '.3f', 'n': '.3f', 'm1': '.3f', 'm2': '.3f', 'm3': '.3f', 'hm': '.2f', 'hm1': '.2f', 'hm2': '.2f',
+        'sigma': '.3f', 'sigma1': '.3f', 'sigma2': '.3f', 'hb': '.2f', 'hb1': '.2f', 'hb2': '.2f', 'hf': '.3f',
         'hc': '.2f', 'l': '.3', 'l1': '.3', 'l2': '.3', 'he': '.2f',
         'Ks': '.2e', 'p': '.3f', 'p1': '.3f', 'p2': '.3f', 'q': '.3f', 'q1': '.3f', 'q2': '.3f', 'r': '.3f', 'omega': '.3'
     }

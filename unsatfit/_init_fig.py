@@ -65,3 +65,8 @@ def init_fig(self):
     self.contour_smooth = 50
     self.contour_range_x = 0.3, 1.5
     self.contour_range_y = 0.5, 1.5
+
+    # Pore
+    self.pore_label = ['Macropore', 'Mesopore', 'Micropore']
+    self.pore_style = ['solid', 'dashed', 'dotted']
+    self.pore_color = ['#1b9e77', '#d95f02', '#7570b3']

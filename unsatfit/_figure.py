@@ -62,12 +62,30 @@ def h_0to1(self, data):
     return (x, y)
 
 
-def plot(self):
+def plot(self, pore_segment=False):
     import matplotlib.pyplot as plt  # type: ignore
     import matplotlib.ticker as ticker  # type: ignore
 
     if self.data_only:
         self.set_scale()
+
+    def draw_segment(ax, data, label):
+        x, y = data
+        macro_max = self.pore_minima[0]
+        meso_max = self.pore_minima[1]
+        mask = [x <= macro_max, (x > macro_max) & (
+            x <= meso_max), x > meso_max]
+        for i in range(3):
+            ax.plot(
+                x[mask[i]],
+                y[mask[i]],
+                color=self.pore_color[i],
+                linestyle=self.pore_style[i],
+                label=label[i],
+                lw=2.3,
+                zorder=4)
+        ax.axvline(macro_max, color='k', ls='--', lw=1, alpha=0.5)
+        ax.axvline(meso_max, color='k', ls='--', lw=1, alpha=0.5)
 
     # Set subplots
     if self.ht_only:
@@ -82,6 +100,13 @@ def plot(self):
         left=self.left_margin,
         hspace=self.hspace)
 
+    if pore_segment:
+        self.find_pore_extreme(self.fitted, epsilon=1e-6)
+        if len(self.pore_minima) != 2:
+            print(
+                f'Pore segmentation failed; it has {len(self.pore_minima)} minima, not 2.')
+            pore_segment = False
+
     # Draw plots, curves and legends
     ax1.plot(*self.h_0to1(self.swrc), color=self.color_marker, marker=self.marker,
              linestyle='', label=self.data_legend)
@@ -89,14 +114,22 @@ def plot(self):
         if self.have_new_plot:
             self.add_curve()
         for curve in self.curves_ht:
-            ax1.plot(*curve['data'], color=curve['color'],
-                     linestyle=curve['style'], label=curve['legend'])
+            if pore_segment:
+                draw_segment(
+                    ax1, curve['data'], self.pore_label)
+            else:
+                ax1.plot(*curve['data'], color=curve['color'],
+                         linestyle=curve['style'], label=curve['legend'])
         if not self.ht_only:
             ax2.plot(*self.h_0to1(self.unsat), color=self.color_marker,
                      marker=self.marker, linestyle='', label='_nolegend_')
             for curve in self.curves_hk:
-                ax2.plot(*curve['data'], color=curve['color'],
-                         linestyle=curve['style'], label='_nolegend_')
+                if pore_segment:
+                    draw_segment(
+                        ax2, curve['data'], ['_nolegend_'] * 3)
+                else:
+                    ax2.plot(*curve['data'], color=curve['color'],
+                             linestyle=curve['style'], label='_nolegend_')
         if hasattr(self, 'fp'):
             leg = fig.legend(loc=self.legend_loc, prop=self.fp,
                              facecolor=self.legend_facecolor)
