@@ -92,7 +92,8 @@ def test_models(unsoda, ids, models, verbose):
                 print(f'Testing UNSODA {id}\r', end='')
             stop = test_model(f, model, verbose)
     if verbose > 0:
-        print(f'Testing of get_init() and get_wrf() functions for {', '.join(models)} models using {tested} UNSODA samples was completed successfully without errors.')
+        print(
+            f'Testing of get_init() and get_wrf() functions for {', '.join(models)} models using {tested} UNSODA samples was completed successfully without errors.')
 
 
 def test_model(f, model, verbose):

@@ -6,8 +6,9 @@ It is all about Fit class of unsatfit.
 
 ### For optimization.
 <dl>
-<dt>set_model(model, const=[])</dt>
-<dd>Set hydraulic model for model with constant parameters of const.</dd>
+<dt>set_model(model, const=[], k_vapor=False)</dt>
+<dd>Set hydraulic model for model with constant parameters of const. When k_vapor=True, isothermal vapor hydraulic conductivity is added from version 6.0. Several parameters need to be set when using this feature. See the <a href=
+"https://github.com/sekika/unsatfit/blob/main/unsatfit/_model_k_vapor.py">source comment of model_k_vapor()</a> for detail.</dd>
 <dt>optimize()</dt>
 <dd>Optimize parameteres.</dd>
 <dt>f_ht(p, x)</dt>

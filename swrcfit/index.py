@@ -1062,7 +1062,10 @@ def printhead(lang, f):
 def printform(lang, getlang, f):
     url = './'
     print(
-        f'<p>{message(lang, "langbar", url)}</p>\n<h1>SWRC Fit</h1>\n<p>{message(lang, "description")}</p>\n<form action="{url}" method="post">',
+        f'<p>{message(lang,
+                      "langbar",
+                      url)}</p>\n<h1>SWRC Fit</h1>\n<p>{message(lang,
+                                                                "description")}</p>\n<form action="{url}" method="post">',
         flush=True)
     print(f'''<table style="margin-left: auto; margin-right: auto; border-collapse: collapse;">
 <tr>

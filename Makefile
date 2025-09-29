@@ -15,8 +15,8 @@ test:
 	cd dev; ./test.sh
 
 test-swrc:
-	swrcfit/index.py -c
-	swrcfit/index.py -t
+	python3 swrcfit/index.py -c
+	python3 swrcfit/index.py -t
 
 format:
 	cd dev; ./format.sh

@@ -209,3 +209,31 @@ HCF variation: r=1 and independent p
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_he, b_ks, b_p, b_q, b_r
+
+## Trimodal models
+
+Available from version 6.0. To be documented fully later.
+
+### tri-VG model
+- Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
+- Name: vg3, TV, tri-VG
+- WRF parameters: qs, qr, w1, a1, m1, ww2, a2, m2, a3, m3, q
+- Converted parameter: w2 = (1-w1) * ww2 (w2 was transformed to make the bound independent of w1), n1 = q/(1-m1), n2 = q/(1-m2), n3 = q/(1-m3)
+- get_init() = get_init_vg3(a1=0): without input parameter, returns w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3 where q=1. When a1>0, a1 is fixed and not in return parameter.
+- sort_param() = sort_param_vg3(): Sort parameters of tri-VG model in the reverse order of alpha, and convert ww2 to w2
+- HCF: [General HCF](hcmodel.md)
+- Parameters which only appears in HCF: Ks, p, r
+- Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_w1, b_a2, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
+
+### BC<sub>1</sub>VG<sub>2</sub> VG<sub>3</sub> model
+- Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
+- Name: BVV, BC1VG2VG3
+- WRF parameters: qs, qr, w1, hb1, l1, ww2, a2, m2, a3, m3, q
+- Converted parameter: w2 = (1-w1) * ww2 (w2 was transformed to make the bound independent of w1), n2 = q/(1-m2), n3 = q/(1-m3)
+- get_init() = get_init_bvv(hb1=0): without input parameter, returns w1, hb1, l1, ww2, alpha2, m2, alpha3, m3 where q=1. When hb1>0, hb1 is fixed and not in return parameter.
+- HCF: [General HCF](hcmodel.md)
+- Parameters which only appears in HCF: Ks, p, r
+- Bound: b_qs, b_qr, b_w1, b_hb, b_lambda, b_w1, b_a2, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
+
+### VVP model
+- To be documanted later
