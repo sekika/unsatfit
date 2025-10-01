@@ -71,7 +71,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 
 #### dual-BC-CH model
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
-- Name: bc2, DBCH, dual-BC-CH
+- Name: bc2, DBC, DBCH, dual-BC-CH
 - WRF parameters: qs, qr, hb, hc, l1, l2
 - Converted parameter: w1 = 1/(1+(hc/hb)^(l2-l1))
 - get_init() = get_init_bc2(): returns hb, hc, l1, l2
@@ -93,7 +93,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 
 #### dual-VG-CH model
 - Priesack and Durner ([2006](https://doi.org/10.2136/vzj2005.0066)), equation corrected at Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
-- Name: vg2ch, DVCH, dual-VG-CH
+- Name: vg2ch, DVC, DVCH, dual-VG-CH
 - WRF parameters: qs, qr, w1, a1, m1, m2, q
 - Converted parameter: n1 = q/(1-m1), n2 = q/(1-m2)
 - get_init() = get_init_vg2ch(): returns w1, a1, m1, m2 where q=1
@@ -114,7 +114,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 
 ### dual-KO-CH model
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
-- Name: ln2ch, DKCH, dual-KO-CH
+- Name: ln2ch, DKC, DKCH, dual-KO-CH
 - WRF parameters: qs, qr, w1, hm1, sigma1, sigma2
 - get_init() = get_init_ln2ch(): returns w1, hm1, sigma1, sigma2
 - get_wrf() = get_wrf_ln2ch(): returns full WRF parameters where qr=0
