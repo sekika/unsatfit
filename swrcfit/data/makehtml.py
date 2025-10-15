@@ -55,7 +55,7 @@ def unitable(models):
     text = ''
     for id in models:
         m = model(id)
-        text += '<tr><td>{0}<td>{1}<td>\({2}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, {3}</tr>'.format(
+        text += '<tr><td>{0}<td>{1}<td>\\({2}\\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, {3}</tr>'.format(
             id, m['html'], m['equation'], (', ').join(m['parameter']))
     text += '</table>'
     return text
@@ -65,7 +65,7 @@ def bitable(models):
     text = ''
     for id in models:
         m = model(id)
-        text += '<tr><td>{0}<td>\({1}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, {2}</tr>'.format(
+        text += '<tr><td>{0}<td>\\({1}\\)<\td>&theta;<sub>s</sub> &theta;<sub>r</sub>, {2}</tr>'.format(
             m['html'], m['equation'], (', ').join(m['parameter']))
     text += '</table>'
     return text
@@ -109,7 +109,7 @@ def english():
 <h1>Soil hydraulic models in SWRC Fit</h1>
 
 <p>Soil water retention curve (SWRC) is described by water retention function &theta;(h) is a function of volumetric water content, &theta; to pressure head, h. Here we denote h to be positive for unsaturated conditions, thus considering to be an equivalent suction.
-Effective water content S<sub>e</sub> is defined by \(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\), where saturated water content &theta;<sub>s</sub> and residual water content &theta;<sub>r</sub> are parameters either treated as constant or variable.
+Effective water content S<sub>e</sub> is defined by \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\), where saturated water content &theta;<sub>s</sub> and residual water content &theta;<sub>r</sub> are parameters either treated as constant or variable.
 We can obtain &theta;(h) from S<sub>e</sub>(h) by &theta;(h) = (&theta;<sub>s</sub> - &theta;<sub>r</sub>)S<sub>e</sub>(h) + &theta;<sub>r</sub></p>
 
 <p><a href="./">SWRC Fit</a> simultaneously fits measured SWRC data to multiple S<sub>e</sub>(h) functions described as follows and determine the parameters of the functions.</p>
@@ -134,7 +134,7 @@ Fitted parameters, coefficient of determination (R<sub>2</sub>) and <a href="htt
 <h2>Multimodal models</h2>
 
 <p>Multimodal water retention function is defined as a linear superposition of subfunctions S<sub>i</sub>(h) as follows (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>).
-\[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
+\\[ S(h) = \\Sigma_{i=1}^k w_i S_i(h) \\]
 where k is the number of subfunctions, and w<sub>i</sub> are weighting factors with 0&lt;w<sub>i</sub>&lt;1 and &Sigma;w<sub>i</sub> = 1.
 Unimodal models are k=1, and bimodal models are k=2.</p>
 
@@ -169,7 +169,7 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 <h2>CH variation</h2>
 
 <p>CH (common head) variation for multimodal model of BC, VG, KO subfunctions is defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> as
-\[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \]
+\\[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \\]
 where following models are implemented in SWRC Fit.</p>
 <table border="1"><tr><td>Model<td>Equation<td>Parameters</tr>
 ''')
@@ -226,7 +226,7 @@ def japanese():
 <h1>SWRC Fit の土壌水分保持関数</h1>
 
 <p>土壌水分保持曲線 (SWRC) は体積含水率θの圧力水頭hによる関数である水分保持関数 &theta;(h) によってあらわされる（<a href="https://toyo.repo.nii.ac.jp/?action=repository_uri&item_id=8838&file_id=22&file_no=1">関, 2017</a>）。ここで h は不飽和で正の値とするサクション（負圧）である。
-有効水分量 S<sub>e</sub> は \(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\) と定義される。
+有効水分量 S<sub>e</sub> は \\(S_e = \\frac{\\theta-\\theta_r}{\\theta_s-\\theta_r}\\) と定義される。
 ここで、飽和含水率θ<sub>s</sub>と残留含水率θ<sub>r</sub>は定数とすることも変数とすることもできる。
 S<sub>e</sub>(h) から θ(h) を θ(h) = (θ<sub>s</sub> - θ<sub>r</sub>)S<sub>e</sub>(h) + θ<sub>r</sub> によって得ることができる。</p></p>
 
@@ -251,7 +251,7 @@ Q(x)=1-&Phi;(x) とあらわされる関数であり、<a href="https://ja.wikip
 <h2>線型和モデル（マルチモデル）</h2>
 
 <p>線形和水分保持関数は基本モデルをサブ関数S<sub>i</sub>(h)としてその線形和で定義される (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。
-\[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
+\\[ S(h) = \\Sigma_{i=1}^k w_i S_i(h) \\]
 k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt;1, &Sigma;w<sub>i</sub> = 1 である。
 ユニモーダルモデルは k=1 バイモーダルモデルは k=2 である。</p>
 
@@ -283,7 +283,7 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 <h2>CHモデル</h2>
 
 <p>BC, VG, KOサブ関数に対する線形和モデルに対する CHモデルが <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>において
-\[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \]
+\\[H = h_{b_i} = \\alpha_i^{-1} = h_{m_i} \\]
 と定義されている。この中で、次の関数が SWRC Fit に実装されている。</p>
 <table border="1"><tr><td>モデル<td>式<td>パラメータ</tr>
 ''')
