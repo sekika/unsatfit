@@ -11,9 +11,9 @@ H0 = 6.3e6  # Se=0 at h=H0
 ht = pd.read_csv('swrc.csv')
 h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
-ht = pd.read_csv('hcc.csv')
-h_k = np.array(ht['h'])
-k = np.array(ht['K'])
+hk = pd.read_csv('hcc.csv')
+h_k = np.array(hk['h'])
+k = np.array(hk['K'])
 # Get optimized WRF parameters
 f = unsatfit.Fit()
 f.swrc = (h_t, theta)

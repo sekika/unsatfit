@@ -7,9 +7,9 @@ import unsatfit
 ht = pd.read_csv('swrc.csv')
 h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
-ht = pd.read_csv('hcc.csv')
-h_k = np.array(ht['h'])
-k = np.array(ht['K'])
+hk = pd.read_csv('hcc.csv')
+h_k = np.array(hk['h'])
+k = np.array(hk['K'])
 # DBC model
 # Get optimized WRF parameters
 f = unsatfit.Fit()

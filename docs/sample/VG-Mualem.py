@@ -10,9 +10,9 @@ FIG = 'VG-Mualem.png'
 ht = pd.read_csv(DATA_SWRC, comment='#')
 h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
-ht = pd.read_csv(DATA_HCC, comment='#')
-h_k = np.array(ht['h'])
-k = np.array(ht['K']) / 24 / 3600
+hk = pd.read_csv(DATA_HCC, comment='#')
+h_k = np.array(hk['h'])
+k = np.array(hk['K']) / 24 / 3600
 ### Optimize parameters ###
 f = unsatfit.Fit()  # Create instance for fitting
 f.swrc = (h_t, theta)  # Data of soil water retention

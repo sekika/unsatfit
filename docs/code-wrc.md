@@ -9,6 +9,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 - Fitted parameters are shown at the standard output, where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively. Statistics are also shown.
 - Note that the program is unit independent, meaning that the unit of the parameters depends on the unit of the input data. Unit of pressure head is assumed as cm for a (cm<sup>-1</sup>) and h<sub>b</sub>.
 - Figure files are produced as png files. For use in papers, pdf files can be produced as instructed in the sample code. To change the appearance of a figure, edit the figure settings in the sample code. For more figure options, see the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
+- See [Reading data from Excel](excel.md) if you wish.
 
 ## List of sample codes
 - [Brooks and Corey (BC) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/BC.py)

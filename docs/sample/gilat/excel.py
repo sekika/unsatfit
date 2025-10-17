@@ -2,38 +2,39 @@
 import numpy as np
 import pandas as pd
 import unsatfit
+import openpyxl
 
-MODEL = 'VG'
+MODEL = 'KBC'
 HB = 2  # hb value of the modified model
 
 # Read data from csv file
-ht = pd.read_csv('swrc.csv')
+ht = pd.read_excel('data.xlsx', sheet_name='swrc')
 h_t = np.array(ht['h'])
 theta = np.array(ht['theta'])
-hk = pd.read_csv('hcc.csv')
+hk = pd.read_excel('data.xlsx', sheet_name='hcc')
 h_k = np.array(hk['h'])
 k = np.array(hk['K'])
 # Get optimized WRF parameters
 f = unsatfit.Fit()
 f.swrc = (h_t, theta)
 f.unsat = (h_k, k)
-qs, qr, a, m, q = wrf = f.get_wrf_vg()
-n = q/(1-m)  # n is calculated from optimized m
+qs, qr, w1, hm, s1, l2 = wrf = f.get_wrf_kobcch()
 # Set HCF model
 model = MODEL
-f.set_model(model, const=[wrf, 'r=2'])
-# Set modified model when n < 1.1
-if n < 1.1:
+f.set_model(model, const=[wrf, 'r=1'])
+# Set modified model when sigma1 > 2
+if s1 > 2:
     model = 'M' + MODEL
     f.modified_model(HB)  # Change to modified model
 # Show model description to optimize HCF function
 print(f.model_description)
-print('Therefore n = {0:.3f}'.format(n))
 # Set initial parameters
 p = (1, 2, 4, 6)  # Initial values of p
-f.ini = ((max(k),), p)
+q = (0.5, 1, 2)  # Initial values of q
+f.ini = ((max(k),), p, q)
 # Set bound of parameters
-f.b_p = (-1, 6)  # Minimum and maximum of p
+f.b_p = (0.3, 10)  # Minimum and maximum of p
+f.b_q = (0.1, 2.5)  # Minimum and maximum of q
 # Set bound of Ks
 max_k = max(k) * 2
 if min(h_k) > 1:
@@ -44,7 +45,7 @@ f.optimize()
 if not f.success:
     print(f.message)  # Show error message
     exit(1)
-ks, p = f.fitted  # Fitted parameters
+ks, p, q = f.fitted  # Fitted parameters
 # Show optimized HCF parameters and R2
 print('Hydraulic conductivity parameters and R2')
 print(f.message)
@@ -54,7 +55,7 @@ f.label_theta = 'Volumetric water content'
 f.label_k = 'Hydraulic conductivity'
 f.legend_loc = 'upper right'  # Location of the legend
 f.data_legend = 'Measured'
-f.line_legend = '{0} p={1:.1f}'.format(model, p)
+f.line_legend = '{0} p={1:.1f} q={2:.1f}'.format(model, p, q)
 # Save figure
 f.save_fig = True
 # PDF file can be produced by changing from '.png' to '.pdf'
