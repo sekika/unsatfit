@@ -24,3 +24,5 @@ SWRC Fit is a web interface which uses unsatfit to determine parameters for wate
 
 * Seki, K., Toride, N., & Th. van Genuchten, M. (2022) Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21; e20168. https://doi.org/10.1002/vzj2.20168
 * Seki, K., Toride, N., & Th. van Genuchten, M. (2023) Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. https://doi.org/10.2478/johh-2022-0039
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sekika/unsatfit)

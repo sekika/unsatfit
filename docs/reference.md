@@ -103,3 +103,8 @@ It can be used for using [Japanese font](https://sekika.github.io/2023/03/11/pyp
 <dt>cor</dt>
 <dd>Correlation matrix. For WRF only.</dd>
 </dl>
+
+## AI documentation
+<ul>
+<li><a href="https://deepwiki.com/sekika/unsatfit">DeepWiki</a></li>
+</ul>
