@@ -140,6 +140,10 @@ def get_init_vg3(self, a1=0):  # w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3
         return ch
     if m1 > m_max:
         m1 = m_max
+    if a1 < f.b_a1[0]:
+        a1 = f.b_a1[0] * 1.0001
+    if a1 > f.b_a1[1]:
+        a1 = f.b_a1[1] * 0.9999
     # Fit second subfunction
     f.swrc = (h[i - 1:j], t[i - 1:j] - t[j - 1])
     try:
@@ -148,6 +152,10 @@ def get_init_vg3(self, a1=0):  # w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3
         return ch
     if m2 > m_max:
         m2 = m_max
+    if a2 < f.b_a2[0]:
+        a2 = f.b_a2[0] * 1.0001
+    if a2 > f.b_a2[1]:
+        a2 = f.b_a2[1] * 0.9999
     # Fit third subfunction
     f.swrc = (h[j - 1:], t[j - 1:])
     try:
@@ -156,6 +164,10 @@ def get_init_vg3(self, a1=0):  # w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3
         return ch
     if m3 > m_max:
         m3 = m_max
+    if a3 < f.b_a3[0]:
+        a3 = f.b_a3[0] * 1.0001
+    if a3 > f.b_a3[1]:
+        a3 = f.b_a3[1] * 0.9999
     # Final fitting
     w1 = 1 - t[i - 1]
     w2 = t[i - 1] - t[j - 1]
