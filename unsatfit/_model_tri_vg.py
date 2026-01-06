@@ -80,6 +80,10 @@ def get_init_vg3(self, a1=0):  # w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3
         a1 = f.b_a1[0] * 1.0001
     if a1 > f.b_a1[1]:
         a1 = f.b_a1[1] * 0.9999
+    if a3 < f.b_a3[0]:
+        a3 = f.b_a3[0] * 1.0001
+    if a3 > f.b_a3[1]:
+        a3 = f.b_a3[1] * 0.9999
     f.set_model('vg3', const=[[1, 1], [2, 0], [9, a3], [10, m3], 'q=1'])
     r2 = 0
     for p in (0.05, 0.3, 0.6):
@@ -191,17 +195,39 @@ def get_init_vg3_fix_a1(self, a1):  # w1, m1, ww2, alpha2, m2, alpha3, m3
     # w2 = (1-w1) * ww2
     from .unsatfit import Fit
     n_max = 8
-    x, t = self.swrc
+    swrc = list(zip(*self.swrc))
+    swrc_sort = sorted(swrc, key=lambda x: x[0])
+    swrc = list(zip(*swrc_sort))
+    x, t = swrc
+    x = np.array(x)
+    t = np.array(t)
     y = t / max(t)
+    idx = np.searchsorted(x, 1/a1)
+    x_b = np.array(x[idx:])
+    t_b = np.array(t[idx:])
+    y_b = t_b / max(t_b)
     f = Fit()
     f.debug = self.debug
-    f.swrc = (x, y)
+    f.swrc = (x_b, y_b)  # for h>a/a1
+    f.b_a1 = (0, a1)
+    f.b_a2 = (0, min(1, self.b_a3[1]))
     w, a2, m2, a3, m3 = f.get_init_vg2()
+    f.b_a1 = f.b_a2 = (0, a1)
+    f.b_a3 = (0, min(1, self.b_a3[1]))
+    if a2 < f.b_a2[0]:
+        a2 = f.b_a2[0] * 1.0001
+    if a2 > f.b_a2[1]:
+        a2 = f.b_a2[1] * 0.9999
+    if a3 < f.b_a3[0]:
+        a3 = f.b_a3[0] * 1.0001
+    if a3 > f.b_a3[1]:
+        a3 = f.b_a3[1] * 0.9999
     if a2 < a3:
         a2, a3 = a3, a2
         m2, m3 = m3, m2
         w = 1 - w
     m_max = 1 - 1 / n_max
+    f.swrc = (x, y) # For all data
     f.b_m = (0, m_max)
     f.set_model('vg3', const=[[1, 1], [2, 0],
                 f'a1={a1}', f'a3={a3}', f'm3={m3}', 'q=1'])

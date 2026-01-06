@@ -56,8 +56,13 @@ def get_init_vg(self):  # alpha and m
     f.swrc = (x, y)
     f.b_a = self.b_a
     hb, l = f.get_init_bc()
+    a = 1 / hb
+    if a < f.b_a[0]:
+        a = f.b_a[0] * 1.0001
+    if a > f.b_a[1]:
+        a = f.b_a[1] * 0.9999
     n = l + 1
-    f.ini = (1 / hb, 1 - 1 / n)
+    f.ini = (a, 1 - 1 / n)
     f.optimize()
     return f.fitted
 

@@ -65,12 +65,12 @@ def get_init_bvv(self, hb1=0):  # w1, hb1, l1, ww2, alpha2, m2, alpha3, m3
     f = Fit()
     f.debug = self.debug
     f.swrc = (x, y)
+    if self.b_hb[0] > 0:
+        f.b_a1 = f.b_a2 = f.b_a3 = (0, 1 / self.b_hb[0])
     w1, a1, m1, ww2, a2, m2, a3, m3 = f.get_init_vg3()
     m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     f.b_hb = self.b_hb
-    if self.b_hb[0] > 0:
-        f.b_a2 = f.b_a3 = (0, 1 / self.b_hb[0])
     f.set_model('BVV', const=[[1, 1], [2, 0], [3, w1], [6, ww2], [
                 7, a2], [8, m2], [9, a3], [10, m3], 'q=1'])
     f.ini = (max(1 / a1, f.b_hb[0] * 1.001), 1 / (1 - m1) - 1)
@@ -91,12 +91,11 @@ def get_init_bvv_fix_hb1(self, hb1):  # w1, l1, ww2, alpha2, m2, alpha3, m3
     f = Fit()
     f.debug = self.debug
     f.swrc = (x, y)
+    f.b_a2 = f.b_a3 = (0, 1 / hb1)
     w1, m1, ww2, a2, m2, a3, m3 = f.get_init_vg3(a1=1 / hb1)
     m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     f.b_hb = self.b_hb
-    if self.b_hb[0] > 0:
-        f.b_a2 = f.b_a3 = (0, 1 / self.b_hb[0])
     f.set_model('BVV', const=[[1, 1], [2, 0], [3, w1], [4, hb1], [6, ww2], [
                 7, a2], [8, m2], [9, a3], [10, m3], 'q=1'])
     f.ini = (1 / (1 - m1) - 1)

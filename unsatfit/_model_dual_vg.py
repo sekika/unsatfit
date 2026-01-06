@@ -69,22 +69,27 @@ def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
     f = Fit()
     f.debug = self.debug
     f.swrc = (x, y)
-    w, a, m1, m2 = f.get_init_vg2ch()
-    f.set_model('vg2', const=[[1, 1], [2, 0], [10, 1]])
     f.b_a = self.b_a1
     f.b_a1 = self.b_a1
-    f.b_a2 = self.b_a1
+    f.b_a2 = self.b_a2
+    w, a1, m1, m2 = f.get_init_vg2ch()
+    a2 = a1
+    f.set_model('vg2', const=[[1, 1], [2, 0], [10, 1]])
     m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
-    if a < f.b_a1[0]:
-        a = f.b_a1[0] * 1.0001
-    if a > f.b_a1[1]:
-        a = f.b_a1[1] * 0.9999
+    if a1 < f.b_a1[0]:
+        a1 = f.b_a1[0] * 1.0001
+    if a1 > f.b_a1[1]:
+        a1 = f.b_a1[1] * 0.9999
+    if a2 < f.b_a2[0]:
+        a2 = f.b_a2[0] * 1.0001
+    if a2 > f.b_a2[1]:
+        a2 = f.b_a2[1] * 0.9999
     if m1 > m_max:
         m1 = m_max * 0.9999
     if m2 > m_max:
         m2 = m_max * 0.9999
-    f.ini = (w, a, m1, a, m2)
+    f.ini = (w, a1, m1, a2, m2)
     m_max = 1 - 1 / n_max
     f.b_m = (0, m_max)
     f.optimize()
@@ -116,6 +121,7 @@ def get_init_vg2(self):  # w, alpha1, m1, alpha2, m2
         return ch
     if m1 > m_max:
         m1 = m_max
+    f.b_a = f.b_a2
     f.swrc = (h[i:], t[i:])
     try:
         a2, m2 = f.get_init_vg()
