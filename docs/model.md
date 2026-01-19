@@ -212,7 +212,7 @@ HCF variation: r=1 and independent p
 
 ## Trimodal models
 
-Available from version 6.0. To be documented fully later.
+See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)) for detail. Available from version 6.0.
 
 ### tri-VG model
 - Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168))
@@ -236,4 +236,12 @@ Available from version 6.0. To be documented fully later.
 - Bound: b_qs, b_qr, b_w1, b_hb, b_lambda, b_w1, b_a2, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
 
 ### VVP model
-- To be documanted later
+- Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf))
+- Name: VVP, tri-PDI
+- WRF parameters: qs, qr, w1, a1, m1, ww2, a2, m2, he, q
+- Converted parameter: w2 = (1-w1) * ww2 (w2 was transformed to make the bound independent of w1), n2 = q/(1-m2)
+- qr=0 by definition. &theta;=0 at h=he.
+- get_init() = get_init_vvp(he): returns w1, a1, m1, ww2, a2, m2 where q=1
+- HCF: [General HCF](hcmodel.md)
+- Parameters which only appears in HCF: Ks, p, r, a
+- Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_w1, b_a2, b_m, b_he, b_ks, b_p, b_q, b_r, b_a
