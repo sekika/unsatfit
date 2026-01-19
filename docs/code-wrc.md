@@ -54,3 +54,18 @@ Method
 - Upper limits are imposed for θ<sub>s</sub> / max(θ) = 1.5 and n<sub>1</sub>, n<sub>2</sub> = 8, along with a lower limit of σ<sub>2</sub> = 0.2.
 - The generated PDF files are concatenated using [this script](https://gist.github.com/sekika/1e8811868cebeca6c3443c69849929db).
 - With the [UNSODA viewer](https://sekika.github.io/unsoda/), you can select a specific soil sample and send data directly to SWRC Fit by clicking the link labeled "Fit with various water retention models".
+
+## Trimodal models
+While trimodal water-retention functions provide the flexibility needed for media with
+clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. Please use these sample code with cautions. See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)) for detail.
+
+Here are sample codes for trimodal models.
+
+- [tri-VG model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/tri-VG.py)
+- [BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub> (BVV) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/BVV.py)
+- [VVP model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VVP.py)
+- [All these trimodal models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/trimodal.py)
+
+By running the last code with [sample data of IL sandstone](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/IL/swrc.csv), this figure can be obtained.
+
+<img src="sample-wrc/trimodal.png" width="300" />
