@@ -26,7 +26,7 @@ def vgfs(self, p, x):
 
 
 def vgfs_se(self, p, x):
-    qs, qr, qa, a, m, he, q = p
+    qs, qr, qa, a, m, he, q = p[:7]
     vg = self.vg_se([a, m, q], x)
     xi = np.where(x > 1, 1 - np.log(x) / np.log(he), 1)
     xisa = xi * qa / qs

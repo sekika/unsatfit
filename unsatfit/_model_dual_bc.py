@@ -42,7 +42,7 @@ def bc2f(self, p, x):
 
 
 def bc2f_se(self, p, x):
-    qs, qr, w1, hb1, l1, hb2, l2 = p
+    qs, qr, w1, hb1, l1, hb2, l2 = p[:7]
     s1 = np.where(x < hb1, 1, (x / hb1) ** (-l1))
     s2 = np.where(x < hb2, 1, (x / hb2) ** (-l2))
     return w1 * s1 + (1 - w1) * s2

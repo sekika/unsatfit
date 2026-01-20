@@ -26,7 +26,7 @@ def pk(self, p, x):
 
 
 def pk_se(self, p, x):
-    qs, qr, w, ha, sigma1, he = p
+    qs, qr, w, ha, sigma1, he = p[:6]
     s1 = self.ln_se([ha, sigma1], x)
     bunbo = np.log(1 + he / ha)
     xm = 1 / (1 - np.log(2) / bunbo)

@@ -58,7 +58,7 @@ def kobc(self, p, x):
 
 
 def kobc_se(self, p, x):
-    qs, qr, w, hm1, sigma1, hb2, l2 = p
+    qs, qr, w, hm1, sigma1, hb2, l2 = p[:7]
     s1 = self.ln_se([hm1, sigma1], x)
     s2 = np.where(x < hb2, 1, (x / hb2) ** (-l2))
     return w * s1 + (1 - w) * s2
@@ -190,7 +190,7 @@ def kobcch(self, p, x):
 
 
 def kobcch_se(self, p, x):
-    qs, qr, w, h, sigma, l2 = p
+    qs, qr, w, h, sigma, l2 = p[:6]
     s1 = self.ln_se([h, sigma], x)
     s2 = np.where(x < h, 1, (x / h) ** (-l2))
     return w * s1 + (1 - w) * s2

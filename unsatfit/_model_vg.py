@@ -32,7 +32,7 @@ def vg(self, p, x):
 
 
 def vg_se(self, p, x):
-    a, m, q = p
+    a, m, q = p[:3]
     n = q / (1 - m)
     return (1 + (a * x)**n)**(-m)
 
@@ -103,7 +103,7 @@ def mvg(self, p, x):
 
 
 def mvg_se(self, p, x):
-    a, m, hs, q = p
+    a, m, hs, q = p[:4]
     n = q / (1 - m)
     sm = (1 + (a * hs)**n)**(m)
     return np.where(x < hs, 1, sm * (1 + (a * x)**n)**(-m))

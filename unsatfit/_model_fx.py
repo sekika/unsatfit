@@ -25,7 +25,7 @@ def fx(self, p, x):
 
 
 def fx_se(self, p, x):
-    a, m, n = p
+    a, m, n = p[:3]
     return (np.log(np.e + (x / a)**n))**(-m)
 
 

@@ -50,7 +50,7 @@ def vgbc(self, p, x):
 
 
 def vgbc_se(self, p, x):
-    qs, qr, w, a1, m1, hb2, l2, q = p
+    qs, qr, w, a1, m1, hb2, l2, q = p[:8]
     s1 = self.vg_se([a1, m1, q], x)
     s2 = np.where(x < hb2, 1, (x / hb2) ** (-l2))
     return w * s1 + (1 - w) * s2
@@ -189,7 +189,7 @@ def vgbcch(self, p, x):
 
 
 def vgbcch_se(self, p, x):
-    qs, qr, w, a1, m1, l2, q = p
+    qs, qr, w, a1, m1, l2, q = p[:7]
     hb2 = 1 / a1
     s1 = self.vg_se([a1, m1, q], x)
     # Ignore runtime warning, because divide by zero is warned when x=0
