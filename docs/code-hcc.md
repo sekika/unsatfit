@@ -172,3 +172,15 @@ $$
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
 <img src="sample/multi-v.png" width="300" />
+
+## Trimodal models
+These samples codes use same models and fitting setup as in Figure 1 of Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)). Constant parameters (e.g., Ks = 3.29 cm / day for the IL sandstone in Figure 1) and unit-conversion parameters for isothermal vapor hydraulic conductivity are provided in the source.
+
+- [tri-VG model](https://github.com/sekika/unsatfit/blob/main/docs/sample/tri-VG.py)
+- [BVV model](https://github.com/sekika/unsatfit/blob/main/docs/sample/BVV.py)
+- [VVP model](https://github.com/sekika/unsatfit/blob/main/docs/sample/VVP.py)
+- [dual-VG and trimodal models](https://github.com/sekika/unsatfit/blob/main/docs/sample/trimodal.py)
+
+Result for the last code with [IL sandstone](https://github.com/sekika/unsatfit/tree/main/docs/sample/IL) is shown.
+
+<img src="sample/trimodal.png" width="300" />
