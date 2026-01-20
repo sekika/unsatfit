@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import unsatfit
 
-MODELS = ['tri-VG', 'BVV', 'VVP']
+MODELS = ['dual-VG', 'tri-VG', 'BVV', 'VVP']
 HE = 6.3e6  # pressure head of zero water content
 
 # Read data from csv file
@@ -31,7 +31,7 @@ f.filename = 'trimodal.svg'
 
 minAIC = 99999
 for model in MODELS:
-    if model in ['tri-VG', 'BVV']:
+    if model in ['dual-VG', 'tri-VG', 'BVV']:
         const = [f'qs={qs}', 'qr=0', 'q=1']
         f.set_model(model, const=const)
         f.ini = f.get_init()

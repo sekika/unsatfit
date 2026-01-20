@@ -64,7 +64,7 @@ Here are sample codes for trimodal models.
 - [tri-VG model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/tri-VG.py)
 - [BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub> (BVV) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/BVV.py)
 - [VVP model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VVP.py)
-- [All these trimodal models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/trimodal.py)
+- [dual-VG and trimodal models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/trimodal.py)
 
 By running the last code with [sample data of IL sandstone](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/IL/swrc.csv), this figure can be obtained.
 
