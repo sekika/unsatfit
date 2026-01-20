@@ -202,7 +202,7 @@ def get_init_vg3_fix_a1(self, a1):  # w1, m1, ww2, alpha2, m2, alpha3, m3
     x = np.array(x)
     t = np.array(t)
     y = t / max(t)
-    idx = np.searchsorted(x, 1/a1)
+    idx = np.searchsorted(x, 1 / a1)
     x_b = np.array(x[idx:])
     t_b = np.array(t[idx:])
     y_b = t_b / max(t_b)
@@ -227,7 +227,7 @@ def get_init_vg3_fix_a1(self, a1):  # w1, m1, ww2, alpha2, m2, alpha3, m3
         m2, m3 = m3, m2
         w = 1 - w
     m_max = 1 - 1 / n_max
-    f.swrc = (x, y) # For all data
+    f.swrc = (x, y)  # For all data
     f.b_m = (0, m_max)
     f.set_model('vg3', const=[[1, 1], [2, 0],
                 f'a1={a1}', f'a3={a3}', f'm3={m3}', 'q=1'])
