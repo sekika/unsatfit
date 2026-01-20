@@ -20,7 +20,7 @@ If you encounter any issues, feel free to ask [questions](feedback.md).
 
 This is an example output of this program; water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam fitted with KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.
 
-![KBC](sample/KBC.png "KBC")
+![KBC](sample/KBC.svg "KBC")
 
 For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf)).
 

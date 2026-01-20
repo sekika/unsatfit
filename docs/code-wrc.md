@@ -8,7 +8,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 - Run the sample code at the same directory with the data file (swrc.csv). For running the code on Mac or unix-like system, edit the first line ([shebang](https://en.wikipedia.org/wiki/Shebang_(Unix))) and mark the file executable by <code>chmod +x VG.py</code>. For running on Windows, please refer to [Python on Windows FAQ](https://docs.python.org/3/faq/windows.html).
 - Fitted parameters are shown at the standard output, where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively. Statistics are also shown.
 - Note that the program is unit independent, meaning that the unit of the parameters depends on the unit of the input data. Unit of pressure head is assumed as cm for a (cm<sup>-1</sup>) and h<sub>b</sub>.
-- Figure files are produced as png files. For use in papers, pdf files can be produced as instructed in the sample code. To change the appearance of a figure, edit the figure settings in the sample code. For more figure options, see the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
+- Figure files are produced as svg files. For use in papers, pdf files can be produced as instructed in the sample code. To change the appearance of a figure, edit the figure settings in the sample code. For more figure options, see the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
 - See [Reading data from Excel](excel.md) if you wish.
 
 ## List of sample codes
@@ -35,9 +35,9 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 - It also shows the model with the smallest corrected AIC.
 - Results with [sample data of Gilat loam](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/gilat/swrc.csv) and [Daisen Andisol](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample-wrc/andisol/swrc.csv) (Fig. 9 in [this paper](https://www.jstage.jst.go.jp/article/jssoilphysics/155/0/155_35/_pdf/-char/en)) are shown below.
 
-<img src="sample-wrc/multi-gilat.png" width="300" />
+<img src="sample-wrc/multi-gilat.svg" width="300" />
 
-<img src="sample-wrc/multi-andisol.png" width="300" />
+<img src="sample-wrc/multi-andisol.svg" width="300" />
 
 ## UNSODA data
 Here are sample codes to draw multiple fitting curves for the [UNSODA](https://agdatacommons.nal.usda.gov/articles/dataset/UNSODA_2_0_Unsaturated_Soil_Hydraulic_Database_Database_and_program_for_indirect_methods_of_estimating_unsaturated_hydraulic_properties/24851832) database and figures which were produced with the code. [pdfgridcat](https://pypi.org/project/pdfgridcat/) was used for arranging the figures.
@@ -68,4 +68,4 @@ Here are sample codes for trimodal models.
 
 By running the last code with [sample data of IL sandstone](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/IL/swrc.csv), this figure can be obtained.
 
-<img src="sample-wrc/trimodal.png" width="300" />
+<img src="sample-wrc/trimodal.svg" width="300" />

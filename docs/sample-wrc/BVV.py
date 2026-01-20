@@ -28,5 +28,5 @@ print(f'{MODEL} model with qs={qs:.3} qr = 0')
 print(f'w1 = {w1:.3f} hb1 = {hb1:.3g} λ1 = {l1:.3f} w2 = {w2:.3f} 1/α2 = {1/a2:.0f} n2 = {n2:.3f} 1/α3 = {1/a3:.0f} n3 = {n3:.3f}')
 print(f'R2 = {f.r2_ht:.5} AIC = {f.aic_ht:.5}')
 f.save_fig = True
-f.filename = MODEL + '.png'
+f.filename = MODEL + '.svg'
 f.plot()

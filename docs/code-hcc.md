@@ -38,16 +38,16 @@ $$
 - It first optimizes WRF parameters (&theta;<sub>s</sub>, &theta;<sub>r</sub>, a, n) of VG model, and then optimizes HCF parameters (K<sub>s</sub>, p) of VG Mualem model, or modified VG model (h<sub>b</sub>=2) [Vogel et al. (2000)](https://doi.org/10.1016/S0309-1708(00)00037-3) when n &gt; 1.1. h<sub>b</sub> value can be changed as HB value in the sample code.
 - Fitted parameters are shown at the standard output, where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively, and R2 q means R<sup>2</sup> for &theta; of water retention curve and R2 logK means R<sup>2</sup> for log(K) of hydraulic conductivity curve.
 - Note that the program is unit independent, meaning that the unit of the parameters depends on the unit of the input data. Unit of pressure head is assumed as cm for a (cm<sup>-1</sup>) and h<sub>b</sub>.
-- Figure file is produced as VG.png. For use in papers, pdf file can be produced as instructed in the sample code.
+- Figure file is produced as VG.svg. For use in papers, pdf file can be produced as instructed in the sample code.
 - See [Reading data from Excel](excel.md) if you wish.
 
 Result with [sample data of clay (Unsoda 2362)](https://github.com/sekika/unsatfit/tree/main/docs/sample/clay2362) is shown below.
 
-<img src="sample/VG-2362.png" width="300" />
+<img src="sample/VG-2362.svg" width="300" />
 
 Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below. In this case, bimodal model is appropriate, as shown below.
 
-<img src="sample/VG-gilat.png" width="300" />
+<img src="sample/VG-gilat.svg" width="300" />
 
 ## Bimodal model with general HCF
 
@@ -77,7 +77,7 @@ $$
 - It first optimizes WRF parameters (&theta;<sub>s</sub>, w, H, &sigma;<sub>1</sub>, &lambda;<sub>2</sub>) of KBC model (&theta;<sub>r</sub>=0), and then optimizes general HCF parameters (K<sub>s</sub>, p, q) of KBC model (r=1), or modified KBC model (h<sub>b</sub>=2, r=1) when &sigma;<sub>1</sub> &gt; 2.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/KBC.png" width="300" />
+<img src="sample/KBC.svg" width="300" />
 
 ## DVC (dual-VG-CH) model (&theta;<sub>r</sub>=0, q=1)
 {% raw %}
@@ -99,7 +99,7 @@ $$
 - It optimizes WRF parameters (&theta;<sub>s</sub>, w, a, n<sub>1</sub>, n<sub>2</sub>)  , and then optimizes general HCF parameters (K<sub>s</sub>, p, r) of DVC model or modified DVC model (h<sub>b</sub>=2) when n<sub>1</sub> or n<sub>2</sub> is smaller than 1.1.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/DVC.png" width="300" />
+<img src="sample/DVC.svg" width="300" />
 
 ## DBC (dual-BC-CH) model (&theta;<sub>r</sub>=0, r=1)
 {% raw %}
@@ -122,7 +122,7 @@ $$
 - It optimizes WRF parameters (&theta;<sub>s</sub>, w, &lambda;<sub>1</sub>, &lambda;<sub>2</sub>), and then optimizes general HCF parameters (K<sub>s</sub>, p, q) of DBC model.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/DBC.png" width="300" />
+<img src="sample/DBC.svg" width="300" />
 
 # Peters model (&theta;<sub>r</sub>=0)
 {% raw %}
@@ -151,27 +151,27 @@ $$
 - It optimizes WRF parameters (&theta;<sub>s</sub>, w, H, &sigma;), and then optimizes general HCF parameters (K<sub>s</sub>, p, a, &omega;) of Peters model or modified Peters model (h<sub>b</sub>=2) when &sigma; &gt; 2.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/PE.png" width="300" />
+<img src="sample/PE.svg" width="300" />
 
 ## Multiple curves
 - Use [sample code for multiple curves](https://github.com/sekika/unsatfit/blob/main/docs/sample/multi.py). See instruction in the VGM model above.
 - Draw DBC, DVC, KBC and Peters model in the same figure.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/multi.png" width="300" />
+<img src="sample/multi.svg" width="300" />
 
 ## Contour plot
 - Use [sample code for contour plot](https://github.com/sekika/unsatfit/blob/main/docs/sample/contour.py). See instruction in the VGM model above.
 - It draws a contour plot of (p, q) for RMSE of estimated log<sub>10</sub>(K) for KBC (r=1) optimization.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-![contour](sample/contour.png "contour")
+![contour](sample/contour.svg "contour")
 
 ## Isothermal vapor conductivity
 - Use [sample code for multiple curves with vapor condictivity](https://github.com/sekika/unsatfit/blob/main/docs/sample/multi-v.py). It sets some converting parameters of units and temperature. Please read the source code.
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
-<img src="sample/multi-v.png" width="300" />
+<img src="sample/multi-v.svg" width="300" />
 
 ## Trimodal models
 These samples codes use same models and fitting setup as in Figure 1 of Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)). Constant parameters (e.g., Ks = 3.29 cm / day for the IL sandstone in Figure 1) and unit-conversion parameters for isothermal vapor hydraulic conductivity are provided in the source.
@@ -183,4 +183,4 @@ These samples codes use same models and fitting setup as in Figure 1 of Seki et 
 
 Result for the last code with [IL sandstone](https://github.com/sekika/unsatfit/tree/main/docs/sample/IL) is shown.
 
-<img src="sample/trimodal.png" width="300" />
+<img src="sample/trimodal.svg" width="300" />

@@ -12,7 +12,7 @@ For quick references and sample codes, visit https://sekika.github.io/unsatfit/
 
 This is an example output of this program: the water retention curve (top) and hydraulic conductivity curve (bottom) of Gilat loam, fitted with the KBC (KO<sub>1</sub>BC<sub>2</sub>-CH) model.
 
-![KBC](https://sekika.github.io/unsatfit/sample/KBC.png "KBC")
+![KBC](https://sekika.github.io/unsatfit/sample/KBC.svg "KBC")
 
 ## SWRC Fit
 

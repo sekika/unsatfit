@@ -69,6 +69,6 @@ f.data_legend = 'Measured'
 f.line_legend = f'{model} p={p:.1f} r={r:.1f}'
 # Save figure
 f.save_fig = True
-# PDF file can be produced by changing from '.png' to '.pdf'
-f.filename = MODEL + '.png'
+# PDF file can be produced by changing from '.svg' to '.pdf'
+f.filename = MODEL + '.svg'
 f.plot()  # Draw figure

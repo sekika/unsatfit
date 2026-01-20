@@ -59,5 +59,5 @@ f.contour_level = 14
 f.contour_marker_color = 'black'
 # Draw contour plot
 f.save_fig = True
-f.filename = 'contour.png'
+f.filename = 'contour.svg'
 f.contour('p', 'q')

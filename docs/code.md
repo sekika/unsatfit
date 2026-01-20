@@ -4,10 +4,10 @@ Easiest way to start learnin g how to use unsatfit is to run sample codes as ins
 
 - [Sample codes for optimizing **WRF only**](code-wrc.md)
 
-<img src="sample-wrc/multi-gilat.png" width="300" />
+<img src="sample-wrc/multi-gilat.svg" width="300" />
 
 - [Sample codes for optimizing **WRF and HCF**](code-hcc.md)
 
-<img src="sample/multi.png" width="300" />
+<img src="sample/multi.svg" width="300" />
 
 Use [pdfgridcat](https://pypi.org/project/pdfgridcat/) for arranging multiple figures.

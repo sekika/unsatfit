@@ -152,6 +152,6 @@ print(f.message)
 f.line_legend = model
 # Save figure
 f.save_fig = True
-# PDF file can be produced by changing from '.png' to '.pdf'
-f.filename = 'multi-v.png'
+# PDF file can be produced by changing from '.svg' to '.pdf'
+f.filename = 'multi-v.svg'
 f.plot()

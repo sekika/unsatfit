@@ -24,8 +24,8 @@ f.legend_loc = 'upper right'  # Location of the legend
 f.data_legend = 'Measured'
 # Save figure
 f.save_fig = True
-# PDF file can be produced by changing from '.png' to '.pdf'
-f.filename = 'multi.png'
+# PDF file can be produced by changing from '.svg' to '.pdf'
+f.filename = 'multi.svg'
 
 minAIC = 99999
 for model in MODELS:
