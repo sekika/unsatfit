@@ -166,3 +166,9 @@ $$
 - Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
 
 ![contour](sample/contour.png "contour")
+
+## Isothermal vapor conductivity
+- Use [sample code for multiple curves with vapor condictivity](https://github.com/sekika/unsatfit/blob/main/docs/sample/multi-v.py). It sets some converting parameters of units and temperature. Please read the source code.
+- Result with [sample data of Gilat loam](https://github.com/sekika/unsatfit/tree/main/docs/sample/gilat) is shown below.
+
+<img src="sample/multi-v.png" width="300" />
