@@ -22,4 +22,7 @@
 - 2024-06-10: Added [Zenodo integration](https://doi.org/10.5281/zenodo.11544880) for permanent archiving.
 - 2024-10-20: Received the **JSSP award** ([土壌物理学会賞](https://js-soilphysics.com/prz)) from the Japanese Society of Soil Physics for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35). A [summary report](https://doi.org/10.34467/jssoilphysics.159.0_103) was subsequently published in Japanese.
 - 2024-11-13: Presented a [poster](https://researchmap.jp/sekik/presentations/48434771/attachment_file.pdf) on hysteresis and [hystfit](https://sekika.github.io/hystfit/) at [ASA, CSSA, SSSA meeting](https://researchmap.jp/sekik/presentations/48434771); took a [photo with Rien van Genuchten](https://sekika.github.io/toyo/photos/RVG.html).
+- 2025-03-11: Provided [sample code for drawing water retention curves](code-wrc.html) after [discussion](https://github.com/sekika/unsatfit/discussions/8).
+- 2025-03-29: Released unsatfit 5.3; at [user's request](https://github.com/sekika/unsatfit/discussions/9), initialization functions (get_init and get_wrf) are now available for all [models](model.html). Expanded [WRF Sample codes](code-wrc.html).
+- 2025-05-08: [Presented](https://researchmap.jp/sekik/presentations/50028303/attachment_file.pdf) on multimodal soil hydraulic models and unsatfit at <a href="https://sekika.github.io/toyo/photos/rio.jpg">Rien van Genuchten conference</a> in Rio de Janeiro.
 {% include news.html %}
