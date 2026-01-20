@@ -1,10 +1,10 @@
 all:
 	cp clay2362/*.csv .
 	./VGM.py
-	mv VG.png VG-2362.png
+	mv VG.svg VG-2362.svg
 	cp gilat/*.csv .
 	./VGM.py
-	mv VG.png VG-gilat.png
+	mv VG.svg VG-gilat.svg
 	./KBC.py
 	./DVC.py
 	./DBC.py
