@@ -51,7 +51,7 @@ Method
 
 - The code reads laboratory drying curves of UNSODA data from a [JSON converted file](https://sekika.github.io/file/unsoda/).
 - &theta;<sub>r</sub> is fitted for VG and KO models, and &theta;<sub>r</sub> = 0 for other models.
-- Upper limits are imposed for θ<sub>s</sub> / max(θ) = 1.5 and n<sub>1</sub>, n<sub>2</sub> = 8, along with a lower limit of σ<sub>2</sub> = 0.2.
+- Upper limits are imposed for &theta;<sub>s</sub> / max(&theta;) = 1.5 and n<sub>1</sub>, n<sub>2</sub> = 8, along with a lower limit of σ<sub>2</sub> = 0.2.
 - The generated PDF files are concatenated using [this script](https://gist.github.com/sekika/1e8811868cebeca6c3443c69849929db).
 - With the [UNSODA viewer](https://sekika.github.io/unsoda/), you can select a specific soil sample and send data directly to SWRC Fit by clicking the link labeled "Fit with various water retention models".
 
@@ -59,13 +59,13 @@ Method
 While trimodal water-retention functions provide the flexibility needed for media with
 clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. Please use these sample code with cautions. See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)) for detail.
 
-Here are sample codes for trimodal models.
+Here is sample code for trimodal models. The fixed parameters are &theta;<sub>s</sub> = max(&theta;), &theta;<sub>r</sub> = 0 and h<sub>e</sub> (for VVP) = 6.3e6.
 
 - [tri-VG model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/tri-VG.py)
 - [BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub> (BVV) model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/BVV.py)
 - [VVP model](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/VVP.py)
 - [dual-VG and trimodal models](https://github.com/sekika/unsatfit/blob/main/docs/sample-wrc/trimodal.py)
 
-By running the last code with [sample data of IL sandstone](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/IL/swrc.csv), this figure can be obtained.
+By running the final code on the [IL sandstone sample dataset](https://raw.githubusercontent.com/sekika/unsatfit/refs/heads/main/docs/sample/IL/swrc.csv), you can generate this figure, which is identical to the upper panel of Figure 1 in Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf)).
 
 <img src="sample-wrc/trimodal.svg" width="300" />
