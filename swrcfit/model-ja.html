@@ -68,11 +68,11 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <h2 id="trimodal">三重モデル（トリモーダルモデル）</h2>
 
-<p>トリモーダルモデルは <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> で定義されており、その応用例は Seki et al.（2026）に示されている。論文で議論しているとおり、トリモーダルな水分保持関数は、三重の間隙構造が明瞭な土壌に必要な柔軟性を提供する一方で、自由度が増えるため、データの測定範囲が限られている場合や誤差が大きい場合には、パラメータが一意に定まらない可能性があり、注意が必要である。</p>
+<p>三重モデルは <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> で定義されており、その応用例は Seki et al.（2026）に示されている。論文で議論しているとおり、トリモーダルな水分保持関数は、三重の間隙構造が明瞭な土壌に必要な柔軟性を提供する一方で、自由度が増えるため、データの測定範囲が限られている場合や誤差が大きい場合には、パラメータが一意に定まらない可能性があり、注意が必要である。複雑さの異なるモデルと比較し、適合度の差があまりない場合には、より単純なモデルを採用することを推奨する。
 
 <table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>tri-VG<td>tri-VG<td>\(\begin{eqnarray}S_e &=& \sum_{i=1}^{3} w_i\bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i}\\m_i&=&1-1/{n_i}\\w_3&=&1-w_1-w_2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr><tr><td>BVV<td>BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub><td>\(\begin{eqnarray}S_e &=& w_1 BC_1 + w_2 VG_2 + (1-w_1 - w_2) VG_3\\BC_1 &=& \begin{cases}\left(h / h_{b1}\right)^{-\lambda_1} & (h>h_{b1}) \\ 1 & (h \le h_{b1})\end{cases}\\ VG_i &=& \bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i} \\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b1</sub>, &lambda;<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr></table>
 
-<p>サンプルデータ（trimodal rock; Illinois sandstone）のSWRCを示す。トリモーダルモデルでフィッティングし、比較のためにdual-VGモデルも示す。トリモーダルモデルでは固定パラメータとして &theta;<sub>s</sub> = max(&theta;) および &theta;<sub>r</sub> = 0 を使用し、dual-VGモデルでは &theta;<sub>r</sub> = 0 のみを固定した。</p>
+<p>サンプルデータ（trimodal rock; Illinois sandstone）のSWRCを示す。トリモーダルモデルでフィッティングし、比較のためにdual-VGモデルも示す。固定パラメータは &theta;<sub>s</sub> = max(&theta;) および &theta;<sub>r</sub> = 0 である。SWRC Fit では、三重モデルの固定パラメータは常にこの設定となる。</p>
 
 <div align="center"><img src="img/trimodal.svg" alt="Trimodal models"></div>
 

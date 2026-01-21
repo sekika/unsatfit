@@ -133,7 +133,7 @@ def model(ID):
     if ID == 'BVV':
         return {
             'html': 'BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub>',
-            'label': 'BVV',
+            'label': '$\\mathrm{BC}_1\\mathrm{VG}_2\\mathrm{VG}_3$',
             'equation': '\\begin{eqnarray}S_e &=& w_1 BC_1 + w_2 VG_2 + (1-w_1 - w_2) VG_3\\\\BC_1 &=& \\begin{cases}\\left(h / h_{b1}\\right)^{-\\lambda_1} & (h>h_{b1}) \\\\ 1 & (h \\le h_{b1})\\end{cases}\\\\ VG_i &=& \\bigl[1+(\\alpha_i h)^{n_i}\\bigr]^{-m_i} \\\\m_i&=&1-1/{n_i}\\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'h<sub>b1</sub>', '&lambda;<sub>1</sub>', 'w<sub>2</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>', '&alpha;<sub>3</sub>', 'n<sub>3</sub>'),
             'parameter_org': ('w<sub>1</sub>', 'h<sub>b1</sub>', '&lambda;<sub>1</sub>', 'w<sub>2</sub> / (1-w<sub>1</sub>)', '&alpha;<sub>2</sub>', 'm<sub>2</sub>', '&alpha;<sub>3</sub>', 'm<sub>3</sub>'),

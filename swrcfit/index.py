@@ -547,8 +547,7 @@ def swrcfit(f):
             f2 = copy.deepcopy(f)
             result.append(f2)
             return result
-        w1, a1, m1, ww2, a2, m2, a3, m3 = f.fitted
-        w2 = (1-w1) * ww2
+        w1, a1, m1, w2, a2, m2, a3, m3 = f.sort_param(f.fitted)
         n1 = 1 / (1 - m1)
         n2 = 1 / (1 - m2)
         n3 = 1 / (1 - m3)

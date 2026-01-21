@@ -171,14 +171,14 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 
 <h2 id="trimodal">Trimodal models</h2>
 
-<p>Trimodal models are defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>, and the application is shown in Seki et al., (2026). As discussed in the paper, while trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy.</p>
+<p>Trimodal models are defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>, and the application is shown in Seki et al., (2026). As discussed in the paper, while trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. To ensure robust application, we recommend comparing models of different complexity and preferring simpler formulations when performance differences are marginal.</p>
 
 ''')
     trimodal = model('trimodal')
     f.write(table(trimodal))
     f.write('''
 
-<p>Here is SWRC for the sample data, trimodal rock (Illinois sandstone) with timodal models and dual-VG model for comparison. Fixed parameter &theta;<sub>s</sub> = max(&theta;) and &theta;<sub>r</sub> = 0 is used for trimodal models, while only &theta;<sub>r</sub> = 0 is fixed for dual-VG model.</p>
+<p>Here is SWRC for the sample data, trimodal rock (Illinois sandstone) with timodal models and dual-VG model for comparison. Fixed parameter are &theta;<sub>s</sub> = max(&theta;) and &theta;<sub>r</sub> = 0. In SWRC Fit, trimodal models always employ this setting of fix parameters.</p>
 
 <div align="center"><img src="img/trimodal.svg" alt="Trimodal models"></div>
 
@@ -291,14 +291,14 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <h2 id="trimodal">三重モデル（トリモーダルモデル）</h2>
 
-<p>トリモーダルモデルは <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> で定義されており、その応用例は Seki et al.（2026）に示されている。論文で議論しているとおり、トリモーダルな水分保持関数は、三重の間隙構造が明瞭な土壌に必要な柔軟性を提供する一方で、自由度が増えるため、データの測定範囲が限られている場合や誤差が大きい場合には、パラメータが一意に定まらない可能性があり、注意が必要である。</p>
+<p>三重モデルは <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> で定義されており、その応用例は Seki et al.（2026）に示されている。論文で議論しているとおり、トリモーダルな水分保持関数は、三重の間隙構造が明瞭な土壌に必要な柔軟性を提供する一方で、自由度が増えるため、データの測定範囲が限られている場合や誤差が大きい場合には、パラメータが一意に定まらない可能性があり、注意が必要である。複雑さの異なるモデルと比較し、適合度の差があまりない場合には、より単純なモデルを採用することを推奨する。
 
 ''')
     trimodal = model('trimodal')
     f.write(table(trimodal))
     f.write('''
 
-<p>サンプルデータ（trimodal rock; Illinois sandstone）のSWRCを示す。トリモーダルモデルでフィッティングし、比較のためにdual-VGモデルも示す。トリモーダルモデルでは固定パラメータとして &theta;<sub>s</sub> = max(&theta;) および &theta;<sub>r</sub> = 0 を使用し、dual-VGモデルでは &theta;<sub>r</sub> = 0 のみを固定した。</p>
+<p>サンプルデータ（trimodal rock; Illinois sandstone）のSWRCを示す。トリモーダルモデルでフィッティングし、比較のためにdual-VGモデルも示す。固定パラメータは &theta;<sub>s</sub> = max(&theta;) および &theta;<sub>r</sub> = 0 である。SWRC Fit では、三重モデルの固定パラメータは常にこの設定となる。</p>
 
 <div align="center"><img src="img/trimodal.svg" alt="Trimodal models"></div>
 

@@ -73,11 +73,11 @@ Fixed parameter &theta;<sub>r</sub> = 0 is used for bimodal models, while all va
 
 <h2 id="trimodal">Trimodal models</h2>
 
-<p>Trimodal models are defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>, and the application is shown in Seki et al., (2026). As discussed in the paper, while trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy.</p>
+<p>Trimodal models are defined in <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>, and the application is shown in Seki et al., (2026). As discussed in the paper, while trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. To ensure robust application, we recommend comparing models of different complexity and preferring simpler formulations when performance differences are marginal.</p>
 
 <table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>tri-VG<td>tri-VG<td>\(\begin{eqnarray}S_e &=& \sum_{i=1}^{3} w_i\bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i}\\m_i&=&1-1/{n_i}\\w_3&=&1-w_1-w_2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr><tr><td>BVV<td>BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub><td>\(\begin{eqnarray}S_e &=& w_1 BC_1 + w_2 VG_2 + (1-w_1 - w_2) VG_3\\BC_1 &=& \begin{cases}\left(h / h_{b1}\right)^{-\lambda_1} & (h>h_{b1}) \\ 1 & (h \le h_{b1})\end{cases}\\ VG_i &=& \bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i} \\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b1</sub>, &lambda;<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr></table>
 
-<p>Here is SWRC for the sample data, trimodal rock (Illinois sandstone) with timodal models and dual-VG model for comparison. Fixed parameter &theta;<sub>s</sub> = max(&theta;) and &theta;<sub>r</sub> = 0 is used for trimodal models, while only &theta;<sub>r</sub> = 0 is fixed for dual-VG model.</p>
+<p>Here is SWRC for the sample data, trimodal rock (Illinois sandstone) with timodal models and dual-VG model for comparison. Fixed parameter are &theta;<sub>s</sub> = max(&theta;) and &theta;<sub>r</sub> = 0. In SWRC Fit, trimodal models always employ this setting of fix parameters.</p>
 
 <div align="center"><img src="img/trimodal.svg" alt="Trimodal models"></div>
 

@@ -61,4 +61,5 @@ venv.bak/
 
 # cgi file
 swrc.png
+swrc.svg
 fontlist*.json
