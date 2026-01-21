@@ -44,8 +44,8 @@ def message(lang, ID, URL='./'):
     # When translation is not defined, English message is returned.
     if ID == 'news':
         if lang == 'ja':
-            return '<strong>[ニュース]</strong><ul><li>団粒土に対するdual-VGの精度を向上させた<a href="https://doi.org/10.34467/jssoilphysics.155.0_35">論文</a>が<strong>土壌物理学会賞</strong>を受賞しました。</li><li>パラメータの不確実性を表示するオプションを追加しました。</li><li><a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> と <a href="https://sekika.github.io/unsatfit/">unsatfit</a> と <a href="https://sekika.github.io/hystfit/">hystfit</a> もどうぞ。</li><li>より詳しくは <a href="https://sekika.github.io/unsatfit/#history">history</a>に記載。</li></ul>'
-        return '<strong>[News]</strong><ul><li><a href="https://doi.org/10.34467/jssoilphysics.155.0_35">Improvement of dual-VG model</a> was implemented.</li><li>Output options for parameter uncertainty is available.<li>Please also check <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a>, <a href="https://sekika.github.io/unsatfit/">unsatfit</a> and <a href="https://sekika.github.io/hystfit/">hystfit</a>.<li>Read more at <a href="https://sekika.github.io/unsatfit/#history">history</a>.</ul>'
+            return '<strong>[ニュース]</strong><ul><li><a href="model-ja.html#trimodal">三重モデル</a>を追加しました。</li><li>団粒土に対するdual-VGの精度を向上させた<a href="https://doi.org/10.34467/jssoilphysics.155.0_35">論文</a>が<strong>土壌物理学会賞</strong>を受賞しました。</li><li><a href="https://sekika.github.io/unsoda/">UNSODA viewer</a> と <a href="https://sekika.github.io/unsatfit/">unsatfit</a> と <a href="https://sekika.github.io/hystfit/">hystfit</a> もどうぞ。</li><li>より詳しくは <a href="https://sekika.github.io/unsatfit/#history">history</a>に記載。</li></ul>'
+        return '<strong>[News]</strong><ul><li><a href="model.html#trimodal">Trimodal models</a> were added.</li><li><a href="https://doi.org/10.34467/jssoilphysics.155.0_35">Improvement of dual-VG model</a> was implemented.</li><li>Please also check <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a>, <a href="https://sekika.github.io/unsatfit/">unsatfit</a> and <a href="https://sekika.github.io/hystfit/">hystfit</a>.<li>Read more at <a href="https://sekika.github.io/unsatfit/#history">history</a>.</ul>'
     if ID == 'description':
         if lang == 'ja':
             return 'SWRC Fit は、<a href="https://github.com/sekika/paper/raw/master/JTUNS/Seki-2017-JTUNS.pdf">土壌水分特性（水分保持曲線）</a>のデータを、<a href="model-ja.html">いくつかのモデル</a>によって近似し、土壌水分特性パラメータを決定することができます。' \
@@ -168,8 +168,8 @@ def message(lang, ID, URL='./'):
         return 'Show only one model'
     if ID == 'showmore':
         if lang == 'ja':
-            return 'さらにオプションを見る（2024-06-04更新）'
-        return 'Show more options (Update on 2024-06-04)'
+            return 'さらにオプションを見る'
+        return 'Show more options'
     if ID == 'swrc':
         if lang == 'ja':
             return '土壌水分特性曲線'

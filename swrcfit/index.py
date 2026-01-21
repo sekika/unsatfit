@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import urllib.parse
@@ -191,7 +191,12 @@ def swrcfit(f):
     # dual-BC-CH model
     if 'DBCH' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
         f.set_model('dual-BC-CH', const=[*con_q])
-        hb, hc, l1, l2 = f.get_init()
+        try:
+            hb, hc, l1, l2 = f.get_init()
+        except:
+            hb, l = f.get_init_bc()
+            hc = 0.5
+            l1 = l2 = l
         if l1 > f.max_lambda_i:
             l1 = f.max_lambda_i - 0.00001
         if l2 > f.max_lambda_i:
@@ -529,8 +534,58 @@ def swrcfit(f):
         f.par = (*par_theta, *f.setting['parameter'])
         f2 = copy.deepcopy(f)
         result.append(f2)
-    return result
 
+    # tri-VG model
+    con_q = [[1, max(f.swrc[1])], [2, 0]]
+    if 'tri-VG' in f.selectedmodel:
+        f.set_model('tri-VG', const=[*con_q, 'q=1'])
+        try:
+            f.ini = f.get_init_vg3()
+            f.optimize()
+        except:
+            f.success = False
+            f2 = copy.deepcopy(f)
+            result.append(f2)
+            return result
+        w1, a1, m1, ww2, a2, m2, a3, m3 = f.fitted
+        w2 = (1-w1) * ww2
+        n1 = 1 / (1 - m1)
+        n2 = 1 / (1 - m2)
+        n3 = 1 / (1 - m3)
+        f.fitted_show = (w1, a1, n1, w2, a2, n2, a3, n3)
+        f.setting = model('tri-VG')
+        if f.show_perr or f.show_cor:
+            f.par = f.setting['parameter_org']
+        else:
+            f.par = f.setting['parameter']
+        f2 = copy.deepcopy(f)
+        result.append(f2)
+
+    # BVV model
+    if 'BVV' in f.selectedmodel:
+        f.set_model('BVV', const=[*con_q, 'q=1'])
+        try:
+            f.ini = f.get_init_bvv()
+            f.optimize()
+        except:
+            f.success = False
+            f2 = copy.deepcopy(f)
+            result.append(f2)
+            return result
+        w1, hb1, l1, ww2, a2, m2, a3, m3 = f.fitted
+        w2 = (1-w1) * ww2
+        n2 = 1 / (1 - m2)
+        n3 = 1 / (1 - m3)
+        f.fitted_show = (w1, hb1, l1, w2, a2, n2, a3, n3)
+        f.setting = model('BVV')
+        if f.show_perr or f.show_cor:
+            f.par = f.setting['parameter_org']
+        else:
+            f.par = f.setting['parameter']
+        f2 = copy.deepcopy(f)
+        result.append(f2)
+
+    return result
 
 def main():
     """Determine if it is invoked as cgi or command line
@@ -662,7 +717,7 @@ def maincgi():
     # Figure options
     f.show_fig = False
     f.save_fig = True
-    f.filename = 'img/swrc.png'
+    f.filename = 'img/swrc.svg'
     f.fig_width = 5.5  # inch
     f.fig_height = 4.5
     f.top_margin = 0.05
@@ -771,7 +826,7 @@ def maincgi():
     history = message(lang, "history")
     history = history.replace('YEAR', str(datetime.datetime.now().year - 2007))
     history = history.replace(
-        'URL', 'https://sekika.github.io/unsatfit/#history')
+        'URL', 'https://sekika.github.io/unsatfit/history.html')
     print(
         f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;">{history}</a></p></body></html>', flush=True)
     return
@@ -813,12 +868,20 @@ def calc(f):
                     f'<li>{escape(i)} = <a href="https://sekika.github.io/unsoda/?{escape(d[i])}">{escape(d[i])}</a>')
             else:
                 print(f'<li>{escape(i)} = {escape(d[i])}')
+    f.trimodal = False
+    for m in model('trimodal'):
+        if m in f.selectedmodel:
+            f.trimodal = True
     for i in getoptiontheta(f, True)[0]:
         bi = ''
         if f.cqr == 'both' and i[0] == 2:
             bi = ' for bimodal models'
         par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0] - 1]
         print(f'<li>Constant: {par} = {i[1]}{bi}')
+    if f.trimodal:
+        d = dataset(f.inputtext)
+        theta = d['data'][1]
+        print(f'<li>Constant: &theta;<sub>s</sub> = {max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
     limit = []
     if f.cqs == 'fit':
         limit.append(
@@ -862,6 +925,8 @@ def calc(f):
     if f.show_perr:
         note.append(
             '&pm; shows 1&sigma; uncertainty of parameters.')
+    if f.trimodal:
+        note.append('While trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. To ensure robust application, we recommend comparing models of different complexity and preferring simpler formulations when performance differences are marginal. See <a href="https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf">Seki et al. (2026)</a> for detail.')
 
     error = False
     try:
@@ -1049,10 +1114,10 @@ def printhead(lang, f):
     print('} else ', end="")
     for ID in f.sampledata:
         d = f.sampledata[ID]
-        unsoda = escape(d['UNSODA'])
+        sample = escape(d['Soil sample'])
         text = "\\r\\n".join(escape(d['text']).splitlines())
         print(
-            f'if(document.getElementById("sample").value == "{unsoda}"){{')
+            f'if(document.getElementById("sample").value == "{sample}"){{')
         print(f'  document.getElementById("input").value = "{text}";')
         print('} else ', end="")
     print('{   document.getElementById("input").value = ""; }')
@@ -1090,9 +1155,9 @@ def printform(lang, getlang, f):
     print(f'    <option value="">{message(lang, "selectsample")}')
     for ID in f.sampledata:
         d = f.sampledata[ID]
-        unsoda = escape(d['UNSODA'])
+        sample = escape(d['Soil sample'])
         texture = escape(d['Texture'])
-        print(f'    <option value="{unsoda}">{texture}')
+        print(f'    <option value="{sample}">{texture}')
     print('  <option value="clear">*** Clear input ***')
     print(f'''  </select>
 <div><textarea name="input" id="input" rows="15" cols="27" style="white-space: nowrap;">{f.given_data}</textarea></div>
@@ -1116,7 +1181,7 @@ def printform(lang, getlang, f):
 <li>Upper limit of n<sub>1</sub>, n<sub>2</sub> = <input type="text" name="max_n_i" id="max_n_i" size="5" maxlength="10" value="{MAX_N_I}">
 <li>Lower limit of &sigma;<sub>1</sub>, &sigma;<sub>2</sub> = <input type="text" name="min_sigma_i" id="min_sigma_i" size="5" maxlength="10" value="{MIN_SIGMA_I}">
 </ul>
-<p><strong>[New]</strong> Output options</p>
+<p>Output options</p>
 <input type="checkbox" name="show_eq" id="show_eq" value="on" checked>Equation<br>
 <input type="checkbox" name="show_caic" id="show_caic" value="on">Corrected AIC<br>
 <input type="checkbox" name="show_perr" id="show_perr" value="on">1&sigma; uncertainty of parameters<br>
@@ -1200,7 +1265,8 @@ def printhelp(lang, f):
     id = list(f.sampledata)[random.randint(0, 7)]
     texture = f.sampledata[id]['Texture']
     soil = f.sampledata[id]['Soil sample']
-    print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<div style="text-align: center;"><img src="img/{id}.png" alt="Sample output"></div>')
+    unsoda = f.sampledata[id]['UNSODA']
+    print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<div style="text-align: center;"><img src="img/{unsoda}.png" alt="Sample output"></div>')
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
     print(message(lang, 'question'))

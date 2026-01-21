@@ -20,9 +20,8 @@ S<sub>e</sub>(h) から θ(h) を θ(h) = (θ<sub>s</sub> - θ<sub>r</sub>)S<sub
 
 <p><a href="./?lang=ja">SWRC Fit</a> では、SWRC の測定値を以下に記述されている複数のS<sub>e</sub>(h)関数で非線形回帰してパラメータを決定することができる。</p>
 
-<h2>基本モデル（ユニモーダルモデル）</h2>
-<table border="1"><tr><td>略記<td>モデル<td>式<td>パラメータ</tr>
-<tr><td>BC<td>Brooks and Corey<td>\(S_e = \begin{cases}\left(h / h_b\right)^{-\lambda} & (h>h_b) \\ 1 & (h \le h_b)\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>b</sub>, &lambda;</tr><tr><td>VG<td>van Genuchten<td>\(S_e = \biggl[\dfrac{1}{1+(\alpha h)^n}\biggr]^m ~~ (m=1-1/n)\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, &alpha;, n</tr><tr><td>KO<td>Kosugi<td>\(\begin{eqnarray}S_e &=& Q \biggl[\dfrac{\ln(h/h_m)}{\sigma}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>m</sub>, &sigma;</tr><tr><td>FX<td>Fredlund and Xing<td>\(S_e = \biggl[ \dfrac{1}{\ln \left[e+(h / a)^n \right]} \biggr]^m\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, a, m, n</tr></table>
+<h2 id="unimodal">基本モデル（ユニモーダルモデル）</h2>
+<table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>BC<td>Brooks and Corey<td>\(S_e = \begin{cases}\left(h / h_b\right)^{-\lambda} & (h>h_b) \\ 1 & (h \le h_b)\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>b</sub>, &lambda;</tr><tr><td>VG<td>van Genuchten<td>\(S_e = \biggl[\dfrac{1}{1+(\alpha h)^n}\biggr]^m ~~ (m=1-1/n)\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, &alpha;, n</tr><tr><td>KO<td>Kosugi<td>\(\begin{eqnarray}S_e &=& Q \biggl[\dfrac{\ln(h/h_m)}{\sigma}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, h<sub>m</sub>, &sigma;</tr><tr><td>FX<td>Fredlund and Xing<td>\(S_e = \biggl[ \dfrac{1}{\ln \left[e+(h / a)^n \right]} \biggr]^m\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, a, m, n</tr></table>
 <ul>
 <li>KOモデルの相補累積分布関数 Q(x) は、&Phi;(x)を<a href="https://ja.wikipedia.org/wiki/%E7%B4%AF%E7%A9%8D%E5%88%86%E5%B8%83%E9%96%A2%E6%95%B0">累積分布関数</a>としたときに
 Q(x)=1-&Phi;(x) とあらわされる関数であり、<a href="https://ja.wikipedia.org/wiki/%E7%B4%AF%E7%A9%8D%E5%88%86%E5%B8%83%E9%96%A2%E6%95%B0">誤差関数</a> erf(x) の補関数 erfc(x) = 1-erf(x) から表のように計算される</li>
@@ -32,9 +31,9 @@ Q(x)=1-&Phi;(x) とあらわされる関数であり、<a href="https://ja.wikip
 
 <p>SWRC Fit のサンプルデータ clay loam (UNSODA 3033) から得られた土壌水分保持曲線(SWRC)を示す。θ<sub>s</sub>とθ<sub>r</sub>を含むすべてのデータを最適化した。最適化されたパラメータ、決定係数(R<sup>2</sup>)、<a href="https://ja.wikipedia.org/wiki/%E8%B5%A4%E6%B1%A0%E6%83%85%E5%A0%B1%E9%87%8F%E8%A6%8F%E6%BA%96">AIC</a>の一覧表はサンプルデータから計算を実行することで見ることができる。</p>
 
-<div align="center"><img src="img/unimodal.png" alt="Unimodal models"></div>
+<div align="center"><img src="img/unimodal.svg" alt="Unimodal models"></div>
 
-<h2>線型和モデル（マルチモデル）</h2>
+<h2 id="multimodal">線型和モデル（マルチモデル）</h2>
 
 <p>線形和水分保持関数は基本モデルをサブ関数S<sub>i</sub>(h)としてその線形和で定義される (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>)。
 \[ S(h) = \Sigma_{i=1}^k w_i S_i(h) \]
@@ -43,41 +42,47 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 
 <p>線形和モデルはサブ関数の番号を下付き文字で表記することであらわす。たとえば、VG<sub>1</sub>BC<sub>2</sub>モデルはVGサブ関数を S<sub>1</sub>(h)、BCサブ関数をS<sub>2</sub>(h)とする。BC<sub>1</sub>BC<sub>2</sub>BC<sub>3</sub>... のような同じサブ関数の組み合わせは multi-BC モデルのように表記して multi-モデルと呼ぶ。multi-VG モデルは Durner (1994) のモデルと同じで、 multi-KO モデルは Seki (2007) と同じである。2つの同じ関数を組み合わせた multi-モデルは dual-モデルであり、たとえば dual-BC は BC<sub>1</sub>BC<sub>2</sub> である。</p>
 
-<h2>二重モデル（バイモーダルモデル）</h2>
+<h2 id="bimodal">二重モデル（バイモーダルモデル）</h2>
 <p>このようにバイモーダルモデルにはいくつかの組み合わせが考えられるが、SWRC Fit では以下のモデルが実装されている。</p>
-<table border="1"><tr><td>モデル<td>式<td>パラメータ</tr>
-<tr><td>dual-BC<td>\(S_e = \begin{cases}w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + (1-w_1)\left(h / h_{b_2}\right)^{-\lambda_2}  & (h>h_{b_2}) \\ w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + 1-w_1  & (h_{b_1} < h \le h_{b_2}) \\1 & (h \le h_{b_1})\end{cases}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hb<sub>1</sub>, &lambda;<sub>1</sub>, hb<sub>2</sub>, &lambda;<sub>2</sub></tr><tr><td>dual-VG<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha_1 h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha_2 h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, &alpha;<sub>2</sub>, n<sub>2</sub></tr><tr><td>dual-KO<td>\(\begin{eqnarray}S_e &=& w_1 Q \biggl[\dfrac{\ln(h/h_{m_1})}{\sigma_1}\biggr] + (1-w_1) Q \biggl[\dfrac{\ln(h/h_{m_2})}{\sigma_2}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hm<sub>1</sub>, &sigma;<sub>1</sub>, hm<sub>2</sub>, &sigma;<sub>2</sub></tr></table>
+<table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>DB<td>dual-BC<td>\(S_e = \begin{cases}w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + (1-w_1)\left(h / h_{b_2}\right)^{-\lambda_2}  & (h>h_{b_2}) \\ w_1 \left(h / h_{b_1}\right)^{-\lambda_1} + 1-w_1  & (h_{b_1} < h \le h_{b_2}) \\1 & (h \le h_{b_1})\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hb<sub>1</sub>, &lambda;<sub>1</sub>, hb<sub>2</sub>, &lambda;<sub>2</sub></tr><tr><td>DV<td>dual-VG<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha_1 h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha_2 h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, &alpha;<sub>2</sub>, n<sub>2</sub></tr><tr><td>DK<td>dual-KO<td>\(\begin{eqnarray}S_e &=& w_1 Q \biggl[\dfrac{\ln(h/h_{m_1})}{\sigma_1}\biggr] + (1-w_1) Q \biggl[\dfrac{\ln(h/h_{m_2})}{\sigma_2}\biggr]\\Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, hm<sub>1</sub>, &sigma;<sub>1</sub>, hm<sub>2</sub>, &sigma;<sub>2</sub></tr></table>
 
 <p>特に、日本の土壌では団粒が発達した土壌においてはバイモーダルモデルが有効であり、バイモーダルモデルの回帰には特段の工夫がされている(<a href="https://doi.org/10.34467/jssoilphysics.155.0_35">関ら, 2023</a>)。</p>
 
 <p>サンプルデータ silty loam (UNSODA 2760) のSWRCを示す。上記のバイモーダルモデルと、比較のためにVGモデルを示している。バイモーダルモデルではθ<sub>r</sub> = 0 と固定し、VGモデルではすべてのパラメータを自由変数としている。</p>
 
-<div align="center"><img src="img/bimodal.png" alt="Bimodal models"></div>
+<div align="center"><img src="img/bimodal.svg" alt="Bimodal models"></div>
 
 <p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0001">Seki et al. (2022) の Figure 1</a> には、熊本黒ボク土のバイモーダルモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
-<h2>CHモデル</h2>
+<h2 id="CH">CHモデル</h2>
 
 <p>BC, VG, KOサブ関数に対する線形和モデルに対する CHモデルが <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a>において
 \[H = h_{b_i} = \alpha_i^{-1} = h_{m_i} \]
 と定義されている。この中で、次の関数が SWRC Fit に実装されている。</p>
-<table border="1"><tr><td>モデル<td>式<td>パラメータ</tr>
-<tr><td>dual-BC-CH<td>\(S_e = \begin{cases}w_1 \left(h / h_b\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\right)^{-\lambda_2}  & (h>h_b)\\ 1 & (h \le h_b)\end{cases}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b</sub>, &lambda;<sub>1</sub>, &lambda;<sub>2</sub></tr><tr><td>VG<sub>1</sub>BC<sub>2</sub>-CH<td>\(\begin{eqnarray}S_e &=& \begin{cases}w_1 S_1 + (1-w_1)\left(h/H\right)^{-\lambda_2}  & (h>H)\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\S_1 &=& \bigl[1+(h/H)^{n_1}\bigr]^{-{m_1}} ~~ (m_1=1-1/{n_1})\end{eqnarray}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, H, n<sub>1</sub>, &lambda;<sub>2</sub></tr><tr><td>dual-VG-CH<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;, n<sub>1</sub>, n<sub>2</sub></tr><tr><td>KO<sub>1</sub>BC<sub>2</sub>-CH<td>\(\begin{eqnarray}S_e &=& \begin{cases}w_1 S_1 + (1-w_1)\left(h/H\right)^{-\lambda_2}  & (h>H)\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\S_1 &=& Q \biggl[\dfrac{\ln(h/h_m)}{\sigma_1}\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<	d>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, H, &sigma;<sub>1</sub>, &lambda;<sub>2</sub></tr></table>
+<table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>DBCH<td>dual-BC-CH<td>\(S_e = \begin{cases}w_1 \left(h / h_b\right)^{-\lambda_1} + (1-w_1)\left(h / h_b\right)^{-\lambda_2}  & (h>h_b)\\ 1 & (h \le h_b)\end{cases}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b</sub>, &lambda;<sub>1</sub>, &lambda;<sub>2</sub></tr><tr><td>VGBCCH<td>VG<sub>1</sub>BC<sub>2</sub>-CH<td>\(\begin{eqnarray}S_e &=& \begin{cases}w_1 S_1 + (1-w_1)\left(h/H\right)^{-\lambda_2}  & (h>H)\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\S_1 &=& \bigl[1+(h/H)^{n_1}\bigr]^{-{m_1}} ~~ (m_1=1-1/{n_1})\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, H, n<sub>1</sub>, &lambda;<sub>2</sub></tr><tr><td>DVCH<td>dual-VG-CH<td>\(\begin{eqnarray}S_e &=& w_1\bigl[1+(\alpha h)^{n_1}\bigr]^{-m_1} + (1-w_1)\bigl[1+(\alpha h)^{n_2}\bigr]^{-m_2}\\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;, n<sub>1</sub>, n<sub>2</sub></tr><tr><td>KOBCCH<td>KO<sub>1</sub>BC<sub>2</sub>-CH<td>\(\begin{eqnarray}S_e &=& \begin{cases}w_1 S_1 + (1-w_1)\left(h/H\right)^{-\lambda_2}  & (h>H)\\ w_1 S_1 + 1-w_1 & (h \le H)\end{cases}\\S_1 &=& Q \biggl[\dfrac{\ln(h/h_m)}{\sigma_1}\biggr], Q(x) = \mathrm{erfc}(x/\sqrt{2})/2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, H, &sigma;<sub>1</sub>, &lambda;<sub>2</sub></tr></table>
 <p>サンプルデータ sand (UNSODA 4440) のSWRCを示す。上記のCHモデルと、比較のためにVGモデルを示している。CHモデルではθ<sub>r</sub> = 0 と固定し、VGモデルではすべてのパラメータを自由変数としている。VGモデルではθ<sub>r</sub>=0.074と最適化された。</p>
 
-<div align="center"><img src="img/dual-ch.png" alt="dual-CH models"></div>
+<div align="center"><img src="img/dual-ch.svg" alt="dual-CH models"></div>
 
 <p><a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/vzj2.20168#vzj220168-fig-0002">Seki et al. (2022) の Figure 2</a> には、浜岡砂丘砂のCHモデルによるSWRCと透水性曲線が示されている。同じ図は関ら (2021) にも示されている。</p>
 
-<h2>透水性関数</h2>
+<h2 id="trimodal">三重モデル（トリモーダルモデル）</h2>
+
+<p>トリモーダルモデルは <a href="https://doi.org/10.1002/vzj2.20168">Seki et al. (2022)</a> で定義されており、その応用例は Seki et al.（2026）に示されている。論文で議論しているとおり、トリモーダルな水分保持関数は、三重の間隙構造が明瞭な土壌に必要な柔軟性を提供する一方で、自由度が増えるため、データの測定範囲が限られている場合や誤差が大きい場合には、パラメータが一意に定まらない可能性があり、注意が必要である。</p>
+
+<table border="1"><tr><td>Abbr.<td>Model<td>Equation<td>Parameters</tr><tr><td>tri-VG<td>tri-VG<td>\(\begin{eqnarray}S_e &=& \sum_{i=1}^{3} w_i\bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i}\\m_i&=&1-1/{n_i}\\w_3&=&1-w_1-w_2\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, &alpha;<sub>1</sub>, n<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr><tr><td>BVV<td>BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub><td>\(\begin{eqnarray}S_e &=& w_1 BC_1 + w_2 VG_2 + (1-w_1 - w_2) VG_3\\BC_1 &=& \begin{cases}\left(h / h_{b1}\right)^{-\lambda_1} & (h>h_{b1}) \\ 1 & (h \le h_{b1})\end{cases}\\ VG_i &=& \bigl[1+(\alpha_i h)^{n_i}\bigr]^{-m_i} \\m_i&=&1-1/{n_i}\end{eqnarray}\)<td>&theta;<sub>s</sub> &theta;<sub>r</sub>, w<sub>1</sub>, h<sub>b1</sub>, &lambda;<sub>1</sub>, w<sub>2</sub>, &alpha;<sub>2</sub>, n<sub>2</sub>, &alpha;<sub>3</sub>, n<sub>3</sub></tr></table>
+
+<p>サンプルデータ（trimodal rock; Illinois sandstone）のSWRCを示す。トリモーダルモデルでフィッティングし、比較のためにdual-VGモデルも示す。トリモーダルモデルでは固定パラメータとして &theta;<sub>s</sub> = max(&theta;) および &theta;<sub>r</sub> = 0 を使用し、dual-VGモデルでは &theta;<sub>r</sub> = 0 のみを固定した。</p>
+
+<div align="center"><img src="img/trimodal.svg" alt="Trimodal models"></div>
+
+<p>Seki et al. (2026) の Fig.1 と Fig.3 を参照。</p>
+
+<h2 id="conductivity">透水性関数</h2>
 
 <p>FX モデル以外のモデルに対しては、一般化Mualem式による不飽和透水係数の閉形式解が得られている (<a href="https://doi.org/10.1002/vzj2.20168">Seki et al., 2022</a>; <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">関ら, 2021</a>; <a href="https://www.jstage.jst.go.jp/article/jssoilphysics/154/0/154_19/_article/-char/ja/">関・取出, 2023</a>)。それが実用的な式であることは<a href="https://doi.org/10.2478/johh-2022-0039">Seki et al. (2023)</a>が示している。<a href="https://sekika.github.io/unsatfit/">unsatfit</a>によって透水性関数のフィッティングが可能である。</p>
 
-<h2>モデルの略記について</h2>
-
-<p>SWRC Fit の旧バージョンでは、KOモデルをLNモデル、dual-VGモデルをDBモデル、dual-KOモデルBLモデルと表記していたが、Seki et al. (2022) の表記にあわせて変更した。</p>
-
-<h2>文献</h2>
+<h2 id="reference">文献</h2>
 
 <ul>
 <li>Brooks, R.H., and A.T. Corey (1964): Hydraulic properties of porous media. Hydrol. Paper 3. Colorado State Univ., Fort Collins, CO, USA.</li>
@@ -85,8 +90,9 @@ k はサブ関数の数、w<sub>i</sub> は重み係数で 0&lt;w<sub>i</sub>&lt
 <li>Fredlund, D.G. and Xing, A. (1994): Equations for the soil-water characteristic curve. <i>Can. Geotech. J.</i>, 31: 521-532. <a href="http://dx.doi.org/10.1139/t94-061">doi:10.1139/t94-061</a></li>
 <li>Kosugi, K. (1996): Lognormal distribution model for unsaturated soil hydraulic properties. <i>Water Resour. Res.</i> 32: 2697-2703. <a href="http://dx.doi.org/10.1029/96WR01776">doi:10.1029/96WR01776</a></li>
 <li>Seki, K. (2007): SWRC fit - a nonlinear fitting program with a water retention curve for soils having unimodal and bimodal pore structure. <i>Hydrol. Earth Syst. Sci. Discuss.</i>, 4: 407-437. <a href="http://dx.doi.org/10.5194/hessd-4-407-2007">doi:10.5194/hessd-4-407-2007</a></li>
-<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. Vadose Zone J. 21, e20168. <a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a></li>
-<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2023). Evaluation of a general model for multimodal unsaturated soil hydraulic properties. J. Hydrol. Hydromech. 71(1): 22-34. <a href="https://doi.org/10.2478/johh-2022-0039">doi:10.2478/johh-2022-0039</a>
+<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2022). Closed-form hydraulic conductivity equations for multimodal unsaturated soil hydraulic properties. <i>Vadose Zone J.</i> 21, e20168. <a href="https://doi.org/10.1002/vzj2.20168">doi:10.1002/vzj2.20168</a></li>
+<li>Seki, K., Toride, N., & Th. van Genuchten, M. (2023). Evaluation of a general model for multimodal unsaturated soil hydraulic properties. <i>J. Hydrol. Hydromech.</i> 71(1): 22-34. <a href="https://doi.org/10.2478/johh-2022-0039">doi:10.2478/johh-2022-0039</a>
+<li>Seki, K., van Genuchten, M.T., Durner, W., Zhuang, L., Bermudez, L.B.S. (2026). Trimodal hydraulic models for unsaturated flow: Coupling triple-porosity water retention with general conductivity functions. <i>J. Hydrol. Hydromech.</i> <a href="https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf">in press</a>.
 
 <li>関勝寿 (2017): <a href="https://toyo.repo.nii.ac.jp/?action=repository_uri&item_id=8838&file_id=22&file_no=1">水分特性曲線の回帰プログラム SWRC Fit (1)−水分特性モデル−</a>. 東洋大学紀要自然科学篇 61: 41-65.
 <li>関勝寿, 取出伸夫, M.Th. van Genuchten (2021): <a href="https://researchmap.jp/sekik/presentations/36027912/attachment_file.pdf">線形和水分保持関数に対するMualemモデルの不飽和透水係数</a>. 2021年度土壌物理学会大会 講演要旨集 pp.30-31.

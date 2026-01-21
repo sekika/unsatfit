@@ -3,7 +3,7 @@ def sample():
     import os
     here = os.path.abspath(os.path.dirname(__file__))
     # Filename of the sample data is hard-coded here
-    sampledata = os.path.join(here, 'unsoda.txt')
+    sampledata = os.path.join(here, 'sample.txt')
     with open(sampledata) as f:
         s = f.read()
     data = ''
@@ -12,13 +12,13 @@ def sample():
         if len(line) > 1 and line[:2] == '--':
             d = dataset(data)
             if d['valid']:
-                obj[d['UNSODA']] = d
+                obj[d['Soil sample']] = d
             data = ''
         else:
             data += line+'\n'
     d = dataset(data)
     if d['valid']:
-        obj[d['UNSODA']] = d
+        obj[d['Soil sample']] = d
     return obj
 
 

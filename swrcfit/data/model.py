@@ -3,11 +3,13 @@ def model(ID):
     q = 'Q(x) &=& \\mathrm{erfc}(x/\\sqrt{2})/2'
     # q = 'Q(x) &=& \mathrm{erfc}(x/\sqrt{2})/2 = \int_{x}^{\infty}\\frac{\exp(-x^2/2)}{\sqrt{2\pi}}dx'
     if ID == 'all':
-        return model('unimodal') + model('bimodal')
+        return model('unimodal') + model('bimodal') + model('trimodal')
     if ID == 'unimodal':
         return ('BC', 'VG', 'KO', 'FX')
     if ID == 'bimodal':
         return ('DBCH', 'VGBCCH', 'DVCH', 'KOBCCH', 'DB', 'DV', 'DK')
+    if ID == 'trimodal':
+        return ('tri-VG', 'BVV')
     if ID == 'limit':
         return ('max_qs', 'max_lambda_i', 'max_n_i', 'min_sigma_i')
     if ID == 'savekeys':
@@ -115,6 +117,26 @@ def model(ID):
             'label': 'dual-KO',
             'equation': '\\begin{eqnarray}S_e &=& w_1 Q \\biggl[\\dfrac{\\ln(h/h_{m_1})}{\\sigma_1}\\biggr] + (1-w_1) Q \\biggl[\\dfrac{\\ln(h/h_{m_2})}{\\sigma_2}\\biggr]\\\\' + q + '\\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'hm<sub>1</sub>', '&sigma;<sub>1</sub>', 'hm<sub>2</sub>', '&sigma;<sub>2</sub>'),
+            'note': '',
+            'selected': False
+        }
+    if ID == 'tri-VG':
+        return {
+            'html': 'tri-VG',
+            'label': 'tri-VG',
+            'equation': '\\begin{eqnarray}S_e &=& \\sum_{i=1}^{3} w_i\\bigl[1+(\\alpha_i h)^{n_i}\\bigr]^{-m_i}\\\\m_i&=&1-1/{n_i}\\\\w_3&=&1-w_1-w_2\\end{eqnarray}',
+            'parameter': ('w<sub>1</sub>', '&alpha;<sub>1</sub>', 'n<sub>1</sub>', 'w<sub>2</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>', '&alpha;<sub>3</sub>', 'n<sub>3</sub>'),
+            'parameter_org': ('w<sub>1</sub>', '&alpha;<sub>1</sub>', 'm<sub>1</sub>', 'w<sub>2</sub> / (1-w<sub>1</sub>)', '&alpha;<sub>2</sub>', 'm<sub>2</sub>', '&alpha;<sub>3</sub>', 'm<sub>3</sub>'),
+            'note': '',
+            'selected': False
+        }
+    if ID == 'BVV':
+        return {
+            'html': 'BC<sub>1</sub>VG<sub>2</sub>VG<sub>3</sub>',
+            'label': 'BVV',
+            'equation': '\\begin{eqnarray}S_e &=& w_1 BC_1 + w_2 VG_2 + (1-w_1 - w_2) VG_3\\\\BC_1 &=& \\begin{cases}\\left(h / h_{b1}\\right)^{-\\lambda_1} & (h>h_{b1}) \\\\ 1 & (h \\le h_{b1})\\end{cases}\\\\ VG_i &=& \\bigl[1+(\\alpha_i h)^{n_i}\\bigr]^{-m_i} \\\\m_i&=&1-1/{n_i}\\end{eqnarray}',
+            'parameter': ('w<sub>1</sub>', 'h<sub>b1</sub>', '&lambda;<sub>1</sub>', 'w<sub>2</sub>', '&alpha;<sub>2</sub>', 'n<sub>2</sub>', '&alpha;<sub>3</sub>', 'n<sub>3</sub>'),
+            'parameter_org': ('w<sub>1</sub>', 'h<sub>b1</sub>', '&lambda;<sub>1</sub>', 'w<sub>2</sub> / (1-w<sub>1</sub>)', '&alpha;<sub>2</sub>', 'm<sub>2</sub>', '&alpha;<sub>3</sub>', 'm<sub>3</sub>'),
             'note': '',
             'selected': False
         }
