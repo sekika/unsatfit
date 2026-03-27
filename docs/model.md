@@ -12,6 +12,7 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - get_wrf() = get_wrf_bc(): returns full WRF parameters
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, hb, l, Ks, p, q, r
 - Bound: b_qs, b_qr, b_hb, b_lambda, b_ks, b_p, b_q, b_r
 
 ### van Genuchten (VG) model
@@ -24,6 +25,7 @@ See also [this paper](https://doi.org/10.1002/vzj2.20168) and [models in SWRC Fi
 - get_wrf() = get_wrf_vg(): returns full WRF parameters where q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, a, m, Ks, p, q, r
 - Bound: b_qs, b_qr, b_a, b_m, b_ks, b_p, b_q, b_r
 
 Modified van Genuchten model
@@ -34,6 +36,7 @@ Modified van Genuchten model
 - hs = 2 cm for 1&lt;n&lt;2 in Vogel et al., (2000)
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, a, m, hs, Ks, p, q, r
 - Bound: b_qs, b_qr, b_a, b_m, b_hs, b_ks, b_p, b_q, b_r
 
 In general, modified model can be made by calling modified_model(hs) after set_model()
@@ -46,6 +49,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_ln(): returns full WRF parameters
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, hm, sigma, Ks, p, q, r
 - Bound: b_qs, b_qr, b_hm, b_sigma, b_ks, b_p, b_q, b_r
 
 ### Fredlund und Xing (FX) model
@@ -67,6 +71,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_bc2f(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, w1, hb1, l1, hb2, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hb, b_lambda1, b_hb2, b_lambda2, b_ks, b_p, b_q, b_r
 
 #### dual-BC-CH model
@@ -78,6 +83,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_bc2(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, hb, hc, l1, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_hb, b_hc, b_lambda1, b_lambda2, b_ks, b_p, b_q, b_r
 
 ### dual-VG model
@@ -89,6 +95,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_vg2(): returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, a1, m1, a2, m2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
 
 #### dual-VG-CH model
@@ -100,6 +107,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_vg2ch(): returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, a1, m1, m2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_m, b_ks, b_p, b_q, b_r
 
 ### dual-KO model
@@ -110,6 +118,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_ln2(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, w1, hm1, sigma1, hm2, sigma2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_hm2, b_sigma, b_ks, b_p, b_q, b_r
 
 ### dual-KO-CH model
@@ -120,6 +129,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_ln2ch(): returns full WRF parameters where qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, w1, hm1, sigma1, sigma2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_sigma, b_ks, b_p, b_q, b_r
 
 ### VG<sub>1</sub>BC<sub>2</sub> model
@@ -131,6 +141,7 @@ In general, modified model can be made by calling modified_model(hs) after set_m
 - get_wrf() = get_wrf_vgbc: returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, a1, m1, hb2, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_hb2, b_lambda2, b_ks, b_p, b_q, b_r
 
 HCF variation: r=1 and independent p
@@ -147,6 +158,7 @@ HCF variation: r=1 and independent p
 - get_wrf() = get_wrf_vgbcch(): returns full WRF parameters where qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, a1, m1, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_lambda2, b_ks, b_p, b_q, b_r
 
 HCF variation: r=1 and independent p
@@ -162,6 +174,7 @@ HCF variation: r=1 and independent p
 - get_wrf() = get_wrf_kobc(): returns full WRF parameters with qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, w1, hm1, sigma1, hb2, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_hb2, b_lambda2, b_ks, b_p, b_q, b_r
 
 HCF variation: r=1 and independent p
@@ -177,12 +190,14 @@ HCF variation: r=1 and independent p
 - get_wrf() = get_wrf_kobcch(): returns full WRF parameters with qr=0
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, q, r
+- Full parameters: qs, qr, w1, hm, sigma1, l2, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_lambda2, b_ks, b_p, b_q, b_r
 
 HCF variation: r=1 and independent p
 
 - Name: kobcch2, KOBCCHIP, KO1BC2-CH-IP, KBC-IP
 - Parameters which only appears in HCF: Ks, p1, p2, q
+- Full parameters: qs, qr, w1, hm, sigma1, l2, Ks, p1, p2, q
 
 ## Giving pressure head of zero water content
 
@@ -195,6 +210,7 @@ HCF variation: r=1 and independent p
 - get_wrf() = get_wrf_pk(he): returns full WRF parameters with qr=0
 - HCF: Peters (2013)
 - Parameters which only appears in HCF: Ks, p, a, omega
+- Full parameters: qs, qr, w1, hm, sigma1, he, Ks, p, a, omega
 - Bound: b_qs, b_qr, b_w1, b_hm1, b_sigma, b_he, b_ks, b_p, b_a, b_w1
 
 ### Fayer and Simmons model (van Genuchten type)
@@ -208,6 +224,7 @@ HCF variation: r=1 and independent p
 - get_wrf() = get_wrf_vgfs(he): returns full WRF parameters with qr=0, q=1
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- WRF parameters: qs, qr, qa, a, m, he, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_he, b_ks, b_p, b_q, b_r
 
 ## Trimodal models
@@ -223,6 +240,7 @@ See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/a
 - sort_param() = sort_param_vg3(): Sort parameters of tri-VG model in the reverse order of alpha, and convert ww2 to w2
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, a1, m1, ww2, a2, m2, a3, m3, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_w1, b_a2, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
 
 ### BC<sub>1</sub>VG<sub>2</sub> VG<sub>3</sub> model
@@ -233,6 +251,7 @@ See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/a
 - get_init() = get_init_bvv(hb1=0): without input parameter, returns w1, hb1, l1, ww2, alpha2, m2, alpha3, m3 where q=1. When hb1>0, hb1 is fixed and not in return parameter.
 - HCF: [General HCF](hcmodel.md)
 - Parameters which only appears in HCF: Ks, p, r
+- Full parameters: qs, qr, w1, hb1, l1, ww2, a2, m2, a3, m3, Ks, p, q, r
 - Bound: b_qs, b_qr, b_w1, b_hb, b_lambda, b_w1, b_a2, b_m, b_a2, b_m, b_ks, b_p, b_q, b_r
 
 ### VVP model
@@ -244,4 +263,5 @@ See Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/a
 - get_init() = get_init_vvp(he): returns w1, a1, m1, ww2, a2, m2 where q=1
 - HCF: Seki et al. ([2026](https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf))
 - Parameters which only appears in HCF: Ks, p, r, a
+- Full parameters: qs, qr, w1, a1, m1, ww2, a2, m2, he, Ks, p, q, r, a
 - Bound: b_qs, b_qr, b_w1, b_a1, b_m, b_w1, b_a2, b_m, b_he, b_ks, b_p, b_q, b_r, b_a
