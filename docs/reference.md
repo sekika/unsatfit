@@ -4,7 +4,7 @@ It is all about Fit class of unsatfit.
 
 ## Methods
 
-### For optimization.
+### For optimization
 <dl>
 <dt>set_model(model, const=[], k_vapor=False)</dt>
 <dd>Set hydraulic model for model with constant parameters of const. When k_vapor=True, isothermal vapor hydraulic conductivity is added from version 6.0. Several parameters need to be set when using this feature. See the <a href=
@@ -43,6 +43,20 @@ See the [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/
 <dd>Pore-size distribution function dθ/d(ln r)</dd>
 <dt>f_dtdh(p, h, epsilon=1e-8)</dt>
 <dd>dθ/dh</dd>
+</dl>
+
+### HYDRUS and PEST
+See [HYDRUS](hydrus.md), [PEST](pest.md) and [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/_hydrus.py) for detail. From version 6.2.
+
+<dl>
+<dt>save_template(filename="model.tpl")</dt>
+<dd>Save a PEST template file for the current hydraulic model.</dd>
+<dt>save_input(filename="model.inp", hc_param=[])</dt>
+<dd>Save a model input file containing parameter values.</dd>
+<dt>load_input(filename="model.inp")</dt>
+<dd>Load model parameters from a model input file.</dd>
+<dt>save_mater(filename="Mater.in")</dt>
+<dd>Generate a HYDRUS lookup-table file from the current model.</dd>
 </dl>
 
 ### Others
