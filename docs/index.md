@@ -43,6 +43,7 @@ unsatfit can be used together with HYDRUS for forward simulations and with PEST 
 - 2024-10-20: Received the **JSSP award** ([土壌物理学会賞](https://js-soilphysics.com/prz)) from the Japanese Society of Soil Physics for the [paper of dual-VG fitting](https://doi.org/10.34467/jssoilphysics.155.0_35). A [summary report](https://doi.org/10.34467/jssoilphysics.159.0_103) was subsequently published in Japanese.
 - 2024-11-13: Presented a [poster](https://researchmap.jp/sekik/presentations/48434771/attachment_file.pdf) on hysteresis and [hystfit](https://sekika.github.io/hystfit/) at [ASA, CSSA, SSSA meeting](https://researchmap.jp/sekik/presentations/48434771); took a [photo with Rien van Genuchten](https://sekika.github.io/toyo/photos/RVG.html).
 - 2025-05-08: [Presented](https://researchmap.jp/sekik/presentations/50028303/attachment_file.pdf) on multimodal soil hydraulic models and unsatfit at <a href="https://sekika.github.io/toyo/photos/rio.jpg">Rien van Genuchten conference</a> in Rio de Janeiro.
+- 2025-09-29: Released unsatfit 6.0; added [trimodal models](model.html#trimodal-models) and an option for isothermal hydraulic conductivity to the [set_model() method](reference.html#for-optimization).
 {% include news.html %}
 
 [Update of this document](https://github.com/sekika/unsatfit/commits/main/docs)
