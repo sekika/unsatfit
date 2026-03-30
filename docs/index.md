@@ -24,6 +24,13 @@ This is an example output of this program; water retention curve (top) and hydra
 
 For more examples, see Fig. 6 and Appendix in Seki et al. ([2023](http://www.uh.sav.sk/Portals/16/vcpdf.asp?ID=2081&Article=2023_71_1_Seki_22.pdf)).
 
+## Integration with HYDRUS and PEST
+
+unsatfit can be used together with HYDRUS for forward simulations and with PEST for inverse parameter estimation.
+
+- [Using unsatfit with HYDRUS](hydrus.md)
+- [Using unsatfit with PEST](pest.md)
+
 ## History ([Detailed version](history.md)) {#history}
 
 - 2007-02-27: [SWRC Fit](https://seki.webmasters.gr.jp/swrc/) started to run on the web.
