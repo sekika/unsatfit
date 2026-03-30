@@ -193,7 +193,7 @@ def swrcfit(f):
         f.set_model('dual-BC-CH', const=[*con_q])
         try:
             hb, hc, l1, l2 = f.get_init()
-        except:
+        except BaseException:
             hb, l = f.get_init_bc()
             hc = 0.5
             l1 = l2 = l
@@ -542,7 +542,7 @@ def swrcfit(f):
         try:
             f.ini = f.get_init_vg3()
             f.optimize()
-        except:
+        except BaseException:
             f.success = False
             f2 = copy.deepcopy(f)
             result.append(f2)
@@ -566,13 +566,13 @@ def swrcfit(f):
         try:
             f.ini = f.get_init_bvv()
             f.optimize()
-        except:
+        except BaseException:
             f.success = False
             f2 = copy.deepcopy(f)
             result.append(f2)
             return result
         w1, hb1, l1, ww2, a2, m2, a3, m3 = f.fitted
-        w2 = (1-w1) * ww2
+        w2 = (1 - w1) * ww2
         n2 = 1 / (1 - m2)
         n3 = 1 / (1 - m3)
         f.fitted_show = (w1, hb1, l1, w2, a2, n2, a3, n3)
@@ -585,6 +585,7 @@ def swrcfit(f):
         result.append(f2)
 
     return result
+
 
 def main():
     """Determine if it is invoked as cgi or command line
@@ -880,7 +881,9 @@ def calc(f):
     if f.trimodal:
         d = dataset(f.inputtext)
         theta = d['data'][1]
-        print(f'<li>Constant: &theta;<sub>s</sub> = {max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
+        print(
+            f'<li>Constant: &theta;<sub>s</sub> = {
+                max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
     limit = []
     if f.cqs == 'fit':
         limit.append(

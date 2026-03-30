@@ -45,6 +45,7 @@ class Fit:
     from ._figure import set_scale, add_curve, clear_curves, h_0to1, plot  # type: ignore
     from ._contour import contour, label  # type: ignore
     from ._pore_size import f_pore, f_pore_log, f_dtdh, find_pore_extreme  # type: ignore
+    from ._hydrus import save_template, save_input, load_input, save_mater, lin_h  # type: ignore
 
     from ._test import test, test_confirm  # type: ignore
 

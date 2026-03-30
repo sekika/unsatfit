@@ -26,6 +26,11 @@ def init_model(self):
     }
     self.r2_format = '.3f'
 
+    # For HYDRUS integration
+    self.min_h = 1e-6
+    self.max_h = 1e6
+    self.points = 100
+
 
 def set_model(self, model, const=[], k_vapor=False):
     """Set model
