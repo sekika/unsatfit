@@ -882,8 +882,7 @@ def calc(f):
         d = dataset(f.inputtext)
         theta = d['data'][1]
         print(
-            f'<li>Constant: &theta;<sub>s</sub> = {
-                max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
+            f'<li>Constant: &theta;<sub>s</sub> = {max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
     limit = []
     if f.cqs == 'fit':
         limit.append(
