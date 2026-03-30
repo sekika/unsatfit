@@ -73,7 +73,7 @@ In your PEST control file (`.pst`), you will set $$a$$ as a fixed parameter with
 
 ### Python script for parameter conversion
 
-Next, you need a Python script to convert between PEST's output and unsatfit. This script will read `model-conv.inp`, calculate the actual value of $r$, generate a standard `model.inp` file, and then instruct unsatfit to create `Mater.in`.
+Next, you need a Python script to convert between PEST's output and unsatfit. This script will read `model-conv.inp`, calculate the actual value of $$r$$, generate a standard `model.inp` file, and then instruct unsatfit to create `Mater.in`.
 
 Save the following script as `mat.py` (replacing the standard one used in the basic workflow):
 
