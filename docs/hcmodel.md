@@ -24,7 +24,7 @@ where Mualem's model is currently most widely used model. When p is used a varia
 
 The HCF depends on WRF. van Genuchten - Mualem model is the most popular selection of WRF and HCF models. However, it does not necessarily represent water retention and hydraulic conductivity curves in a wide range of pressure head. For giving more flexibility to the water retention curve, linear superposition model was proposed by Durner ([1994](https://doi.org/10.1029/93WR02676)) and Seki et al. ([2022](https://doi.org/10.1002/vzj2.20168)). Seki et al. ([2023](https://doi.org/10.2478/johh-2022-0039)) showed that two parameters (p, q) or (p, r) should be optimized to represent hydraulic conductivity curves over a wide range of pressure heads.
 
-In practice, as measuring (h, K) is difficult, HCF parameters are optimized to represent measured θ and/or h in water flow experiment by using such software as [HYDRUS](https://www.pc-progress.com/en/Default.aspx?hydrus). In that case, WRF parameters may be determined with measured (h, &theta;) data before determining HCF parameters. [SWRC Fit](swrcfit.md) is a convenient tool for that purpose.
+In practice, as measuring (h, K) is difficult, HCF parameters are optimized to represent measured θ and/or h in water flow experiment by using such software as HYDRUS and PEST. See [Using unsatfit with HYDRUS](https://sekika.github.io/unsatfit/hydrus.html) and [Using unsatfit with PEST](https://sekika.github.io/unsatfit/pest.html) for detail.
 
 ## Research history
 
