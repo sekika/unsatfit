@@ -10,7 +10,7 @@ The proposed equations are useful for practical applications as shown in the fol
 
 ## User manual
 
-A [user manual](https://arxiv.org/pdf/2302.00472) is available.
+A [user manual](https://arxiv.org/pdf/2302.00472) ([日本語](https://researchmap.jp/sekik/published_papers/52123019/attachment_file.pdf)) is available.
 
 See [install](install.md) and [sample code](code.md) for a quick start.
 
