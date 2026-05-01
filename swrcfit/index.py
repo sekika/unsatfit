@@ -5,12 +5,17 @@ import urllib.parse
 import os
 import sys
 import configparser
+import json
+import html
+import math
 from data.message import message
 from data.model import model
 from data.sample import sample
 from data.sample import dataset
+
 config = configparser.ConfigParser()
 config.read(os.path.dirname(__file__) + '/data/server.txt')
+
 UNSATFIT_MIN_VERSION = '5.2'
 WORKDIR = config.get('Settings', 'workdir')
 IMAGEFILE = config.get('Settings', 'imagefile')
@@ -23,7 +28,98 @@ MAX_LAMBDA_I = 10
 MAX_N_I = 8
 MIN_SIGMA_I = 0.2
 
+# Security limits
+MAX_CONTENT_LENGTH = 100_000
+MAX_NUM_FIELDS = 200
+MAX_INPUT_CHARS = 30_000
+MAX_INPUT_LINES = 1_000
+MAX_DATA_POINTS = 1_000
+
 os.environ['MPLCONFIGDIR'] = WORKDIR
+
+
+class BadRequest(Exception):
+    pass
+
+
+class PayloadTooLarge(Exception):
+    pass
+
+
+def escape(text):
+    """Escape HTML control characters."""
+    return html.escape(str(text), quote=True)
+
+
+def js_string(value):
+    """Safely encode a value as JavaScript string literal.
+
+    Also prevents accidental </script> termination.
+    """
+    return json.dumps(str(value), ensure_ascii=False).replace('</', '<\\/')
+
+
+def normalize_literal_newlines(text):
+    """Convert literal backslash-r/backslash-n sequences to real newlines.
+
+    This recovers values stored by the previous buggy version, such as:
+        line1\\r\\nline2
+    """
+    text = str(text)
+    text = text.replace('\\r\\n', '\n')
+    text = text.replace('\\n', '\n')
+    text = text.replace('\\r', '\n')
+    return text
+
+
+def safe_float(value, default=None, minimum=None, maximum=None):
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return default
+
+    if not math.isfinite(value):
+        return default
+
+    if minimum is not None and value < minimum:
+        value = minimum
+
+    if maximum is not None and value > maximum:
+        value = maximum
+
+    if value == int(value):
+        return int(value)
+
+    return value
+
+
+def validate_input_size(inputtext):
+    inputtext = str(inputtext)
+
+    if len(inputtext) > MAX_INPUT_CHARS:
+        raise BadRequest(
+            f'Input is too long. Maximum length is {MAX_INPUT_CHARS} characters.'
+        )
+
+    if len(inputtext.splitlines()) > MAX_INPUT_LINES:
+        raise BadRequest(
+            f'Too many input lines. Maximum number of lines is {MAX_INPUT_LINES}.'
+        )
+
+
+def validate_dataset_size(d):
+    if not d.get('valid'):
+        return
+
+    if 'data' not in d:
+        return
+
+    h, theta = d['data']
+
+    if len(h) > MAX_DATA_POINTS or len(theta) > MAX_DATA_POINTS:
+        raise BadRequest(
+            f'Too many data points. Maximum number of data points is {MAX_DATA_POINTS}.'
+        )
 
 
 def test(minR2, strict=False):
@@ -193,7 +289,7 @@ def swrcfit(f):
         f.set_model('dual-BC-CH', const=[*con_q])
         try:
             hb, hc, l1, l2 = f.get_init()
-        except BaseException:
+        except Exception:
             hb, l = f.get_init_bc()
             hc = 0.5
             l1 = l2 = l
@@ -542,7 +638,7 @@ def swrcfit(f):
         try:
             f.ini = f.get_init_vg3()
             f.optimize()
-        except BaseException:
+        except Exception:
             f.success = False
             f2 = copy.deepcopy(f)
             result.append(f2)
@@ -566,7 +662,7 @@ def swrcfit(f):
         try:
             f.ini = f.get_init_bvv()
             f.optimize()
-        except BaseException:
+        except Exception:
             f.success = False
             f2 = copy.deepcopy(f)
             result.append(f2)
@@ -588,8 +684,7 @@ def swrcfit(f):
 
 
 def main():
-    """Determine if it is invoked as cgi or command line
-    """
+    """Determine if it is invoked as cgi or command line."""
     if os.getenv('SCRIPT_NAME') is None:
         maincl()
     else:
@@ -613,17 +708,12 @@ def maincl():
     parser.print_help()
 
 
-# Since the cgi module is deprecated as of Python 3.11 (PEP 594),
-# get_field_storage() was defined as an alternative to the cgi module.
-# The line field = cgi.FieldStorage() is replaced with
-# field = get_field_storage(), and the field.getfirst method
-# functions in the same way.
 class FieldStorage:
     def __init__(self, form_data):
         self.form_data = form_data
 
     def getfirst(self, key, default=''):
-        """ Get first value of the key """
+        """Get first value of the key."""
         return self.form_data.get(key, [default])[0]
 
 
@@ -632,56 +722,118 @@ def get_field_storage():
 
     if method == 'POST':
         content_type = os.environ.get('CONTENT_TYPE', '')
-        content_length = int(os.environ.get('CONTENT_LENGTH', 0))
-        if content_length > 0 and content_type == 'application/x-www-form-urlencoded':
+        content_type_main = content_type.split(';', 1)[0].strip().lower()
+
+        try:
+            content_length = int(os.environ.get('CONTENT_LENGTH', 0))
+        except ValueError:
+            raise BadRequest('Invalid Content-Length.')
+
+        if content_length < 0:
+            raise BadRequest('Invalid Content-Length.')
+
+        if content_length > MAX_CONTENT_LENGTH:
+            raise PayloadTooLarge(
+                f'POST body is too large. Maximum size is {MAX_CONTENT_LENGTH} bytes.'
+            )
+
+        if content_length > 0 and content_type_main == 'application/x-www-form-urlencoded':
             post_data = sys.stdin.read(content_length)
-            form_data = urllib.parse.parse_qs(post_data, keep_blank_values=1)
+            try:
+                form_data = urllib.parse.parse_qs(
+                    post_data,
+                    keep_blank_values=True,
+                    max_num_fields=MAX_NUM_FIELDS
+                )
+            except ValueError:
+                raise BadRequest('Too many form fields.')
         else:
             form_data = {}
+
     else:
         query_string = os.environ.get('QUERY_STRING', '')
-        form_data = urllib.parse.parse_qs(query_string, keep_blank_values=1)
+
+        if len(query_string) > MAX_CONTENT_LENGTH:
+            raise PayloadTooLarge(
+                f'Query string is too large. Maximum size is {MAX_CONTENT_LENGTH} bytes.'
+            )
+
+        try:
+            form_data = urllib.parse.parse_qs(
+                query_string,
+                keep_blank_values=True,
+                max_num_fields=MAX_NUM_FIELDS
+            )
+        except ValueError:
+            raise BadRequest('Too many query fields.')
 
     return FieldStorage(form_data)
 
 
+def print_error_page(title, message_text):
+    print('<!DOCTYPE html>')
+    print('<html lang="en"><head><meta charset="UTF-8">')
+    print(f'<title>{escape(title)}</title></head><body>')
+    print(f'<h1>{escape(title)}</h1>')
+    print(f'<p>{escape(message_text)}</p>')
+    print('</body></html>')
+
+
 def maincgi():
-    """SWRC Fit to run as CGI"""
+    """SWRC Fit to run as CGI."""
     import datetime
     from io import TextIOWrapper
     from packaging import version
     import unsatfit
     f = unsatfit.Fit()
 
-    # Change encoding of stdout to utf-8
-    # It is required becaue CGI script runs as another user and may not
-    # print utf-8 encoded text
     sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-    # Respond HTTP header
-    print('Content-Type: text/html')
-    print('Cache-Control: public\n')
+    print('Content-Type: text/html; charset=UTF-8')
+    print('Cache-Control: no-store')
+    print('X-Content-Type-Options: nosniff')
+    print()
 
-    # Get input strings
-    # field = cgi.FieldStorage() was replaced to the following line
-    field = get_field_storage()
-    getlang = field.getfirst('lang', 'none')
-    f.inputtext = field.getfirst('input', '')
+    try:
+        field = get_field_storage()
+    except PayloadTooLarge as e:
+        print_error_page('Request too large', e)
+        return
+    except BadRequest as e:
+        print_error_page('Bad request', e)
+        return
+
+    raw_getlang = field.getfirst('lang', 'none')
+    f.inputtext = normalize_literal_newlines(field.getfirst('input', ''))
+
+    try:
+        validate_input_size(f.inputtext)
+    except BadRequest as e:
+        print_error_page('Bad request', e)
+        return
 
     # Get language setting
     LANGUAGES = message('', 'list')
+    if raw_getlang in LANGUAGES:
+        getlang = raw_getlang
+    else:
+        getlang = 'none'
+
     lang = os.getenv('HTTP_ACCEPT_LANGUAGE')
     if lang is None:
         lang = []
     else:
         lang = lang.split(',')
     lang.append('en')
+
     for i in lang:
         if i[:2] in LANGUAGES:
             lang = i[:2]
             break
+
     if getlang in LANGUAGES:
         lang = getlang
+
     f.lang = lang
     f.getlang = getlang
 
@@ -689,18 +841,27 @@ def maincgi():
     code = field.getfirst('unsoda', '')
     f.given_data = ''
     if code != '':
-        import json
         place = field.getfirst('place', '')
         process = field.getfirst('process', '')
         table = place + '_' + process + '_h-t'
-        unsoda_json = json.load(open('data/unsoda.json', 'r'))
+        try:
+            with open('data/unsoda.json', 'r', encoding='utf-8') as fp:
+                unsoda_json = json.load(fp)
+        except Exception:
+            unsoda_json = {}
+
         if table in unsoda_json and code in unsoda_json[table]:
             s = unsoda_json[table][code]
             f.given_data = 'UNSODA = ' + str(code)
             f.given_data += '\nTexture = ' + \
-                unsoda_json['general'][code]['texture'] + '\n\n'
+                str(unsoda_json['general'][code]['texture']) + '\n\n'
             for i in [list(x) for x in zip(*s)]:
                 f.given_data += str(i[0]) + ' ' + str(i[1]) + '\n'
+            try:
+                validate_input_size(f.given_data)
+            except BadRequest:
+                f.given_data = ''
+
     # Get model selection
     f.selectedmodel = []
     for m in model('all'):
@@ -718,11 +879,11 @@ def maincgi():
     f.show_fig = False
     f.save_fig = True
     f.filename = 'img/swrc.svg'
-    f.fig_width = 5.5  # inch
+    f.fig_width = 5.5
     f.fig_height = 4.5
     f.top_margin = 0.05
     f.bottom_margin = 0.12
-    f.left_margin = 0.15  # Space for label is needed
+    f.left_margin = 0.15
     f.right_margin = 0.05
     f.legend_loc = 'upper right'
     f.color_marker = 'blue'
@@ -730,19 +891,30 @@ def maincgi():
     f.sampledata = sample()
     printhead(lang, f)
     print('<body>')
-    d = dataset(f.inputtext)
+
+    try:
+        d = dataset(f.inputtext)
+        validate_dataset_size(d)
+    except BadRequest as e:
+        printform(lang, getlang, f)
+        print(f'<p><strong>{escape(e)}</strong></p>')
+        printhelp(lang, f)
+        print('</body></html>')
+        return
+    except Exception:
+        d = {'empty': False, 'valid': False, 'message': 'Error in input data'}
 
     if field.getfirst('button') == 'Clear setting':
         # Clear field storage
         for i in model('savekeys'):
             key = STORAGEPREFIX + i
-            print(f'<script>localStorage.removeItem("{key}");</script>')
+            print(f'<script>localStorage.removeItem({js_string(key)});</script>')
         printform(lang, getlang, f)
         printhelp(lang, f)
     else:
         if version.parse(UNSATFIT_MIN_VERSION) > version.parse(f.version()):
             print(
-                f'<h1>Version error</h1><p>Unsatfit >= <strong>{UNSATFIT_MIN_VERSION}</strong> is required, but <strong>{f.version()}</strong> is installed.</p>')
+                f'<h1>Version error</h1><p>Unsatfit &gt;= <strong>{escape(UNSATFIT_MIN_VERSION)}</strong> is required, but <strong>{escape(f.version())}</strong> is installed.</p>')
             print('<p>Note that Python is run by the user who runs cgi program on Apache. Run "make update" when you are using the <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">Docker version</a>.</p>')
         elif d['empty']:
             printform(lang, getlang, f)
@@ -761,29 +933,41 @@ def maincgi():
                 f'<p><strong>{error}</strong></p><p>{message(lang, "readformat")}</p>')
             printhelp(lang, f)
         else:
-            f.swrc = h, theta = d['data']  # Data of soil water retention
+            f.swrc = h, theta = d['data']
             f.data = d
+
             # Get options
             f.cqs = field.getfirst('cqs', '')
             f.cqr = field.getfirst('cqr', '')
-            f.qsin = field.getfirst('qsin', str(max(theta)))
-            f.qrin = field.getfirst('qrin', '')
+
+            if f.cqs not in ('fit', 'max', 'fix'):
+                f.cqs = 'fit'
+            if f.cqr not in ('fit', 'fix', 'both'):
+                f.cqr = 'both'
+
+            qsin = safe_float(field.getfirst('qsin', str(max(theta))),
+                              default=max(theta))
+            qrin = safe_float(field.getfirst('qrin', ''),
+                              default=0)
+
+            f.qsin = str(qsin)
+            f.qrin = str(qrin)
+
             f.max_qs = getfloat(field, 'max_qs', MAX_QS, 1.00001)
             f.max_lambda_i = getfloat(field, 'max_lambda_i', MAX_LAMBDA_I, 0.5)
             f.max_n_i = getfloat(field, 'max_n_i', MAX_N_I, 1.5)
             f.min_sigma_i = getfloat(field, 'min_sigma_i', MIN_SIGMA_I, 0)
             if f.min_sigma_i > 1:
                 f.min_sigma_i = 1
+
             # Save field storage to local storage
             for i in model('savekeys'):
-                value = '//'.join(field.getfirst(i, 'off').splitlines())
+                raw_value = normalize_literal_newlines(field.getfirst(i, 'off'))
+                value = '//'.join(raw_value.splitlines())
+
                 if i in ('qsin', 'qrin') + model('limit'):
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        value = -99
-                    if value == int(value):
-                        value = int(value)
+                    value = safe_float(value, default=-99)
+
                     if value == -99:
                         if i == 'qsin':
                             value = ''
@@ -800,29 +984,35 @@ def maincgi():
                     else:
                         if value <= 0:
                             value = 0
-                    if i == 'max_qs' and value < 1:
+
+                    if i == 'max_qs' and value != '' and value < 1:
                         value = 1
-                    if i == 'max_lambda_i' and value < 0.5:
+                    if i == 'max_lambda_i' and value != '' and value < 0.5:
                         value = 0.5
-                    if i == 'max_n_i' and value < 1.5:
+                    if i == 'max_n_i' and value != '' and value < 1.5:
                         value = 1.5
-                    if i == 'min_sigma_i' and value < 0:
+                    if i == 'min_sigma_i' and value != '' and value < 0:
                         value = 0
-                    if i == 'min_sigma_i' and value > 1:
+                    if i == 'min_sigma_i' and value != '' and value > 1:
                         value = 1
+
                     value = str(value)
+
                 key = STORAGEPREFIX + i
                 print(
-                    f'<script>localStorage.setItem("{key}", "{value}");</script>')
-            calc(f)   # Start main calculation
+                    f'<script>localStorage.setItem({js_string(key)}, {js_string(value)});</script>')
+
+            calc(f)
+
     # Print footer
     import platform
     footer = message(lang, "footer")
-    footer = footer.replace('VER', f.version())
+    footer = footer.replace('VER', escape(f.version()))
     footer = footer.replace('AUTHOR', message(lang, 'author'))
     pyver = str(sys.version_info.major) + '.' + \
         str(sys.version_info.minor) + '.' + str(sys.version_info.micro)
-    footer = footer.replace('PYV', pyver).replace('ARCH', platform.system())
+    footer = footer.replace('PYV', escape(pyver)).replace(
+        'ARCH', escape(platform.system()))
     history = message(lang, "history")
     history = history.replace('YEAR', str(datetime.datetime.now().year - 2007))
     history = history.replace(
@@ -832,79 +1022,84 @@ def maincgi():
     return
 
 
-def getfloat(field, id, default, min):
-    value = field.getfirst(id, 'a')
-    try:
-        value = float(value)
-    except ValueError:
+def getfloat(field, id, default, minimum):
+    value = field.getfirst(id, '')
+    value = safe_float(value, default=default, minimum=minimum)
+    if value is None:
         value = default
-    if value < min:
-        value = min
-    if value == int(value):
-        value = int(value)
     return value
 
 
 def calc(f):
-    """Main calculation"""
+    """Main calculation."""
     lang = f.lang
     getlang = f.getlang
     d = f.data
+
     # Show process
     if getlang in message('', 'list'):
-        url = './?lang=' + lang
+        url = './?lang=' + urllib.parse.quote(lang, safe='')
     else:
         url = './'
+
     print(
-        f'<h1><a href="{url}">SWRC Fit</a> - {message(lang, "result")}</h1>')
+        f'<h1><a href="{escape(url)}">SWRC Fit</a> - {message(lang, "result")}</h1>')
     print('<ul>')
     for i in sorted(d):
         if i not in ['empty', 'valid', 'text', 'data']:
             if i == 'doi':
+                doi = str(d[i])
                 print(
-                    f'<li>{escape(i)} = <a href="https://doi.org/{1}">{escape(d[i])}</a>')
+                    f'<li>{escape(i)} = <a href="https://doi.org/{urllib.parse.quote(doi, safe="/.:")}">{escape(doi)}</a>')
             elif i == 'UNSODA':
+                unsoda = str(d[i])
                 print(
-                    f'<li>{escape(i)} = <a href="https://sekika.github.io/unsoda/?{escape(d[i])}">{escape(d[i])}</a>')
+                    f'<li>{escape(i)} = <a href="https://sekika.github.io/unsoda/?{urllib.parse.quote(unsoda, safe="")}">{escape(unsoda)}</a>')
             else:
                 print(f'<li>{escape(i)} = {escape(d[i])}')
+
     f.trimodal = False
     for m in model('trimodal'):
         if m in f.selectedmodel:
             f.trimodal = True
+
     for i in getoptiontheta(f, True)[0]:
         bi = ''
         if f.cqr == 'both' and i[0] == 2:
             bi = ' for bimodal models'
         par = ('&theta;<sub>s</sub>', '&theta;<sub>r</sub>')[i[0] - 1]
-        print(f'<li>Constant: {par} = {i[1]}{bi}')
+        print(f'<li>Constant: {par} = {escape(i[1])}{bi}')
+
     if f.trimodal:
         d = dataset(f.inputtext)
         theta = d['data'][1]
         print(
-            f'<li>Constant: &theta;<sub>s</sub> = {max(theta)}, &theta;<sub>r</sub> = 0 for trimodal models')
+            f'<li>Constant: &theta;<sub>s</sub> = {escape(max(theta))}, &theta;<sub>r</sub> = 0 for trimodal models')
+
     limit = []
     if f.cqs == 'fit':
         limit.append(
             f'&theta;<sub>s</sub> &lt; {f.max_qs * max(d["data"][1]):.3f}')
     if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel:
-        limit.append(f'&lambda;<sub>1</sub> &lt; {f.max_lambda_i}')
+        limit.append(f'&lambda;<sub>1</sub> &lt; {escape(f.max_lambda_i)}')
     if 'VGBCCH' in f.selectedmodel or 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
-        limit.append(f'n<sub>1</sub> &lt; {f.max_n_i}')
+        limit.append(f'n<sub>1</sub> &lt; {escape(f.max_n_i)}')
     if 'KOBCCH' in f.selectedmodel or 'DK' in f.selectedmodel:
-        limit.append(f'&sigma;<sub>1</sub> &gt; {f.min_sigma_i}')
+        limit.append(f'&sigma;<sub>1</sub> &gt; {escape(f.min_sigma_i)}')
     if 'DBCH' in f.selectedmodel or 'DB' in f.selectedmodel or 'VGBCCH' in f.selectedmodel or 'KOBCCH' in f.selectedmodel:
-        limit.append(f'&lambda;<sub>2</sub> &lt; {f.max_lambda_i}')
+        limit.append(f'&lambda;<sub>2</sub> &lt; {escape(f.max_lambda_i)}')
     if 'DVCH' in f.selectedmodel or 'DV' in f.selectedmodel:
-        limit.append(f'n<sub>2</sub> &lt; {f.max_n_i}')
+        limit.append(f'n<sub>2</sub> &lt; {escape(f.max_n_i)}')
     if 'DK' in f.selectedmodel:
-        limit.append(f'&sigma;<sub>2</sub> &gt; {f.min_sigma_i}')
+        limit.append(f'&sigma;<sub>2</sub> &gt; {escape(f.min_sigma_i)}')
     if len(limit) > 0:
         print('<li>Limit: ' + ', '.join(limit))
     print('</ul>')
+
     print(
         f'<div class="tmp" id="tmp">{message(lang, "wait")}</div>', flush=True)
-    result = swrcfit(f)  # Calculation
+    result = swrcfit(f)
+
     if len(result) == 0:
         print(
             '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
@@ -914,8 +1109,8 @@ def calc(f):
         print('<p><a href="{0}"></a></p>')
         showdata(f)
         return
+
     # Show result
-    # Note
     note = [
         'The model with minumum AIC is shown in red color. AIC (<a href="https://en.wikipedia.org/wiki/Akaike_information_criterion">Akaike Information Criterion</a>) = n ln(RSS/n)+2k, where n is sample size, RSS is residual sum of squares and k is the number of estimated parameters.']
     if f.show_caic:
@@ -933,25 +1128,28 @@ def calc(f):
     try:
         with open(IMAGEFILE, 'w'):
             pass
-    except BaseException:
+    except Exception:
         error = True
     if error:
         print(
-            f'<strong>Server setup error: Cannot write {IMAGEFILE}. Please check permission.</strong>')
+            f'<strong>Server setup error: Cannot write {escape(IMAGEFILE)}. Please check permission.</strong>')
+
     error = False
     tmpfile = WORKDIR + '/dksafjsdafkpaoeiwr'
     try:
         with open(tmpfile, 'w'):
             pass
-    except BaseException:
+    except Exception:
         error = True
     if error:
         print(
-            f'<strong>Server setup error: Cannot write in {WORKDIR}. Please check permission.</strong>')
+            f'<strong>Server setup error: Cannot write in {escape(WORKDIR)}. Please check permission.</strong>')
     else:
         os.remove(tmpfile)
+
     print(
         '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
+
     aic = []
     caic = []
     for i in result:
@@ -969,6 +1167,7 @@ def calc(f):
         caic_min = -1
     else:
         caic_min = caic.index(min(caic))
+
     if f.show_eq:
         eq = '<th>Equation'
     else:
@@ -981,8 +1180,10 @@ def calc(f):
         caic = '<th>AIC<sub>c</sub>'
     else:
         caic = ''
+
     print(
         f'<table border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC{caic}</tr>')
+
     count = 0
     for i in result:
         if i.success:
@@ -996,11 +1197,12 @@ def calc(f):
                     p = f'{i.fitted[j]:.5}'
                 else:
                     p = f'{i.fitted_show[j]:.5}'
-                par += f'{i.par[j]} = {p}<br>'
+                par += f'{i.par[j]} = {escape(p)}<br>'
             r2 = f'{i.r2_ht:.4f}'
         else:
             par = 'Failed'
             r2 = aic = caic = ''
+
         if count == aic_min:
             name = '<strong>' + i.setting['html'] + '</strong>'
             aic = f'<strong>{i.aic_ht:.2f}</strong>'
@@ -1008,6 +1210,7 @@ def calc(f):
             name = i.setting['html']
             if i.success:
                 aic = f'{i.aic_ht:.2f}'
+
         if f.show_caic:
             if i.success and i.aicc_ht is not None:
                 if count == caic_min:
@@ -1016,10 +1219,12 @@ def calc(f):
                     caic = f'<td>{i.aicc_ht:.2f}'
             else:
                 caic = '<td>NA'
+
         if f.show_eq:
             eq = f'<td>\\( {i.setting["equation"]} \\)'
         else:
             eq = ''
+
         if f.show_cor:
             if i.cor is None:
                 cor = 'Not available'
@@ -1029,8 +1234,10 @@ def calc(f):
             cor = f'<td>{cor}'
         else:
             cor = ''
+
         print(
-            f'<tr><td>{name}{eq}<td>{par}{cor}<td>{r2}<td>{aic}{caic}</tr>')
+            f'<tr><td>{name}{eq}<td>{par}{cor}<td>{escape(r2)}<td>{aic}{caic}</tr>')
+
         if len(i.setting['note']) > 0:
             note.append(i.setting['note'])
         f.set_model(i.model_name, i.const)
@@ -1046,6 +1253,7 @@ def calc(f):
                 else:
                     f.add_curve()
         count += 1
+
     print('</table>\n<ul>\n')
     for n in note:
         print(f'<li>{n}</li>')
@@ -1057,29 +1265,30 @@ def calc(f):
 
 def showdata(f):
     print(
-        f'<div style="text-align: center;"><img src="{IMAGEFILE}" alt="Figure"></div>')
+        f'<div style="text-align: center;"><img src="{escape(IMAGEFILE)}" alt="Figure"></div>')
     print('<h2>Original data</h2><table border="1"><tr><th>h<th>&theta;')
     for i in list(zip(*f.swrc)):
-        print(f'<tr><td>{i[0]}<td>{i[1]}</tr>')
+        print(f'<tr><td>{escape(i[0])}<td>{escape(i[1])}</tr>')
     print('</table>')
 
 
 def getoptiontheta(f, bimodal):
-    """Get options for theta_s and theta_r"""
+    """Get options for theta_s and theta_r."""
     con_q = []
     ini_q = []
     par_theta = []
     if f.cqs == 'max':
         con_q.append([1, max(f.swrc[1])])
     elif f.cqs == 'fix':
-        qs = float(f.qsin)
+        qs = safe_float(f.qsin, default=max(f.swrc[1]))
         con_q.append([1, qs])
     else:
         ini_q.append(max(f.swrc[1]))
         par_theta.append('&theta;<sub>s</sub>')
+
     cqr = f.cqr
     if cqr == 'fix':
-        qr = float(f.qrin)
+        qr = safe_float(f.qrin, default=0)
         if qr <= 0 or qr > max(f.swrc[1]):
             qr = 0
         con_q.append([2, qr])
@@ -1094,13 +1303,13 @@ def getoptiontheta(f, bimodal):
 def printhead(lang, f):
     mathjax = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
     print(f'''<!DOCTYPE html>
-<html lang="{lang}">
+<html lang="{escape(lang)}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SWRC Fit</title>
-  <link rel="stylesheet" type="text/css" href="{message(lang, "css")}">
-  <script id="MathJax-script" async src="{mathjax}"></script>
+  <link rel="stylesheet" type="text/css" href="{escape(message(lang, "css"))}">
+  <script id="MathJax-script" async src="{escape(mathjax)}"></script>
   <script>
     function showMore(btn) {{
         var targetId = btn.getAttribute("href").slice(1);
@@ -1108,21 +1317,42 @@ def printhead(lang, f):
         btn.parentNode.style.display = "none";
         return false;
     }}
-  function a(){{''')
-    print('if(document.getElementById("sample").value == "clear"){')
-    print('  document.getElementById("input").value = "";')
-    print(f"  localStorage.removeItem('{STORAGEPREFIX + 'input'}');")
-    print('} else ', end="")
+
+    function a() {{
+        const sampleElement = document.getElementById("sample");
+        const inputElement = document.getElementById("input");
+
+        if (!sampleElement || !inputElement) {{
+            return;
+        }}
+
+        const selected = sampleElement.value;
+
+        if (selected === "clear") {{
+            inputElement.value = "";
+            localStorage.removeItem({js_string(STORAGEPREFIX + "input")});
+            return;
+        }}
+''')
+
     for ID in f.sampledata:
         d = f.sampledata[ID]
-        sample = escape(d['Soil sample'])
-        text = "\\r\\n".join(escape(d['text']).splitlines())
-        print(
-            f'if(document.getElementById("sample").value == "{sample}"){{')
-        print(f'  document.getElementById("input").value = "{text}";')
-        print('} else ', end="")
-    print('{   document.getElementById("input").value = ""; }')
-    print('  }</script></head>', flush=True)
+        sample_name = str(d['Soil sample'])
+
+        # Important:
+        # This is real CRLF, not a literal backslash-r/backslash-n string.
+        text = "\r\n".join(str(d['text']).splitlines())
+
+        print(f'''        if (selected === {js_string(sample_name)}) {{
+            inputElement.value = {js_string(text)};
+            return;
+        }}
+''')
+
+    print('''        inputElement.value = "";
+    }
+  </script>
+</head>''', flush=True)
 
 
 def printform(lang, getlang, f):
@@ -1131,7 +1361,7 @@ def printform(lang, getlang, f):
         f'<p>{message(lang, "langbar", url)}</p>\n'
         f'<h1>SWRC Fit</h1>\n'
         f'<p>{message(lang, "description")}</p>\n'
-        f'<form action="{url}" method="post">',
+        f'<form action="{escape(url)}" method="post">',
         flush=True
     )
     print(f'''<table style="margin-left: auto; margin-right: auto; border-collapse: collapse;">
@@ -1139,13 +1369,15 @@ def printform(lang, getlang, f):
 <td style="width: 240px;">
   <p>{message(lang, "modelselect")}</p>
 ''')
+
     for ID in model('all'):
         if model(ID)['selected']:
             checked = ' checked'
         else:
             checked = ''
-        print('<INPUT TYPE="checkbox" id={0} name="{0}" value="on"{1}>{2}<br>'.format(
-            ID, checked, model(ID)['html']))
+        print('<INPUT TYPE="checkbox" id="{0}" name="{0}" value="on"{1}>{2}<br>'.format(
+            escape(ID), checked, model(ID)['html']))
+
     print(f'''<p>{message(lang, "figoption")}<br>
   <input type="checkbox" name="onemodel" id="onemodel" value="on">{message(lang, "onemodel")}<br>
   </p>
@@ -1156,12 +1388,12 @@ def printform(lang, getlang, f):
     print(f'    <option value="">{message(lang, "selectsample")}')
     for ID in f.sampledata:
         d = f.sampledata[ID]
-        sample = escape(d['Soil sample'])
+        sample_name = escape(d['Soil sample'])
         texture = escape(d['Texture'])
-        print(f'    <option value="{sample}">{texture}')
+        print(f'    <option value="{sample_name}">{texture}')
     print('  <option value="clear">*** Clear input ***')
     print(f'''  </select>
-<div><textarea name="input" id="input" rows="15" cols="27" style="white-space: nowrap;">{f.given_data}</textarea></div>
+<div><textarea name="input" id="input" rows="15" cols="27" style="white-space: nowrap;">{escape(f.given_data)}</textarea></div>
 </td></tr>
 <tr>
 <td colspan="2">
@@ -1191,11 +1423,14 @@ def printform(lang, getlang, f):
 <p>When you calculate, setting is saved in your web browser.</p>
 <p><input type="submit" name="button" value="Clear setting"></p>
 </div>
-<p><input type="hidden" name="lang" value="{getlang}"></p>\n  <div style="text-align: center;"><input type="submit" name="button" value="{message(lang, 'calculate')}"></div>\n
+<p><input type="hidden" name="lang" value="{escape(getlang)}"></p>
+  <div style="text-align: center;"><input type="submit" name="button" value="{escape(message(lang, 'calculate'))}"></div>
+
 </td>
 </tr>
 </table>
 </form>''', flush=True)
+
     # Read setting from local storage
     for i in model('all'):
         loadchecked(i)
@@ -1213,49 +1448,66 @@ def printform(lang, getlang, f):
 
 
 def loadchecked(id):
-    print('''<script>
-  if (localStorage.getItem("{0}{1}") == 'on') {{
-    document.getElementById('{1}').checked = true;
-  }};
-  if (localStorage.getItem("{0}{1}") == 'off') {{
-    document.getElementById('{1}').checked = false;
-  }};
-</script>'''.format(STORAGEPREFIX, id))
+    key = STORAGEPREFIX + id
+    varname = ''.join(c if c.isalnum() else '_' for c in id)
+    print(f'''<script>
+  const el_{varname} = document.getElementById({js_string(id)});
+  if (el_{varname}) {{
+    if (localStorage.getItem({js_string(key)}) == 'on') {{
+      el_{varname}.checked = true;
+    }}
+    if (localStorage.getItem({js_string(key)}) == 'off') {{
+      el_{varname}.checked = false;
+    }}
+  }}
+</script>''')
 
 
 def loadradio(id, default):
-    print('''<script>
-    let val{1} = localStorage.getItem("{0}{1}");
-    if (!val{1}) {{
-        val{1} = "{2}"
+    key = STORAGEPREFIX + id
+    varname = ''.join(c if c.isalnum() else '_' for c in id)
+    print(f'''<script>
+    let val_{varname} = localStorage.getItem({js_string(key)});
+    if (!val_{varname}) {{
+        val_{varname} = {js_string(default)};
     }}
-    let ele{1} = document.getElementsByName("{1}");
-    for (let i = 0; i < ele{1}.length; i++){{
-        if (ele{1}.item(i).value == val{1}) {{
-            ele{1}[i].checked = true;
+
+    let ele_{varname} = document.getElementsByName({js_string(id)});
+    for (let i = 0; i < ele_{varname}.length; i++) {{
+        if (ele_{varname}.item(i).value == val_{varname}) {{
+            ele_{varname}[i].checked = true;
         }} else {{
-            ele{1}[i].checked = false;
+            ele_{varname}[i].checked = false;
         }}
     }}
-    </script>'''.format(STORAGEPREFIX, id, default))
+</script>''')
 
 
 def loadnum(id):
-    print('''<script>
-  const num{1} = localStorage.getItem("{0}{1}");
-  if (num{1}) {{
-    document.getElementById('{1}').value = num{1};
+    key = STORAGEPREFIX + id
+    varname = ''.join(c if c.isalnum() else '_' for c in id)
+    print(f'''<script>
+  const num_{varname} = localStorage.getItem({js_string(key)});
+  const el_{varname} = document.getElementById({js_string(id)});
+  if (num_{varname} && el_{varname}) {{
+    el_{varname}.value = num_{varname};
   }}
-</script>'''.format(STORAGEPREFIX, id))
+</script>''')
 
 
 def loadtext(id):
-    print('''<script>
-  const text = localStorage.getItem("{0}{1}");
-  if (text) {{
-    document.getElementById('{1}').textContent = text.replace(/\\/\\//g,'\\n');
+    key = STORAGEPREFIX + id
+    print(f'''<script>
+  const text = localStorage.getItem({js_string(key)});
+  const el = document.getElementById({js_string(id)});
+  if (text && el) {{
+    el.value = text
+      .replace(/\\\\r\\\\n/g, '\\n')
+      .replace(/\\\\n/g, '\\n')
+      .replace(/\\\\r/g, '\\n')
+      .split('//').join('\\n');
   }}
-</script>'''.format(STORAGEPREFIX, id))
+</script>''')
 
 
 def printhelp(lang, f):
@@ -1264,22 +1516,13 @@ def printhelp(lang, f):
     print(message(lang, 'format'))
     print(f'<h2>{message(lang, "sample")}</h2>')
     id = list(f.sampledata)[random.randint(0, 7)]
-    texture = f.sampledata[id]['Texture']
-    soil = f.sampledata[id]['Soil sample']
-    unsoda = f.sampledata[id]['UNSODA']
+    texture = escape(f.sampledata[id]['Texture'])
+    soil = escape(f.sampledata[id]['Soil sample'])
+    unsoda = escape(f.sampledata[id]['UNSODA'])
     print(f'<ul><li>{soil}<li>Texture: {texture}<li><a href="fig.html">List of figures</a></ul>\n<div style="text-align: center;"><img src="img/{unsoda}.png" alt="Sample output"></div>')
     print(message(lang, 'help'))
     print(message(lang, 'ack'))
     print(message(lang, 'question'))
-
-
-def escape(text):
-    """escape html control characters
-
-    Everything which might include input text should be escaped before output
-    as html for security"""
-    return text.replace('&', '&amp;').replace('<', '&lt;').replace(
-        '>', '&gt;').replace('"', '&quot;').replace("'", '&apos;')
 
 
 if __name__ == '__main__':
