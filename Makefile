@@ -37,4 +37,5 @@ deb: sdist
 	    --maintainer "Katsutoshi Seki" \
 	    --description "Fit soil water retention and unsaturated hydraulic conductivity functions" \
 	    --prefix /usr/local \
+		--package $(DISTDIR)/unsatfit_$(VERSION)_arm64.deb \
 	    $(PKGDIR)
