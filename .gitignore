@@ -63,3 +63,6 @@ venv.bak/
 swrc.png
 swrc.svg
 fontlist*.json
+
+# Mac
+.DS_Store
