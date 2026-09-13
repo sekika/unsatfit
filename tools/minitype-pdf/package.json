@@ -1,0 +1,14 @@
+{
+  "name": "unsatfit-minitype-pdf",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node generate-pdfs.mjs --missing",
+    "rebuild": "node generate-pdfs.mjs --all"
+  },
+  "dependencies": {
+    "@minitype/minitype": "latest",
+    "@resvg/resvg-js": "latest",
+    "pdf-lib": "latest"
+  }
+}

@@ -33,7 +33,14 @@
       </header>
       <section>
 
-      {{ content }}
+      {% unless page.pdf == false %}
+        {% assign pdf_url = page.url | append: ".pdf" | replace: ".html.pdf", ".pdf" | replace: "/.pdf", ".pdf" | prepend: "/pdf" %}
+        {% capture title_pdf_link %}</h1>
+        <p class="view" style="text-align: right;"><a href="{{ pdf_url | relative_url }}" target="_blank" rel="noopener" type="application/pdf">View PDF</a></p>{% endcapture %}
+        {{ content | replace_first: "</h1>", title_pdf_link }}
+      {% else %}
+        {{ content }}
+      {% endunless %}
 
       </section>
       <footer>

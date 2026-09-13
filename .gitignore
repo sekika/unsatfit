@@ -66,3 +66,14 @@ fontlist*.json
 
 # Mac
 .DS_Store
+
+# Temporary files used while rasterizing SVGs and normalizing Markdown for PDFs.
+tmp/pdfs/
+
+# Installed locally; npm resolves the latest declared packages on each install.
+tools/minitype-pdf/node_modules/
+tools/minitype-pdf/.npm/
+tools/minitype-pdf/npm-debug.log*
+
+# minitype font-subsetting cache (can exceed GitHub's 100 MB file limit).
+tools/minitype-pdf/font-caches.db*

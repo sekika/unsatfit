@@ -1,0 +1,29 @@
+#!/bin/sh
+# Install with: make -C setup
+# Rebuild and stage documentation PDFs affected by this commit.
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if git diff --cached --name-only --diff-filter=ACDMR -- docs/ | grep -q .; then
+  # The generator reads the working tree.  A partly staged documentation
+  # change could otherwise commit a PDF for different source text.
+  if ! git diff --quiet -- docs/; then
+    echo "pre-commit: docs/ に未ステージの変更があります。" >&2
+    echo "pre-commit: PDF と本文を一致させるため、先にステージするか退避してください。" >&2
+    exit 1
+  fi
+
+  set -- $(git diff --cached --name-only --diff-filter=ACMR -- 'docs/*.md')
+  if [ "$#" -gt 0 ]; then
+    node "$repo_root/tools/minitype-pdf/generate-pdfs.mjs" --missing "$@"
+    git add docs/pdf/
+    if [ -f docs/pdf.pdf ]; then
+      git add docs/pdf.pdf
+    else
+      git rm --cached --ignore-unmatch docs/pdf.pdf
+    fi
+  fi
+fi
