@@ -29,6 +29,28 @@ const style = {
 const interactiveTags = new Set(["applet", "button", "canvas", "embed", "form", "iframe", "input", "object", "script", "select", "textarea"]);
 const pdfLink = (href, body) => color(url(href, restoreInlineValue(body)), rgb(0, 82, 155));
 
+function sourcePageLink(href, identity) {
+  const matched = href.match(/^([^?#]+)\.(?:m(?:d|arkdown)|html)([?#].*)?$/i);
+  if (!matched || /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(href)) return href;
+  const [, markdownPath, suffix = ""] = matched;
+  const resolved = markdownPath.startsWith("/")
+    ? markdownPath.replace(/^\/+/, "")
+    : path.posix.normalize(path.posix.join(path.posix.dirname(identity.relative), markdownPath));
+  return `${siteUrl}/${resolved}.html${suffix}`;
+}
+
+function normalizeDefinitionLists(source) {
+  return source
+    // Keep attributes of a link on one line so normalizeHtml can convert it.
+    .replace(/<a\b([\s\S]*?)>/gi, (_tag, attributes) => `<a ${attributes.replace(/\s+/g, " ")}>`)
+    .replace(/<dl\b[^>]*>/gi, "")
+    .replace(/<\/dl\s*>/gi, "")
+    .replace(/<dt\b[^>]*>\s*([\s\S]*?)\s*<\/dt\s*>/gi, "\n\n**$1**\n")
+    .replace(/<dd\b[^>]*>\s*([\s\S]*?)\s*<\/dd\s*>/gi, "\n$1\n")
+    .replace(/<\/?(?:ul|ol)\b[^>]*>/gi, "")
+    .replace(/<li\b[^>]*>\s*([\s\S]*?)\s*<\/li\s*>/gi, "\n- $1\n");
+}
+
 function frontMatter(source) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   const values = new Map();
@@ -121,6 +143,10 @@ function normalizeMarkdown(source) {
     .replace(/^(`{3,}|~{3,})([^\s]*)\s*$/gm, (line, fence, language) => language && !supported.has(language.toLowerCase()) ? `${fence}text` : line);
 }
 
+function stripHeadingAttributes(source) {
+  return source.replace(/^(#{1,6}\s+.*?)\s+\{#[^\s}]+\}\s*$/gm, "$1");
+}
+
 function mathMarkers(source) {
   const display = [], inline = [];
   let fence, open;
@@ -203,11 +229,11 @@ async function generate(file) {
   const identity = fileIdentity(file);
   const title = metadata.get("title") || body.match(/^#\s+(.+?)(?:\s+\{#.+\})?\s*$/m)?.[1] || identity.stem;
   const bodyWithoutTitle = body.replace(/^#\s+.+?(?:\s+\{#.+\})?\s*\r?\n+/, "");
-  const prepared = mathMarkers(normalizeMarkdown(normalizeHtml(bodyWithoutTitle.replace(/{%\s*(?:raw|endraw|include[^%]*)\s*%}\r?\n?/gi, "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ""))));
+  const prepared = mathMarkers(normalizeMarkdown(normalizeHtml(normalizeDefinitionLists(stripHeadingAttributes(bodyWithoutTitle)).replace(/{%\s*(?:raw|endraw|include[^%]*)\s*%}\r?\n?/gi, "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ""))));
   const markdownFile = path.join(root, "tmp", "pdfs", "normalized", identity.relative);
   await mkdir(path.dirname(markdownFile), { recursive: true });
   await writeFile(markdownFile, prepared.source);
-  const article = await mdFile(markdownFile, { image: (src) => pdfImage(src), link: (href, text) => pdfLink(href, text) });
+  const article = await mdFile(markdownFile, { image: (src) => pdfImage(src), link: (href, text) => pdfLink(sourcePageLink(href, identity), text) });
   article.blocks = replaceDisplay(article.blocks, prepared.display);
   replaceMath(article.blocks, prepared.inline);
   replaceInlineHtml(article.blocks);
