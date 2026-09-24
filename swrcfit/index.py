@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UNSATFIT_MIN_VERSION = '5.2'
 STORAGEPREFIX = 'swrc_'
 TEST_R2 = 0.945
+PUBLIC_URL = 'https://seki.webmasters.gr.jp/swrc/'
 
 # Default limit of parameters
 MAX_QS = 1.5
@@ -1028,8 +1029,9 @@ def maincgi(environ=None, input_stream=None):
     history = history.replace('YEAR', str(datetime.datetime.now().year - 2007))
     history = history.replace(
         'URL', 'https://sekika.github.io/unsatfit/history.html')
+    language_links = message('', 'langlinks')
     print(
-        f'<hr>\n<p>{footer}</p>\n<p style="text-align:right;">{history}</a></p></body></html>', flush=True)
+        f'<hr>\n<p>{footer}</p>\n<p>{language_links}</p>\n<p style="text-align:right;">{history}</a></p></body></html>', flush=True)
     return
 
 
@@ -1294,12 +1296,18 @@ def getoptiontheta(f, bimodal):
 
 def printhead(lang, f):
     mathjax = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+    alternate_links = '\n'.join(
+        f'  <link rel="alternate" hreflang="{language}" href="{PUBLIC_URL}?lang={language}">'
+        for language in message('', 'list')
+    )
     print(f'''<!DOCTYPE html>
 <html lang="{escape(lang)}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SWRC Fit</title>
+{alternate_links}
+  <link rel="alternate" hreflang="x-default" href="{PUBLIC_URL}">
   <link rel="stylesheet" type="text/css" href="{escape(message(lang, "css"))}">
   <script id="MathJax-script" async src="{escape(mathjax)}"></script>
   <script>
@@ -1374,7 +1382,7 @@ def printhead(lang, f):
 def printform(lang, getlang, f):
     url = './'
     print(
-        f'<p>{message(lang, "langbar", url)}</p>\n'
+        f'<div>{message(lang, "langbar", url)}</div>\n'
         f'<h1>SWRC Fit</h1>\n'
         f'<p>{message(lang, "description")}</p>\n'
         f'<form id="fit-form" action="{escape(url)}" method="post" onsubmit="beginCalculation(event)">',
@@ -1409,7 +1417,7 @@ def printform(lang, getlang, f):
         print(f'    <option value="{sample_name}">{texture}')
     print('  <option value="clear">*** Clear input ***')
     print(f'''  </select>
-<div><textarea name="input" id="input" rows="15" cols="27" style="white-space: nowrap;">{escape(f.given_data)}</textarea></div>
+<div><textarea name="input" id="input" rows="15" cols="27">{escape(f.given_data)}</textarea></div>
 </td></tr>
 <tr>
 <td colspan="2">
