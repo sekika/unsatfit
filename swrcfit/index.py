@@ -1107,13 +1107,9 @@ def calc(f):
         print('<li>Limit: ' + ', '.join(limit))
     print('</ul>')
 
-    print(
-        f'<div class="tmp" id="tmp">{message(lang, "wait")}</div>', flush=True)
     result = swrcfit(f)
 
     if len(result) == 0:
-        print(
-            '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
         print('<p><strong>Optimization failed.</strong></p>')
         f.data_only = True
         plot_to_buffer(f)
@@ -1134,9 +1130,6 @@ def calc(f):
             '&pm; shows 1&sigma; uncertainty of parameters.')
     if f.trimodal:
         note.append('While trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. To ensure robust application, we recommend comparing models of different complexity and preferring simpler formulations when performance differences are marginal. See <a href="https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf">Seki et al. (2026)</a> for detail.')
-
-    print(
-        '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
 
     aic = []
     caic = []
@@ -1317,6 +1310,30 @@ def printhead(lang, f):
         return false;
     }}
 
+    function beginCalculation(event) {{
+        const form = event.currentTarget;
+        const submitter = event.submitter;
+        if (submitter && submitter.id === "clear-setting") {{
+            return;
+        }}
+
+        const wait = document.getElementById("wait");
+        if (wait) {{
+            wait.hidden = false;
+        }}
+
+        const calculate = document.getElementById("calculate");
+        if (calculate) {{
+            calculate.disabled = true;
+        }}
+
+        // Delay the normal submission by two frames so the wait message paints.
+        event.preventDefault();
+        requestAnimationFrame(() => {{
+            requestAnimationFrame(() => form.submit());
+        }});
+    }}
+
     function a() {{
         const sampleElement = document.getElementById("sample");
         const inputElement = document.getElementById("input");
@@ -1360,7 +1377,7 @@ def printform(lang, getlang, f):
         f'<p>{message(lang, "langbar", url)}</p>\n'
         f'<h1>SWRC Fit</h1>\n'
         f'<p>{message(lang, "description")}</p>\n'
-        f'<form action="{escape(url)}" method="post">',
+        f'<form id="fit-form" action="{escape(url)}" method="post" onsubmit="beginCalculation(event)">',
         flush=True
     )
     print(f'''<table style="margin-left: auto; margin-right: auto; border-collapse: collapse;">
@@ -1420,10 +1437,13 @@ def printform(lang, getlang, f):
 <input type="checkbox" name="show_cor" id="show_cor" value="on">Correlation matrix<br>
 
 <p>When you calculate, setting is saved in your web browser.</p>
-<p><input type="submit" name="button" value="Clear setting"></p>
+<p><input type="submit" id="clear-setting" name="button" value="Clear setting"></p>
 </div>
 <p><input type="hidden" name="lang" value="{escape(getlang)}"></p>
-  <div style="text-align: center;"><input type="submit" name="button" value="{escape(message(lang, 'calculate'))}"></div>
+  <div style="text-align: center;">
+    <input type="submit" id="calculate" name="button" value="{escape(message(lang, 'calculate'))}">
+    <div class="tmp" id="wait" hidden>{message(lang, 'wait')}</div>
+  </div>
 
 </td>
 </tr>
