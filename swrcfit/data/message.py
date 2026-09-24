@@ -104,6 +104,31 @@ EXTRA_MESSAGES = {
 }
 
 
+PERSIAN_MESSAGES = {
+    'description': 'SWRC Fit می‌تواند <a href="model.html">چندین مدل هیدرولیکی خاک</a> را بر داده‌های اندازه‌گیری‌شدهٔ <a href="https://en.wikipedia.org/wiki/Water_retention_curve">منحنی نگهداشت آب خاک</a> برازش دهد و پارامترهای هیدرولیکی خاک را تعیین کند. داده‌های اندازه‌گیری‌شدهٔ خود (فشار، محتوای آب) را در کادر متنی زیر وارد کنید و دکمهٔ «محاسبه» را فشار دهید. پیش از استفاده از داده‌های خود، می‌توانید با انتخاب دادهٔ نمونه از منوی کشویی نحوهٔ کار برنامه را بررسی کنید.',
+    'calculate': 'محاسبه',
+    'wait': 'لطفاً صبر کنید ...',
+    'sample': 'نمونهٔ خروجی',
+    'help': '<h2>استناد</h2>\n<p>هنگام انتشار نتایج پژوهشی که با این برنامه، SWRC Fit یا unsatfit به دست آمده‌اند، لطفاً به این مقاله استناد کنید. SWRC Fit برای محاسبات از کتابخانهٔ <a href="https://sekika.github.io/unsatfit/">unsatfit</a> استفاده می‌کند.</p>\n',
+    'ack': '<h2>سپاسگزاری</h2><ul><li>داده‌های نمونه از <a href="https://doi.org/10.15482/USDA.ADC/1173246">پایگاه دادهٔ UNSODA</a> دربارهٔ ویژگی‌های هیدرولیکی خاک‌های غیراشباع، که توسط US Salinity Laboratory توسعه یافته است، گرفته شده‌اند. برای داده‌های بیشتر، <a href="https://sekika.github.io/unsoda/">نمایشگر UNSODA</a> را ببینید.</li><li>سپاسگزاری مربوط به ترجمه در صفحهٔ هر زبان درج می‌شود. من فقط انگلیسی و ژاپنی صحبت می‌کنم و از کمک برای بهبود ترجمه استقبال می‌کنم.</li></ul>',
+    'question': '<h2>پرسش</h2><p>لطفاً پرسش‌ها و گزارش‌های خطا را در بخش <a href="https://github.com/sekika/unsatfit/discussions/categories/q-a?discussions_q=">پرسش و پاسخ unsatfit Discussions</a> ارسال کنید. یک حساب GitHub بسازید، وارد شوید و دکمهٔ سبز «New discussion» را فشار دهید. من در بخش نظرات پاسخ خواهم داد. اگر پرسش شما محرمانه است، برای نمونه شامل داده‌های منتشرنشده است، از طریق ایمیل با من تماس بگیرید. نشانی ایمیل در <a href="https://doi.org/10.1002/vzj2.20168">این مقاله</a> آمده است.</p>',
+    'format': '<h2>قالب داده‌های ورودی</h2>\n<ul>\n<li>مانند داده‌های نمونه، هر سطر از داده‌های عددی یک جفت اندازه‌گیری‌شدهٔ <span class="ltr">(h, &theta;)</span> را به همین ترتیب نشان می‌دهد. <a href="unit.html">می‌توان از هر واحدی استفاده کرد</a>.\n<li>در هر سطر، مقادیر با فاصله، tab یا ویرگول (,) جدا می‌شوند.\n<li>اگر بیش از دو عدد وجود داشته باشد، فقط دو عدد نخست خوانده می‌شوند.\n<li>سطرهایی که با عدد آغاز نمی‌شوند، دادهٔ اندازه‌گیری‌شده محسوب نمی‌شوند.</ul>',
+    'modelselect': 'انتخاب مدل',
+    'figoption': 'گزینه‌های نمودار',
+    'onemodel': 'فقط بهترین مدل را نمایش بده',
+    'showmore': 'نمایش گزینه‌های بیشتر',
+    'swrc': 'منحنی نگهداشت آب خاک',
+    'selectsample': 'انتخاب از داده‌های نمونه',
+    'pastehere': 'داده‌های خود را اینجا وارد کنید',
+    'inputerror': 'خطا در داده‌های ورودی',
+    'sameh': 'همهٔ مقادیر h یکسان هستند. مقادیر متفاوت h لازم است.',
+    'readformat': 'قالب داده‌های ورودی را در پایین ببینید.',
+    'result': 'نتیجه',
+    'footer': '<a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a> با نسخهٔ VER از <a href="https://sekika.github.io/unsatfit/">unsatfit</a>، ساخته‌شده توسط AUTHOR، با Python PYV روی ARCH اجرا می‌شود. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">اجرای سرور محلی</a>.',
+    'history': 'این سرویس <a href="URL"><strong>YEAR سال</strong> است که در حال اجراست</a>.',
+}
+
+
 ITALIAN_MESSAGES = {
     'description': 'SWRC Fit può adattare <a href="model.html">diversi modelli</a> ai dati misurati della <a href="https://en.wikipedia.org/wiki/Water_retention_curve">curva di ritenzione idrica del suolo</a> e determinare i parametri idraulici del suolo. Copiare i dati misurati (pressione, contenuto d’acqua) nella casella di testo sottostante e premere il pulsante «Calcola». Prima di usare dati originali, è possibile selezionare un campione dal menu a discesa.',
     'calculate': 'Calcola',
@@ -148,6 +173,81 @@ TURKISH_MESSAGES = {
 }
 
 
+KOREAN_MESSAGES = {
+    'description': 'SWRC Fit은 측정된 <a href="https://en.wikipedia.org/wiki/Water_retention_curve">토양 수분보유곡선</a> 자료에 <a href="model.html">여러 토양 수리 모형</a>을 적합하여 토양 수리학적 매개변수를 결정할 수 있습니다. 아래 텍스트 상자에 측정 자료(압력, 수분 함량)를 붙여 넣고 “계산” 버튼을 누르십시오. 자신의 자료를 사용하기 전에 풀다운 메뉴에서 예제 자료를 선택하여 프로그램의 작동을 확인할 수 있습니다.',
+    'calculate': '계산',
+    'wait': '잠시만 기다려 주십시오 ...',
+    'sample': '출력 예',
+    'help': '<h2>인용</h2>\n<p>이 프로그램, SWRC Fit 또는 unsatfit을 사용하여 얻은 연구 결과를 발표할 때에는 이 논문을 인용해 주십시오. SWRC Fit은 계산에 <a href="https://sekika.github.io/unsatfit/">unsatfit</a> 라이브러리를 사용합니다.</p>\n',
+    'ack': '<h2>감사의 글</h2><ul><li>예제 자료는 US Salinity Laboratory에서 개발한 불포화 토양 수리 특성 <a href="https://doi.org/10.15482/USDA.ADC/1173246">UNSODA 데이터베이스</a>에서 가져왔습니다. 더 많은 자료는 <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a>를 참조하십시오.</li><li>번역에 대한 감사 표시는 각 언어 페이지에 기재합니다. 저는 영어와 일본어만 사용하므로 번역 개선에 대한 도움을 환영합니다.</li></ul>',
+    'question': '<h2>질문</h2><p>질문과 오류 보고는 <a href="https://github.com/sekika/unsatfit/discussions/categories/q-a?discussions_q=">unsatfit Discussions의 Q&amp;A</a>에 올려 주십시오. GitHub 계정을 만들고 로그인한 뒤 녹색 “New discussion” 버튼을 누르십시오. 댓글로 답변하겠습니다. 미발표 자료 등 비공개 내용이 포함된 질문은 이메일로 문의하십시오. 이메일 주소는 <a href="https://doi.org/10.1002/vzj2.20168">이 논문</a>에 있습니다.</p>',
+    'format': '<h2>입력 자료 형식</h2>\n<ul>\n<li>예제 자료와 같이 각 수치 자료 행은 이 순서로 하나의 측정값 쌍 <span class="ltr">(h, &theta;)</span>을 나타냅니다. <a href="unit.html">어떤 단위도 사용할 수 있습니다</a>.\n<li>각 행의 값은 공백, 탭 또는 쉼표(,)로 구분합니다.\n<li>숫자가 두 개보다 많으면 처음 두 개만 읽습니다.\n<li>숫자로 시작하지 않는 행은 측정 자료로 간주하지 않습니다.</ul>',
+    'modelselect': '모형 선택',
+    'figoption': '그림 옵션',
+    'onemodel': '최적 모형만 표시',
+    'showmore': '추가 옵션 표시',
+    'swrc': '토양 수분보유곡선',
+    'selectsample': '예제 자료에서 선택',
+    'pastehere': '여기에 자료를 붙여 넣으십시오',
+    'inputerror': '입력 자료 오류',
+    'sameh': '모든 h 값이 같습니다. 서로 다른 h 값이 필요합니다.',
+    'readformat': '아래의 입력 자료 형식을 참조하십시오.',
+    'result': '결과',
+    'footer': '<a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a>은 AUTHOR가 개발한 <a href="https://sekika.github.io/unsatfit/">unsatfit</a> 버전 VER을 사용하며, ARCH에서 Python PYV로 실행됩니다. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">로컬 서버에서 실행</a>.',
+    'history': '이 서비스는 <a href="URL"><strong>YEAR년 동안</strong> 운영되고 있습니다</a>.',
+}
+
+
+INDONESIAN_MESSAGES = {
+    'description': 'SWRC Fit dapat mencocokkan <a href="model.html">berbagai model hidraulik tanah</a> dengan data terukur <a href="https://en.wikipedia.org/wiki/Water_retention_curve">kurva retensi air tanah</a> dan menentukan parameter hidraulik tanah. Tempelkan data pengukuran Anda (tekanan, kadar air) ke kotak teks di bawah lalu tekan tombol “Hitung”. Sebelum menggunakan data Anda sendiri, Anda dapat mencoba program dengan memilih data contoh dari menu tarik-turun.',
+    'calculate': 'Hitung',
+    'wait': 'Mohon tunggu ...',
+    'sample': 'Contoh keluaran',
+    'help': '<h2>Sitasi</h2>\n<p>Harap sitasi artikel ini ketika memublikasikan hasil penelitian yang diperoleh dengan program ini, SWRC Fit, atau unsatfit. SWRC Fit menggunakan pustaka <a href="https://sekika.github.io/unsatfit/">unsatfit</a> untuk perhitungan.</p>\n',
+    'ack': '<h2>Ucapan terima kasih</h2><ul><li>Data contoh berasal dari <a href="https://doi.org/10.15482/USDA.ADC/1173246">basis data UNSODA</a> mengenai sifat hidraulik tanah tak jenuh yang dikembangkan oleh US Salinity Laboratory. Untuk data lainnya, lihat <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a>.</li><li>Ucapan terima kasih untuk penerjemahan dicantumkan pada halaman tiap bahasa. Saya hanya berbahasa Inggris dan Jepang, sehingga bantuan untuk memperbaiki terjemahan sangat dihargai.</li></ul>',
+    'question': '<h2>Pertanyaan</h2><p>Silakan kirim pertanyaan dan laporan kesalahan ke bagian <a href="https://github.com/sekika/unsatfit/discussions/categories/q-a?discussions_q=">Q&amp;A unsatfit Discussions</a>. Buat akun GitHub, masuk, lalu tekan tombol hijau “New discussion”. Saya akan menjawab melalui komentar. Jika pertanyaan Anda bersifat rahasia, misalnya memuat data yang belum dipublikasikan, silakan hubungi saya melalui email. Alamat email tercantum dalam <a href="https://doi.org/10.1002/vzj2.20168">artikel ini</a>.</p>',
+    'format': '<h2>Format data masukan</h2>\n<ul>\n<li>Seperti pada data contoh, setiap baris data numerik menunjukkan satu pasangan nilai terukur <span class="ltr">(h, &theta;)</span> dalam urutan tersebut. <a href="unit.html">Satuan apa pun dapat digunakan</a>.\n<li>Nilai pada setiap baris dipisahkan dengan spasi, tab, atau koma (,).\n<li>Jika terdapat lebih dari dua angka, hanya dua angka pertama yang dibaca.\n<li>Baris yang tidak diawali angka tidak dianggap sebagai data pengukuran.</ul>',
+    'modelselect': 'Pemilihan model',
+    'figoption': 'Opsi gambar',
+    'onemodel': 'Tampilkan hanya model terbaik',
+    'showmore': 'Tampilkan opsi lainnya',
+    'swrc': 'Kurva retensi air tanah',
+    'selectsample': 'Pilih dari data contoh',
+    'pastehere': 'Tempelkan data di sini',
+    'inputerror': 'Kesalahan pada data masukan',
+    'sameh': 'Semua nilai h sama. Diperlukan nilai h yang berbeda.',
+    'readformat': 'Lihat format data masukan di bawah.',
+    'result': 'Hasil',
+    'footer': '<a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a> berjalan dengan versi VER dari <a href="https://sekika.github.io/unsatfit/">unsatfit</a>, dibuat oleh AUTHOR, menggunakan Python PYV pada ARCH. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">Menjalankan server lokal</a>.',
+    'history': 'Layanan ini <a href="URL">telah berjalan selama <strong>YEAR tahun</strong></a>.',
+}
+
+
+ARABIC_MESSAGES = {
+    'description': 'يمكن لبرنامج SWRC Fit ملاءمة <a href="model.html">عدة نماذج هيدروليكية للتربة</a> مع البيانات المقاسة لـ<a href="https://en.wikipedia.org/wiki/Water_retention_curve">منحنى احتفاظ التربة بالماء</a> وتحديد المعلمات الهيدروليكية للتربة. الصق بيانات القياس الخاصة بك (الضغط، المحتوى المائي) في مربع النص أدناه ثم اضغط زر «احسب». قبل استخدام بياناتك، يمكنك تجربة البرنامج باختيار بيانات نموذجية من القائمة المنسدلة.',
+    'calculate': 'احسب',
+    'wait': 'يرجى الانتظار ...',
+    'sample': 'مثال على المخرجات',
+    'help': '<h2>الاستشهاد</h2>\n<p>يرجى الاستشهاد بهذه المقالة عند نشر نتائج بحثية تم الحصول عليها باستخدام هذا البرنامج أو SWRC Fit أو unsatfit. يستخدم SWRC Fit مكتبة <a href="https://sekika.github.io/unsatfit/">unsatfit</a> لإجراء الحسابات.</p>\n',
+    'ack': '<h2>شكر وتقدير</h2><ul><li>أُخذت البيانات النموذجية من <a href="https://doi.org/10.15482/USDA.ADC/1173246">قاعدة بيانات UNSODA</a> للخصائص الهيدروليكية للتربة غير المشبعة، التي طوّرها US Salinity Laboratory. لمزيد من البيانات، راجع <a href="https://sekika.github.io/unsoda/">UNSODA viewer</a>.</li><li>يُذكر شكر المساهمين في الترجمة في صفحة كل لغة. أنا أتحدث الإنجليزية واليابانية فقط، وأرحب بالمساعدة في تحسين الترجمة.</li></ul>',
+    'question': '<h2>الأسئلة</h2><p>يرجى إرسال الأسئلة وتقارير الأخطاء إلى قسم <a href="https://github.com/sekika/unsatfit/discussions/categories/q-a?discussions_q=">الأسئلة والأجوبة في unsatfit Discussions</a>. أنشئ حسابًا على GitHub، وسجّل الدخول، ثم اضغط زر “New discussion” الأخضر. سأجيب في تعليق. إذا كان سؤالك سريًا، مثل أن يتضمن بيانات غير منشورة، فتواصل معي عبر البريد الإلكتروني. عنوان البريد الإلكتروني موجود في <a href="https://doi.org/10.1002/vzj2.20168">هذه المقالة</a>.</p>',
+    'format': '<h2>تنسيق بيانات الإدخال</h2>\n<ul>\n<li>كما في البيانات النموذجية، يمثل كل سطر من البيانات الرقمية زوجًا من القيم المقاسة <span class="ltr">(h, &theta;)</span> بهذا الترتيب. <a href="unit.html">يمكن استخدام أي وحدة</a>.\n<li>تُفصل القيم في كل سطر بمسافة أو tab أو فاصلة (,).\n<li>إذا وُجد أكثر من رقمين، فتُقرأ أول قيمتين فقط.\n<li>الأسطر التي لا تبدأ برقم لا تُعد بيانات قياس.</ul>',
+    'modelselect': 'اختيار النموذج',
+    'figoption': 'خيارات الشكل',
+    'onemodel': 'اعرض أفضل نموذج فقط',
+    'showmore': 'عرض مزيد من الخيارات',
+    'swrc': 'منحنى احتفاظ التربة بالماء',
+    'selectsample': 'اختر من البيانات النموذجية',
+    'pastehere': 'الصق البيانات هنا',
+    'inputerror': 'خطأ في بيانات الإدخال',
+    'sameh': 'جميع قيم h متساوية. يلزم وجود قيم مختلفة لـ h.',
+    'readformat': 'راجع تنسيق بيانات الإدخال أدناه.',
+    'result': 'النتيجة',
+    'footer': 'يعمل <a href="https://sekika.github.io/unsatfit/swrcfit.html">SWRC Fit</a> باستخدام الإصدار VER من <a href="https://sekika.github.io/unsatfit/">unsatfit</a> الذي أنشأه AUTHOR، وباستخدام Python PYV على ARCH. <a href="https://github.com/sekika/unsatfit/blob/main/docker/Readme.md">تشغيل خادم محلي</a>.',
+    'history': 'هذه الخدمة <a href="URL">تعمل منذ <strong>YEAR عامًا</strong></a>.',
+}
+
+
 def message(lang, ID, URL='./'):
     """Define localized message"""
     if ID == 'list':
@@ -155,7 +255,7 @@ def message(lang, ID, URL='./'):
         # https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
         # It is used for lang parameter in this function.
         # It appears in the language menu in this order.
-        return ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'ru', 'tr', 'zh']
+        return ['ar', 'de', 'en', 'es', 'fa', 'fr', 'id', 'it', 'ja', 'ko', 'pt', 'ru', 'tr', 'zh']
     if ID == 'langname':
         # Return language name in the language
         if lang == 'en':
@@ -164,6 +264,14 @@ def message(lang, ID, URL='./'):
             return 'Español'
         if lang == 'fr':
             return 'Français'
+        if lang == 'fa':
+            return 'فارسی'
+        if lang == 'ar':
+            return 'العربية'
+        if lang == 'id':
+            return 'Bahasa Indonesia'
+        if lang == 'ko':
+            return '한국어'
         if lang == 'de':
             return 'Deutsche'
         if lang == 'it':
@@ -181,7 +289,7 @@ def message(lang, ID, URL='./'):
         return lang
     if ID == 'langbar':
         # Make language selection menu.
-        bar = '<form action="' + URL + '" method="get">'
+        bar = '<form class="ltr" action="' + URL + '" method="get">'
         bar += '<select name="lang" aria-label="Language" onchange="this.form.submit()">'
         for i in message('', 'list'):
             language = message(i, 'langname')
@@ -204,7 +312,11 @@ def message(lang, ID, URL='./'):
     translated = EXTRA_MESSAGES.get(ID, {}).get(lang)
     if translated is None:
         translated = {
+            'ar': ARABIC_MESSAGES,
+            'fa': PERSIAN_MESSAGES,
+            'id': INDONESIAN_MESSAGES,
             'it': ITALIAN_MESSAGES,
+            'ko': KOREAN_MESSAGES,
             'tr': TURKISH_MESSAGES,
         }.get(lang, {}).get(ID)
     if translated is not None:

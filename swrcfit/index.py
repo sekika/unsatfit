@@ -21,6 +21,7 @@ UNSATFIT_MIN_VERSION = '5.2'
 STORAGEPREFIX = 'swrc_'
 TEST_R2 = 0.945
 PUBLIC_URL = 'https://seki.webmasters.gr.jp/swrc/'
+RTL_LANGUAGES = {'fa', 'ar', 'he', 'ur'}
 
 # Default limit of parameters
 MAX_QS = 1.5
@@ -1031,7 +1032,7 @@ def maincgi(environ=None, input_stream=None):
         'URL', 'https://sekika.github.io/unsatfit/history.html')
     language_links = message('', 'langlinks')
     print(
-        f'<hr>\n<p>{footer}</p>\n<p>{language_links}</p>\n<p style="text-align:right;">{history}</a></p></body></html>', flush=True)
+        f'<hr>\n<p>{footer}</p>\n<p>{language_links}</p>\n<p style="text-align:end;">{history}</a></p></body></html>', flush=True)
     return
 
 
@@ -1057,7 +1058,7 @@ def calc(f):
 
     print(
         f'<h1><a href="{escape(url)}">SWRC Fit</a> - {message(lang, "result")}</h1>')
-    print('<ul>')
+    print('<ul class="scientific">')
     for i in sorted(d):
         if i not in ['empty', 'valid', 'text', 'data']:
             if i == 'doi':
@@ -1165,7 +1166,7 @@ def calc(f):
         caic = ''
 
     print(
-        f'<table border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC{caic}</tr>')
+        f'<table class="scientific" border="1">\n<tr><th>Model{eq}<th>Parameters{cor}<th>R<sup>2</sup><th>AIC{caic}</tr>')
 
     count = 0
     for i in result:
@@ -1237,7 +1238,7 @@ def calc(f):
                     f.add_curve()
         count += 1
 
-    print('</table>\n<ul>\n')
+    print('</table>\n<ul class="scientific">\n')
     for n in note:
         print(f'<li>{n}</li>')
     print('</ul>\n<h2>Figure</h2>')
@@ -1260,10 +1261,10 @@ def showdata(f):
     svg = base64.b64encode(f.filename.getvalue()).decode('ascii')
     print(
         f'<div style="text-align: center;"><img src="data:image/svg+xml;base64,{svg}" alt="Figure"></div>')
-    print('<h2>Original data</h2><table border="1"><tr><th>h<th>&theta;')
+    print('<div class="ltr"><h2>Original data</h2><table class="scientific" border="1"><tr><th>h<th>&theta;')
     for i in list(zip(*f.swrc)):
         print(f'<tr><td>{escape(i[0])}<td>{escape(i[1])}</tr>')
-    print('</table>')
+    print('</table></div>')
 
 
 def getoptiontheta(f, bimodal):
@@ -1296,12 +1297,13 @@ def getoptiontheta(f, bimodal):
 
 def printhead(lang, f):
     mathjax = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+    direction = 'rtl' if lang in RTL_LANGUAGES else 'ltr'
     alternate_links = '\n'.join(
         f'  <link rel="alternate" hreflang="{language}" href="{PUBLIC_URL}?lang={language}">'
         for language in message('', 'list')
     )
     print(f'''<!DOCTYPE html>
-<html lang="{escape(lang)}">
+<html lang="{escape(lang)}" dir="{direction}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1309,6 +1311,25 @@ def printhead(lang, f):
 {alternate_links}
   <link rel="alternate" hreflang="x-default" href="{PUBLIC_URL}">
   <link rel="stylesheet" type="text/css" href="{escape(message(lang, "css"))}">
+  <style>
+    html[dir="rtl"] body {{
+      direction: rtl;
+      text-align: right;
+    }}
+    html[dir="rtl"] .ltr,
+    html[dir="rtl"] .scientific,
+    html[dir="rtl"] input[type="text"],
+    html[dir="rtl"] textarea {{
+      direction: ltr;
+      unicode-bidi: isolate;
+      text-align: left;
+    }}
+    html[dir="rtl"] .detailed-options {{
+      direction: ltr;
+      unicode-bidi: isolate;
+      text-align: left;
+    }}
+  </style>
   <script id="MathJax-script" async src="{escape(mathjax)}"></script>
   <script>
     function showMore(btn) {{
@@ -1539,7 +1560,7 @@ def loadtext(id):
 
 def printhelp(lang, f):
     import random
-    print(message(lang, 'news'))
+    print('<div class="ltr">' + message(lang, 'news') + '</div>')
     print(message(lang, 'format'))
     print(f'<h2>{message(lang, "sample")}</h2>')
     id = list(f.sampledata)[random.randint(0, 7)]
