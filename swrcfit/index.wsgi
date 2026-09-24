@@ -1,9 +1,9 @@
 """mod_wsgi entry point for SWRC Fit.
 
 The application deliberately keeps the CGI renderer in index.py so the web
-interface has a single implementation.  The Docker Apache configuration runs
-this application in a one-thread daemon because the current figure filename
-is shared by all requests.
+interface has a single implementation. The Apache configuration runs this
+application in a one-thread daemon because this adapter captures its legacy
+print-based output.
 """
 
 import contextlib

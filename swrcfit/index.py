@@ -4,25 +4,20 @@
 import urllib.parse
 import os
 import sys
-import configparser
+import base64
 import json
 import html
 import math
+import tempfile
+from io import BytesIO
 from data.message import message
 from data.model import model
 from data.sample import sample
 from data.sample import dataset
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-config = configparser.ConfigParser()
-config.read(os.path.join(BASE_DIR, 'data', 'server.txt'))
 
 UNSATFIT_MIN_VERSION = '5.2'
-# IMAGEFILE is a URL path and is deliberately kept relative to this app.
-# IMAGEPATH is the corresponding filesystem path used by Python.
-WORKDIR = os.path.join(BASE_DIR, config.get('Settings', 'workdir'))
-IMAGEFILE = config.get('Settings', 'imagefile')
-IMAGEPATH = os.path.join(BASE_DIR, IMAGEFILE)
 STORAGEPREFIX = 'swrc_'
 TEST_R2 = 0.945
 
@@ -39,7 +34,9 @@ MAX_INPUT_CHARS = 30_000
 MAX_INPUT_LINES = 1_000
 MAX_DATA_POINTS = 1_000
 
-os.environ['MPLCONFIGDIR'] = WORKDIR
+MPLCONFIGDIR = os.environ.setdefault(
+    'MPLCONFIGDIR', os.path.join(tempfile.gettempdir(), 'swrcfit-matplotlib'))
+os.makedirs(MPLCONFIGDIR, exist_ok=True)
 
 
 class BadRequest(Exception):
@@ -796,6 +793,7 @@ def maincgi(environ=None, input_stream=None):
     import datetime
     from packaging import version
     import unsatfit
+
     f = unsatfit.Fit()
 
     if environ is None:
@@ -891,7 +889,7 @@ def maincgi(environ=None, input_stream=None):
     # Figure options
     f.show_fig = False
     f.save_fig = True
-    f.filename = IMAGEPATH
+    f.filename = BytesIO()
     f.fig_width = 5.5
     f.fig_height = 4.5
     f.top_margin = 0.05
@@ -1118,7 +1116,7 @@ def calc(f):
             '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
         print('<p><strong>Optimization failed.</strong></p>')
         f.data_only = True
-        f.plot()
+        plot_to_buffer(f)
         print('<p><a href="{0}"></a></p>')
         showdata(f)
         return
@@ -1136,29 +1134,6 @@ def calc(f):
             '&pm; shows 1&sigma; uncertainty of parameters.')
     if f.trimodal:
         note.append('While trimodal water-retention functions provide the flexibility needed for media with clear triple porosity, they also introduce additional degrees of freedom and may lead to non-unique parameterizations when data coverage is limited or noisy. To ensure robust application, we recommend comparing models of different complexity and preferring simpler formulations when performance differences are marginal. See <a href="https://researchmap.jp/sekik/published_papers/51967432/attachment_file.pdf">Seki et al. (2026)</a> for detail.')
-
-    error = False
-    try:
-        with open(IMAGEPATH, 'w'):
-            pass
-    except Exception:
-        error = True
-    if error:
-        print(
-            f'<strong>Server setup error: Cannot write {escape(IMAGEFILE)}. Please check permission.</strong>')
-
-    error = False
-    tmpfile = WORKDIR + '/dksafjsdafkpaoeiwr'
-    try:
-        with open(tmpfile, 'w'):
-            pass
-    except Exception:
-        error = True
-    if error:
-        print(
-            f'<strong>Server setup error: Cannot write in {escape(WORKDIR)}. Please check permission.</strong>')
-    else:
-        os.remove(tmpfile)
 
     print(
         '<script>_delete_element("tmp"); function _delete_element( id_name ){var dom_obj = document.getElementById(id_name); var dom_obj_parent = dom_obj.parentNode; dom_obj_parent.removeChild(dom_obj);}</script>')
@@ -1259,10 +1234,10 @@ def calc(f):
         if i.success:
             if f.onemodel:
                 if count == aic_min:
-                    f.plot()
+                    plot_to_buffer(f)
             else:
                 if len(result) > count:
-                    f.plot()
+                    plot_to_buffer(f)
                 else:
                     f.add_curve()
         count += 1
@@ -1276,9 +1251,20 @@ def calc(f):
     showdata(f)
 
 
+def plot_to_buffer(f):
+    """Render the current figure into the response buffer."""
+    import matplotlib
+
+    f.filename.seek(0)
+    f.filename.truncate(0)
+    with matplotlib.rc_context({'savefig.format': 'svg'}):
+        f.plot()
+
+
 def showdata(f):
+    svg = base64.b64encode(f.filename.getvalue()).decode('ascii')
     print(
-        f'<div style="text-align: center;"><img src="{escape(IMAGEFILE)}" alt="Figure"></div>')
+        f'<div style="text-align: center;"><img src="data:image/svg+xml;base64,{svg}" alt="Figure"></div>')
     print('<h2>Original data</h2><table border="1"><tr><th>h<th>&theta;')
     for i in list(zip(*f.swrc)):
         print(f'<tr><td>{escape(i[0])}<td>{escape(i[1])}</tr>')

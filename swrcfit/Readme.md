@@ -20,9 +20,8 @@ This is a source code of SWRC Fit running at https://seki.webmasters.gr.jp/swrc/
   ```
 
 - The application directory in this example is `/srv/unsatfit/swrcfit`.
-  [data/server.txt](data/server.txt) has server-dependent settings. Its
-  `workdir` and `imagefile` locations must be writable by the user who runs
-  the mod_wsgi daemon.
+  Figures are generated in memory and embedded in the HTML response, so the
+  web application does not need write access to `img/`.
 
 ## Running on an Apache server with mod_wsgi
 
@@ -67,17 +66,13 @@ server administrator; it cannot be supplied through `.htaccess`.
 
    The bundled `.htaccess` selects `index.wsgi` as the directory index, maps
    it to mod_wsgi, and retains the legacy language-page rewrite rule.
-   `threads=1` is intentional for now: the generated figure is stored at the
-   shared `img/swrc.svg` path. Raise it only after figure output is made
-   request-specific.
+   `threads=1` is intentional: the WSGI adapter captures the legacy
+   print-based renderer output. Raise it only after that renderer is made
+   thread-safe.
 
-4. Allow the Apache worker user to write `img/` (and the configured `workdir`)
-   and reload Apache. For a Debian-style installation whose worker user is
-   `www-data`, this can be done as follows:
+4. Reload Apache:
 
    ```sh
-   chgrp -R www-data /srv/unsatfit/swrcfit/img
-   chmod -R g+rwX /srv/unsatfit/swrcfit/img
    systemctl reload apache2
    ```
 
