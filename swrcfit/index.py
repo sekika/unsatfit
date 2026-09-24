@@ -13,12 +13,16 @@ from data.model import model
 from data.sample import sample
 from data.sample import dataset
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 config = configparser.ConfigParser()
-config.read(os.path.dirname(__file__) + '/data/server.txt')
+config.read(os.path.join(BASE_DIR, 'data', 'server.txt'))
 
 UNSATFIT_MIN_VERSION = '5.2'
-WORKDIR = config.get('Settings', 'workdir')
+# IMAGEFILE is a URL path and is deliberately kept relative to this app.
+# IMAGEPATH is the corresponding filesystem path used by Python.
+WORKDIR = os.path.join(BASE_DIR, config.get('Settings', 'workdir'))
 IMAGEFILE = config.get('Settings', 'imagefile')
+IMAGEPATH = os.path.join(BASE_DIR, IMAGEFILE)
 STORAGEPREFIX = 'swrc_'
 TEST_R2 = 0.945
 
@@ -717,15 +721,21 @@ class FieldStorage:
         return self.form_data.get(key, [default])[0]
 
 
-def get_field_storage():
-    method = os.environ.get('REQUEST_METHOD', 'GET').upper()
+def get_field_storage(environ=None, input_stream=None):
+    """Read URL-encoded form data from either CGI or WSGI request objects."""
+    if environ is None:
+        environ = os.environ
+    if input_stream is None:
+        input_stream = sys.stdin
+
+    method = environ.get('REQUEST_METHOD', 'GET').upper()
 
     if method == 'POST':
-        content_type = os.environ.get('CONTENT_TYPE', '')
+        content_type = environ.get('CONTENT_TYPE', '')
         content_type_main = content_type.split(';', 1)[0].strip().lower()
 
         try:
-            content_length = int(os.environ.get('CONTENT_LENGTH', 0))
+            content_length = int(environ.get('CONTENT_LENGTH', 0))
         except ValueError:
             raise BadRequest('Invalid Content-Length.')
 
@@ -738,7 +748,9 @@ def get_field_storage():
             )
 
         if content_length > 0 and content_type_main == 'application/x-www-form-urlencoded':
-            post_data = sys.stdin.read(content_length)
+            post_data = input_stream.read(content_length)
+            if isinstance(post_data, bytes):
+                post_data = post_data.decode('utf-8', errors='replace')
             try:
                 form_data = urllib.parse.parse_qs(
                     post_data,
@@ -751,7 +763,7 @@ def get_field_storage():
             form_data = {}
 
     else:
-        query_string = os.environ.get('QUERY_STRING', '')
+        query_string = environ.get('QUERY_STRING', '')
 
         if len(query_string) > MAX_CONTENT_LENGTH:
             raise PayloadTooLarge(
@@ -779,15 +791,15 @@ def print_error_page(title, message_text):
     print('</body></html>')
 
 
-def maincgi():
+def maincgi(environ=None, input_stream=None):
     """SWRC Fit to run as CGI."""
     import datetime
-    from io import TextIOWrapper
     from packaging import version
     import unsatfit
     f = unsatfit.Fit()
 
-    sys.stdout = TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    if environ is None:
+        environ = os.environ
 
     print('Content-Type: text/html; charset=UTF-8')
     print('Cache-Control: no-store')
@@ -795,7 +807,7 @@ def maincgi():
     print()
 
     try:
-        field = get_field_storage()
+        field = get_field_storage(environ, input_stream)
     except PayloadTooLarge as e:
         print_error_page('Request too large', e)
         return
@@ -819,7 +831,7 @@ def maincgi():
     else:
         getlang = 'none'
 
-    lang = os.getenv('HTTP_ACCEPT_LANGUAGE')
+    lang = environ.get('HTTP_ACCEPT_LANGUAGE')
     if lang is None:
         lang = []
     else:
@@ -845,7 +857,8 @@ def maincgi():
         process = field.getfirst('process', '')
         table = place + '_' + process + '_h-t'
         try:
-            with open('data/unsoda.json', 'r', encoding='utf-8') as fp:
+            with open(os.path.join(BASE_DIR, 'data', 'unsoda.json'),
+                      'r', encoding='utf-8') as fp:
                 unsoda_json = json.load(fp)
         except Exception:
             unsoda_json = {}
@@ -878,7 +891,7 @@ def maincgi():
     # Figure options
     f.show_fig = False
     f.save_fig = True
-    f.filename = 'img/swrc.svg'
+    f.filename = IMAGEPATH
     f.fig_width = 5.5
     f.fig_height = 4.5
     f.top_margin = 0.05
@@ -1126,7 +1139,7 @@ def calc(f):
 
     error = False
     try:
-        with open(IMAGEFILE, 'w'):
+        with open(IMAGEPATH, 'w'):
             pass
     except Exception:
         error = True

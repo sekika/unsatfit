@@ -9,14 +9,17 @@ USER root
 RUN apt update && apt upgrade -y
 
 # Setup Apache
-RUN apt install -y apache2 && apt clean && \
-    ln -s ../mods-available/cgi.load /etc/apache2/mods-enabled/ && \
-    ln -s ../mods-available/rewrite.load /etc/apache2/mods-enabled/
+RUN apt install -y apache2 apache2-dev build-essential && apt clean && \
+    pip3 install --no-cache-dir mod_wsgi && \
+    mod_wsgi-express module-config > /etc/apache2/mods-available/wsgi.load && \
+    a2enmod rewrite wsgi
 COPY ./apache2.conf /etc/apache2/
+COPY ./swrcfit-wsgi.conf /etc/apache2/conf-available/
+RUN a2enconf swrcfit-wsgi
 
 # SWRC Fit
-RUN pip3 install unsatfit && pip3 cache purge && \
-    ln -s /usr/local/bin/python3 /usr/bin/python3
+# mod_wsgi above is compiled for the Python supplied by the base image.
+RUN pip3 install unsatfit && pip3 cache purge
 
 # Run Apache
 EXPOSE 80

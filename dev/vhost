@@ -1,0 +1,37 @@
+<VirtualHost *:80>
+ServerName seki.webmasters.gr.jp
+DocumentRoot /home/seki/public_html
+Alias /icons/ "/home/seki/public_html/icons/"
+WSGIDaemonProcess swrcfit-http processes=1 threads=1 user=seki group=seki \
+  python-path=/home/seki/public_html/swrc
+WSGIProcessGroup swrcfit-http
+WSGIApplicationGroup %{GLOBAL}
+TransferLog /home/seki/log/access.log
+ErrorLog /home/seki/log/error.log
+Addtype text/css .css
+</VirtualHost>
+
+<Directory /home/seki/public_html/>
+  Require all granted
+  AllowOverride All
+</Directory>
+
+<VirtualHost *:443>
+ServerName seki.webmasters.gr.jp
+DocumentRoot /home/seki/public_html
+Alias /icons/ "/home/seki/public_html/icons/"
+WSGIDaemonProcess swrcfit-https processes=1 threads=1 user=seki group=seki \
+  python-path=/home/seki/public_html/swrc
+WSGIProcessGroup swrcfit-https
+WSGIApplicationGroup %{GLOBAL}
+TransferLog /home/seki/log/access.log
+ErrorLog /home/seki/log/error.log
+SSLEngine on
+SSLHonorCipherOrder on
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+SSLProtocol -All +TLSv1.2 +TLSv1.3
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+SSLCertificateFile /etc/letsencrypt/live/seki.webmasters.gr.jp/cert.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/seki.webmasters.gr.jp/privkey.pem
+SSLCertificateChainFile /etc/letsencrypt/live/seki.webmasters.gr.jp/chain.pem
+</VirtualHost>

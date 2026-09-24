@@ -1,6 +1,6 @@
-DirectoryIndex index.py
+DirectoryIndex index.wsgi
 Options +ExecCGI
-AddHandler cgi-script py
+AddHandler wsgi-script .wsgi
 
 RewriteEngine On
 RewriteRule index-(.*).html ?lang=$1 [PT]
