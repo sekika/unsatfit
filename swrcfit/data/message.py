@@ -130,7 +130,7 @@ PERSIAN_MESSAGES = {
 
 
 ITALIAN_MESSAGES = {
-    'description': 'SWRC Fit può adattare <a href="model.html">diversi modelli</a> ai dati misurati della <a href="https://en.wikipedia.org/wiki/Water_retention_curve">curva di ritenzione idrica del suolo</a> e determinare i parametri idraulici del suolo. Copiare i dati misurati (pressione, contenuto d’acqua) nella casella di testo sottostante e premere il pulsante «Calcola». Prima di usare dati originali, è possibile selezionare un campione dal menu a discesa.',
+    'description': 'SWRC Fit può adattare <a href="model.html">diversi modelli</a> ai dati misurati della <a href="https://it.wikipedia.org/wiki/Potenziale_idrico#Curva_di_ritenzione_idrica">curva di ritenzione idrica del suolo</a> e determinare i parametri idraulici del suolo. Copiare i dati misurati (pressione, contenuto d’acqua) nella casella di testo sottostante e premere il pulsante «Calcola». Prima di usare dati originali, è possibile selezionare un campione dal menu a discesa.',
     'calculate': 'Calcola',
     'wait': 'Attendere, per favore ...',
     'sample': 'Esempio di risultato',
@@ -199,7 +199,7 @@ KOREAN_MESSAGES = {
 
 
 INDONESIAN_MESSAGES = {
-    'description': 'SWRC Fit dapat mencocokkan <a href="model.html">berbagai model hidraulik tanah</a> dengan data terukur <a href="https://en.wikipedia.org/wiki/Water_retention_curve">kurva retensi air tanah</a> dan menentukan parameter hidraulik tanah. Tempelkan data pengukuran Anda (tekanan, kadar air) ke kotak teks di bawah lalu tekan tombol “Hitung”. Sebelum menggunakan data Anda sendiri, Anda dapat mencoba program dengan memilih data contoh dari menu tarik-turun.',
+    'description': 'SWRC Fit dapat mencocokkan <a href="model.html">berbagai model hidraulik tanah</a> dengan data terukur <a href="https://repository.ub.ac.id/148940/1/17_BAB_IV_HASIL_DAN_PEMBAHASAN.pdf">kurva retensi air tanah</a> dan menentukan parameter hidraulik tanah. Tempelkan data pengukuran Anda (tekanan, kadar air) ke kotak teks di bawah lalu tekan tombol “Hitung”. Sebelum menggunakan data Anda sendiri, Anda dapat mencoba program dengan memilih data contoh dari menu tarik-turun.',
     'calculate': 'Hitung',
     'wait': 'Mohon tunggu ...',
     'sample': 'Contoh keluaran',
@@ -249,7 +249,7 @@ ARABIC_MESSAGES = {
 
 
 VIETNAMESE_MESSAGES = {
-    'description': 'SWRC Fit có thể khớp <a href="model.html">nhiều mô hình thủy lực đất</a> với dữ liệu đo của <a href="https://en.wikipedia.org/wiki/Water_retention_curve">đường cong giữ nước của đất</a> và xác định các tham số thủy lực của đất. Hãy dán dữ liệu đo của bạn (áp suất, hàm lượng nước) vào hộp văn bản bên dưới rồi nhấn nút “Tính toán”. Trước khi sử dụng dữ liệu của riêng mình, bạn có thể thử chương trình bằng cách chọn dữ liệu mẫu từ trình đơn thả xuống.',
+    'description': 'SWRC Fit có thể khớp <a href="model.html">nhiều mô hình thủy lực đất</a> với dữ liệu đo của <a href="https://www.thuvientailieu.vn/tai-lieu/nghien-cuu-thuc-nghiem-xay-dung-duong-dac-trung-am-cua-dat-pf-phuc-vu-xac-dinh-che-do-tuoi-hop-ly-cho-cay-trong-can-tai-51400/">đường cong giữ nước của đất</a> và xác định các tham số thủy lực của đất. Hãy dán dữ liệu đo của bạn (áp suất, hàm lượng nước) vào hộp văn bản bên dưới rồi nhấn nút “Tính toán”. Trước khi sử dụng dữ liệu của riêng mình, bạn có thể thử chương trình bằng cách chọn dữ liệu mẫu từ trình đơn thả xuống.',
     'calculate': 'Tính toán',
     'wait': 'Vui lòng chờ ...',
     'sample': 'Ví dụ kết quả',
@@ -274,7 +274,7 @@ VIETNAMESE_MESSAGES = {
 
 
 THAI_MESSAGES = {
-    'description': 'SWRC Fit สามารถปรับ <a href="model.html">แบบจำลองไฮดรอลิกของดินหลายแบบ</a>ให้เข้ากับข้อมูลที่วัดได้ของ<a href="https://en.wikipedia.org/wiki/Water_retention_curve">เส้นโค้งการกักเก็บน้ำของดิน</a> และใช้หาพารามิเตอร์ไฮดรอลิกของดินได้ ให้วางข้อมูลการวัดของคุณ (ความดัน, ปริมาณน้ำ) ลงในช่องข้อความด้านล่าง แล้วกดปุ่ม “คำนวณ” ก่อนใช้ข้อมูลของคุณเอง คุณสามารถทดลองโปรแกรมโดยเลือกข้อมูลตัวอย่างจากเมนูแบบเลื่อนลงได้',
+    'description': 'SWRC Fit สามารถปรับ <a href="model.html">แบบจำลองไฮดรอลิกของดินหลายแบบ</a>ให้เข้ากับข้อมูลที่วัดได้ของ<a href="https://agritech.doae.go.th/wp-content/uploads/2026/01/%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3-Crop-and-Soil-Science.pdf">เส้นโค้งการกักเก็บน้ำของดิน</a> และใช้หาพารามิเตอร์ไฮดรอลิกของดินได้ ให้วางข้อมูลการวัดของคุณ (ความดัน, ปริมาณน้ำ) ลงในช่องข้อความด้านล่าง แล้วกดปุ่ม “คำนวณ” ก่อนใช้ข้อมูลของคุณเอง คุณสามารถทดลองโปรแกรมโดยเลือกข้อมูลตัวอย่างจากเมนูแบบเลื่อนลงได้',
     'calculate': 'คำนวณ',
     'wait': 'โปรดรอสักครู่ ...',
     'sample': 'ตัวอย่างผลลัพธ์',
@@ -299,7 +299,7 @@ THAI_MESSAGES = {
 
 
 POLISH_MESSAGES = {
-    'description': 'SWRC Fit może dopasować <a href="model.html">różne modele hydrauliczne gleby</a> do zmierzonych danych <a href="https://en.wikipedia.org/wiki/Water_retention_curve">krzywej retencji wodnej gleby</a> i wyznaczyć parametry hydrauliczne gleby. Wklej dane pomiarowe (ciśnienie, zawartość wody) do pola tekstowego poniżej i naciśnij przycisk „Oblicz”. Przed użyciem własnych danych możesz wypróbować program, wybierając dane przykładowe z menu rozwijanego.',
+    'description': 'SWRC Fit może dopasować <a href="model.html">różne modele hydrauliczne gleby</a> do zmierzonych danych <a href="https://agro.icm.edu.pl/agro/element/bwmeta1.element.agro-article-64d1a773-0cc6-49ad-a50f-cda0876ac0a5/c/Use_of_neural_networks.pdf">krzywej retencji wodnej gleby</a> i wyznaczyć parametry hydrauliczne gleby. Wklej dane pomiarowe (ciśnienie, zawartość wody) do pola tekstowego poniżej i naciśnij przycisk „Oblicz”. Przed użyciem własnych danych możesz wypróbować program, wybierając dane przykładowe z menu rozwijanego.',
     'calculate': 'Oblicz',
     'wait': 'Proszę czekać ...',
     'sample': 'Przykładowy wynik',
@@ -422,13 +422,13 @@ def message(lang, ID, URL='./'):
             return 'SWRC Fit puede ajustar <a href="model.html">diferentes modelos</a> de <a href="https://es.slideshare.net/smeseguer/t10-edafologia-ag1012el-agua-en-el-suelo">curva de retención de agua del suelo</a> a los valores medidos. ' \
                 + 'Copie sus datos de medida (presión, contenido de agua) en el cuadro de texto de abajo y pulse el botón "Calcular". Antes de usar sus datos originales, puede ver como funciona la aplicación seleccionado diferentes tipos de suelos en el menu desplagable. '
         if lang == 'fr':
-            return 'SWRC Fit permet d’ajuster <a href="model.html">différents modèles</a> de <a href="https://en.wikipedia.org/wiki/Water_retention_curve">rétention de l’eau du sol</a> avec des valeurs mesurées. ' \
+            return 'SWRC Fit permet d’ajuster <a href="model.html">différents modèles</a> de <a href="https://theses.univ-orleans.fr/public/2016ORLE2039_va.pdf">rétention de l’eau du sol</a> avec des valeurs mesurées. ' \
                 + 'Copiez vos données mesurées (pression, teneur en eau)  dans la zone de texte ci-dessous et appuyez sur le bouton "Calculer". Vous pouvez choisir des exemples de données dans le menu déroulant. '
         if lang == 'de':
             return 'SWRC Fit kann <a href="model.html">bodenhydraulische Modelle</a> an gemessene <a href="https://de.wikipedia.org/wiki/Bodenwasserspannung">Bodenwasserspannungskurven</a> anpassen. ' \
                 + 'Kopieren Sie Ihre Bodenwasserspannungsdaten in das Textfeld und klicken Sie auf "Berechnen". Sie können Beispieldaten aus dem Pull-Down-Menü auswählen.'
         if lang == 'pt':
-            return 'SWRC Fit pode definir água <a href="model.html">diferentes modelos</a> de curva de retenção de água no solo para os valores medidos. ' \
+            return 'SWRC Fit pode definir água <a href="model.html">diferentes modelos</a> de <a href="https://en.wikipedia.org/wiki/Water_retention_curve">curva de retenção de água no solo</a> para os valores medidos. ' \
                 + 'Copiar os dados de medição (pressão, teor de água) na caixa de texto abaixo e pressione o botão "Calcular". Antes de usar seus dados originais, você pode ver como o aplicativo selecionado diferentes tipos de solos nas obras de menu desplagable.'
         if lang == 'ru':
             return 'ОГХ Приближение (SWRC Fit) может подгонять <a href="model.html">несколько гидравлических моделей почвы</a> к измеренной <a href="https://ru.wikipedia.org/wiki/%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D0%B3%D0%B8%D0%B4%D1%80%D0%BE%D1%84%D0%B8%D0%B7%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F_%D1%85%D0%B0%D1%80%D0%B0%D0%BA%D1%82%D0%B5%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0">Основная гидрофизическая характеристика</a> (<strong>ОГХ</strong>, кривая водоудерживания). ' \
