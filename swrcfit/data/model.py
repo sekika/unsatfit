@@ -21,7 +21,7 @@ def model(ID):
             'equation': 'S_e = \\begin{cases}\\left(h / h_b\\right)^{-\\lambda} & (h>h_b) \\\\ 1 & (h \\le h_b)\\end{cases}',
             'parameter': ('h<sub>b</sub>', '&lambda;'),
             'note': '',
-            'selected': True
+            'selected': False
         }
     if ID == 'VG':
         return {
@@ -89,7 +89,7 @@ def model(ID):
             'equation': '\\begin{eqnarray}S_e &=& \\begin{cases}w_1 S_1 + (1-w_1)\\left(h/H\\right)^{-\\lambda_2}  & (h>H)\\\\ w_1 S_1 + 1-w_1 & (h \\le H)\\end{cases}\\\\S_1 &=& Q \\biggl[\\dfrac{\\ln(h/h_m)}{\\sigma_1}\\biggr], Q(x) = \\mathrm{erfc}(x/\\sqrt{2})/2\\end{eqnarray}',
             'parameter': ('w<sub>1</sub>', 'H', '&sigma;<sub>1</sub>', '&lambda;<sub>2</sub>'),
             'note': '',
-            'selected': True
+            'selected': False
         }
     if ID == 'DB':
         return {
