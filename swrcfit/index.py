@@ -831,17 +831,43 @@ def maincgi(environ=None, input_stream=None):
     else:
         getlang = 'none'
 
-    lang = environ.get('HTTP_ACCEPT_LANGUAGE')
-    if lang is None:
-        lang = []
-    else:
-        lang = lang.split(',')
-    lang.append('en')
+    LANGUAGE_FALLBACKS = {
+        'ms': 'id',   # Malay -> Indonesian
+        'ca': 'es',   # Catalan -> Spanish
+        'gl': 'es',   # Galician -> Spanish
+        'az': 'tr',   # Azerbaijani -> Turkish
+        'prs': 'fa',  # Dari -> Persian
+        'yue': 'zh',  # Cantonese -> Chinese
+        'wuu': 'zh',  # Wu Chinese
+        'nan': 'zh',  # Southern Min
+        'hak': 'zh',  # Hakka
+        'gan': 'zh',  # Gan Chinese
+        'hsn': 'zh',  # Xiang Chinese
+    }
 
-    for i in lang:
-        if i[:2] in LANGUAGES:
-            lang = i[:2]
+    accept_language = environ.get('HTTP_ACCEPT_LANGUAGE', '')
+
+    preferred_languages = []
+
+    for item in accept_language.split(','):
+        code = item.split(';', 1)[0].strip().lower().split('-', 1)[0]
+        if code:
+            preferred_languages.append(code)
+
+    lang = 'en'
+
+    # Prefer explicitly supported languages.
+    for code in preferred_languages:
+        if code in LANGUAGES:
+            lang = code
             break
+    else:
+        # If none are supported, try a related supported language.
+        for code in preferred_languages:
+            fallback = LANGUAGE_FALLBACKS.get(code)
+            if fallback in LANGUAGES:
+                lang = fallback
+                break
 
     if getlang in LANGUAGES:
         lang = getlang
