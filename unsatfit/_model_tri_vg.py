@@ -108,16 +108,21 @@ def get_init_vg3(self, a1=0):  # w1, alpha1, m1, ww2, alpha2, m2, alpha3, m3
     else:
         ch = f.ini
         ch_r2 = f.f_r2_ht(f.ini, x, y)
-    if len(x) < 10:
+    # Saturation data at h=0 remain in the model fits, but cannot be
+    # used in the polynomial fit on log10(h).
+    positive = x > 0
+    if np.count_nonzero(positive) < 10:
         return ch
+    log_x = np.log10(x[positive])
+    y_poly = y[positive]
     # Find a place to split to subfunctions
     try:
-        c = np.polyfit(np.log10(x), y, 7)  # Fit with 7th degree
+        c = np.polyfit(log_x, y_poly, 7)  # Fit with 7th degree
     except BaseException:
         return ch
-    y_pred = np.polyval(c, np.log10(x))
-    ss_res = np.sum((y - y_pred) ** 2)  # residual sum of squares
-    ss_tot = np.sum((y - np.mean(y)) ** 2)  # total sum of squares
+    y_pred = np.polyval(c, log_x)
+    ss_res = np.sum((y_poly - y_pred) ** 2)  # residual sum of squares
+    ss_tot = np.sum((y_poly - np.mean(y_poly)) ** 2)  # total sum of squares
     r_squared = 1 - (ss_res / ss_tot)
     d = np.polyder(np.polyder(c))  # Second derivative
     split = []
