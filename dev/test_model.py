@@ -8,6 +8,9 @@
 import numpy as np
 import sys
 
+# This is a standalone validation script, not a pytest test module.
+__test__ = False
+
 # Selection of UNSODA data
 UNSODA_DATA = "https://sekika.github.io/file/unsoda/unsoda.json"
 MIN_NUM_DATA = 7

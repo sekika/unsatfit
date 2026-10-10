@@ -48,7 +48,12 @@ classifiers = [
 include-package-data = true
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["unsatfit", "unsatfit.*"]
 
 [tool.setuptools.dynamic]
 version = { attr = "unsatfit.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["dev"]
+pythonpath = ["src"]

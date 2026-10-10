@@ -8,7 +8,7 @@ It is all about Fit class of unsatfit.
 <dl>
 <dt>set_model(model, const=[], k_vapor=False)</dt>
 <dd>Set hydraulic model for model with constant parameters of const. When k_vapor=True, isothermal vapor hydraulic conductivity is added from version 6.0. Several parameters need to be set when using this feature. See the <a href=
-"https://github.com/sekika/unsatfit/blob/main/unsatfit/_model_k_vapor.py">source comment of model_k_vapor()</a> for detail.</dd>
+"https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_model_k_vapor.py">source comment of model_k_vapor()</a> for detail.</dd>
 <dt>optimize()</dt>
 <dd>Optimize parameteres.</dd>
 <dt>f_ht(p, x)</dt>
@@ -34,7 +34,7 @@ It is all about Fit class of unsatfit.
 </dl>
 
 ### Pore-size distribution
-See the [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/_pore_size.py) for detail. From version 5.4.
+See the [source comments](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_pore_size.py) for detail. From version 5.4.
 
 <dl>
 <dt>f_pore(p, r, C=0.149, epsilon=1e-8)</dt>
@@ -46,7 +46,7 @@ See the [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/
 </dl>
 
 ### HYDRUS and PEST
-See [HYDRUS](hydrus.md), [PEST](pest.md) and [source comments](https://github.com/sekika/unsatfit/blob/main/unsatfit/_hydrus.py) for detail. From version 6.2.
+See [HYDRUS](hydrus.md), [PEST](pest.md) and [source comments](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_hydrus.py) for detail. From version 6.2.
 
 <dl>
 <dt>save_template(filename="model.tpl")</dt>
@@ -78,9 +78,9 @@ See [HYDRUS](hydrus.md), [PEST](pest.md) and [source comments](https://github.co
 <dd>Initial parameters. When it is a list (or tuple) of parameters, such as [a, b, c], the set of parameters is used as initial parameters. When it is a nested list, such as [[a1, a2, a3], [b1, b2]], all combination of the initial parameters is used.</dd>
 </dl>
 
-- For boundary conditions, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_bound.py).
-- For least square optimization, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_lsq.py).
-- For figure options, see [source](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
+- For boundary conditions, see [source](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_init_bound.py).
+- For least square optimization, see [source](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_init_lsq.py).
+- For figure options, see [source](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_init_fig.py).
 
 For specifying font in figures, [FontProperties](https://matplotlib.org/stable/api/font_manager_api.html#matplotlib.font_manager.FontProperties) object can be set as self.fp. For example, set font_path as the absolute path to a font file and
 ```

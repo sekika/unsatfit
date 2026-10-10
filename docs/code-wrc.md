@@ -8,7 +8,7 @@ Easiest way to start learning how to use unsatfit is to run sample codes as inst
 - Run the sample code at the same directory with the data file (swrc.csv). For running the code on Mac or unix-like system, edit the first line ([shebang](https://en.wikipedia.org/wiki/Shebang_(Unix))) and mark the file executable by <code>chmod +x VG.py</code>. For running on Windows, please refer to [Python on Windows FAQ](https://docs.python.org/3/faq/windows.html).
 - Fitted parameters are shown at the standard output, where qs and qr means &theta;<sub>s</sub> and &theta;<sub>r</sub> respectively. Statistics are also shown.
 - Note that the program is unit independent, meaning that the unit of the parameters depends on the unit of the input data. Unit of pressure head is assumed as cm for a (cm<sup>-1</sup>) and h<sub>b</sub>.
-- Figure files are produced as svg files. For use in papers, pdf files can be produced as instructed in the sample code. To change the appearance of a figure, edit the figure settings in the sample code. For more figure options, see the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/unsatfit/_init_fig.py).
+- Figure files are produced as svg files. For use in papers, pdf files can be produced as instructed in the sample code. To change the appearance of a figure, edit the figure settings in the sample code. For more figure options, see the [source code of unsatfit](https://github.com/sekika/unsatfit/blob/main/src/unsatfit/_init_fig.py).
 - See [Reading data from Excel](excel.md) if you wish.
 
 ## List of sample codes
