@@ -76,4 +76,4 @@ tools/minitype-pdf/.npm/
 tools/minitype-pdf/npm-debug.log*
 
 # minitype font-subsetting cache (can exceed GitHub's 100 MB file limit).
-tools/minitype-pdf/font-caches.db*
+font-caches.db*

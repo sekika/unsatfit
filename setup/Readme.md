@@ -15,7 +15,8 @@ PDF rebuild to pick up security and feature updates.
 
 When a committed `docs/*.md` file is added, changed, moved, or deleted, the
 pre-commit hook regenerates its PDF (and any missing documentation PDFs) and
-stages `pdf/` automatically.  The hook stops if `docs/` has unstaged changes,
+stages `docs/pdf/` and `docs/pdf.pdf` automatically.  After updating the hook
+source, run `make -C setup` again to reinstall it.  The hook stops if `docs/` has unstaged changes,
 so the committed Markdown and generated PDFs always agree.
 
 Generate PDFs without committing:
