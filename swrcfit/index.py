@@ -947,7 +947,9 @@ def maincgi(environ=None, input_stream=None):
         # Clear field storage
         for i in model('savekeys'):
             key = STORAGEPREFIX + i
-            print(f'<script>localStorage.removeItem({js_string(key)});</script>')
+            print(
+                f'<script>localStorage.removeItem({
+                    js_string(key)});</script>')
         printform(lang, getlang, f)
         printhelp(lang, f)
     else:
@@ -1001,7 +1003,8 @@ def maincgi(environ=None, input_stream=None):
 
             # Save field storage to local storage
             for i in model('savekeys'):
-                raw_value = normalize_literal_newlines(field.getfirst(i, 'off'))
+                raw_value = normalize_literal_newlines(
+                    field.getfirst(i, 'off'))
                 value = '//'.join(raw_value.splitlines())
 
                 if i in ('qsin', 'qrin') + model('limit'):
@@ -1432,7 +1435,8 @@ def printform(lang, getlang, f):
         f'<div>{message(lang, "langbar", url)}</div>\n'
         f'<h1>SWRC Fit</h1>\n'
         f'<p>{message(lang, "description")}</p>\n'
-        f'<form id="fit-form" action="{escape(url)}" method="post" onsubmit="beginCalculation(event)">',
+        f'<form id="fit-form" action="{
+            escape(url)}" method="post" onsubmit="beginCalculation(event)">',
         flush=True
     )
     print(f'''<table style="margin-left: auto; margin-right: auto; border-collapse: collapse;">

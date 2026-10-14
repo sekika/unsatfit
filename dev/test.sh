@@ -1,6 +1,8 @@
 #!/bin/sh
+set -eu
+
 # Change to this directory
-cd `echo $0 | sed -e 's/[^/]*$//'`
+cd "$(dirname "$0")"
 echo '=== test SWRC Fit'
 ./test.py
 

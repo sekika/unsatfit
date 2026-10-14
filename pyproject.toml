@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "Fit soil water retention and unsaturated hydraulic conductivity functions"
 readme = "README.md"
 requires-python = ">=3.7"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
   { name = "Katsutoshi Seki" }
 ]
